@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Pictures</h1>
+
+<div class="container">
+  <div class="left">
+    <% @pictures_left.each do |picture| %>
+    <tr>
+      <td><%= image_tag(picture.address) %></td>
+      <td><%= picture.member %></td>
+      <td><%= picture.date %></td>
+      <td><%= picture.tag %></td>
+      <td><%= link_to 'Edit', edit_picture_path(picture) %></td>
+      <td><%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <br>
+    <% end %>
+  </div>
+  
+  <div class="right">
+    <% @pictures_right.each do |picture| %>
+    <tr>
+      <td><%= image_tag(picture.address) %></td>
+      <td><%= picture.member %></td>
+      <td><%= picture.date %></td>
+      <td><%= picture.tag %></td>
+      <td><%= link_to 'Edit', edit_picture_path(picture) %></td>
+      <td><%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <br>
+    <% end %>
+  </div>
+
+  <div class="footer">
+  <%= link_to 'New Picture', new_picture_path %>
+  </div>
+</div>
