@@ -1,18 +1,29 @@
 <p id="notice"><%= notice %></p>
 
-<p>
+<div class="left">
   <%= image_tag(@picture.address) %>
-</p>
+</div>
 
-<p>
-  <strong>Member:</strong>
-  <%= @picture.member %>
-</p>
+<div class="right">
+  <p>
+    <strong>Member:</strong>
+    <%= @picture.member %>
+  </p>
 
-<p>
-  <strong>Date:</strong>
-  <%= @picture.date %>
-</p>
+  <p>
+    <strong>Date:</strong>
+    <%= @picture.date %>
+  </p>
 
-<%= link_to 'Edit', edit_picture_path(@picture) %> |
-<%= link_to 'Back', pictures_path %>
+  <p>
+    <strong>Tags:</strong>
+    <% @picture.tags.each do |t| %>
+      <%= t.tag %>
+    <% end %>
+  </p>
+</div>
+
+<div class="footer">
+  <%= link_to 'Back', pictures_path, class:"link" %>
+  <%= link_to 'Edit', edit_picture_path(@picture), class:"link" %>
+</div>

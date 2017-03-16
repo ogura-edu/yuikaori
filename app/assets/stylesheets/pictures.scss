@@ -2,10 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-body {
-widht: 100%;
-}
-
 img {
 max-width: 450px;
 max-height: 450px;
@@ -26,14 +22,12 @@ position: relative;
 .left {
 width: 50%;
 float: left;
-background-color: #f8bbd0;
 margin: 0 auto;
 }
 
 .right {
 width: 50%;
 float: right;
-background-color: #bbdefb;
 margin: 0 auto;
 }
 
@@ -53,7 +47,7 @@ padding-bottom: 5px;
 font-size: 20px;
 }
 
-.new_link {
+.link {
 float: right;
 padding-right: 50px;
 padding-top: 5px;

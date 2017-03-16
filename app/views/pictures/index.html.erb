@@ -1,33 +1,37 @@
 <p id="notice"><%= notice %></p>
 
-<div class="container">
-  <div class="left">
-    <% @pictures_left.each do |picture| %>
-    <%= link_to image_tag(picture.address), edit_picture_path(picture)  %>
-    <table>
-      <tr>
-        <td><%= picture.member %>
-        <td><%= picture.date %>
-        <td><%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' }, style:"font-size:20px;" %>
-    </table>
-    <% end %>
-  </div>
-  
-  <div class="right">
-    <% @pictures_right.each do |picture| %>
-    <%= link_to image_tag(picture.address), edit_picture_path(picture)  %>
-    <table>
-      <tr>
-        <td><%= picture.member %>
-        <td><%= picture.date %>
-        <td><%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' }, style:"font-size:20px;" %>
-    </table>
-    <% end %>
-  </div>
-  
-  
-  <div class="footer">
-  <%= paginate @pictures %>
-  <%= link_to 'New Picture', new_picture_path, class:"new_link" %>
-  </div>
+<div class="left">
+  <% @pictures_left.each do |picture| %>
+  <%= link_to image_tag(picture.address), edit_picture_path(picture)  %>
+  <table>
+    <tr>
+      <td><%= picture.member %>
+      <td><%= picture.date %>
+      <% picture.tags.each do |t| %>
+        <td><%= t.tag %>
+      <% end %>
+      <td><%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' }, style:"font-size:20px;" %>
+  </table>
+  <% end %>
+</div>
+
+<div class="right">
+  <% @pictures_right.each do |picture| %>
+  <%= link_to image_tag(picture.address), edit_picture_path(picture)  %>
+  <table>
+    <tr>
+      <td><%= picture.member %>
+      <td><%= picture.date %>
+      <% picture.tags.each do |t| %>
+        <td><%= t.tag %>
+      <% end %>
+      <td><%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' }, style:"font-size:20px;" %>
+  </table>
+  <% end %>
+</div>
+
+
+<div class="footer">
+<%= paginate @pictures %>
+<%= link_to 'New Picture', new_picture_path, class:"link" %>
 </div>

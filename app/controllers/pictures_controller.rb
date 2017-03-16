@@ -4,7 +4,7 @@ class PicturesController < ApplicationController
   # GET /pictures
   # GET /pictures.json
   def index
-    @pictures = Picture.order('date').page(params[:page]).per(50)
+    @pictures = Picture.order('date DESC').page(params[:page]).per(50)
     @pictures_left =[]
     @pictures_right =[]
     @pictures.each_with_index do |picture, i|
@@ -81,6 +81,6 @@ class PicturesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def picture_params
-      params.require(:picture).permit(:member, :address, :date, :tag)
+      params.require(:picture).permit(:member, :address, :date, :tag_ids => [])
     end
 end

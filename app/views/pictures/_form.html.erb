@@ -26,6 +26,13 @@
     <%= f.date_select :date %>
   </div>
 
+  <div class="field">
+    <%= f.label :tag %>
+    <%= collection_check_boxes(:picture, :tag_ids, Tag.all, :id, :tag) do |t| %>
+      <% t.label {t.check_box + t.text} %>
+    <% end %>
+  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

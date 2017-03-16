@@ -1,5 +1,7 @@
 body {
-  background-color: #fff;
+  background: -webkit-repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
+  background: -moz-repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
+  background: repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
   color: #333;
   font-family: verdana, arial, helvetica, sans-serif;
   font-size: 13px;
