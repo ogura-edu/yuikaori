@@ -4,12 +4,10 @@ class PicturesController < ApplicationController
   # GET /pictures
   # GET /pictures.json
   def index
+    @pictures = Picture.order('date').page(params[:page]).per(50)
     @pictures_left =[]
     @pictures_right =[]
-    Picture.where("id < '100'").each_with_index do |picture, i|
-#      数が多すぎて大変なことになるので一時取得数を絞る
-#      そのうちページャーで処理する
-#    Picture.all.each_with_index do |picture, i|
+    @pictures.each_with_index do |picture, i|
       if i.even?
         @pictures_left << picture
       else
@@ -65,7 +63,10 @@ class PicturesController < ApplicationController
   # DELETE /pictures/1
   # DELETE /pictures/1.json
   def destroy
+    # delete from database
     @picture.destroy
+    # delete picture from directory
+    File.delete("app/assets/images/#{@picture.address}")
     respond_to do |format|
       format.html { redirect_to pictures_url, notice: 'Picture was successfully destroyed.' }
       format.json { head :no_content }
