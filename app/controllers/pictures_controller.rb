@@ -1,19 +1,27 @@
 class PicturesController < ApplicationController
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
 
+  
+  def index_destroy
+    index
+  end
+  
+  def multiple_destroy
+    params[:pictures].each do |id|
+      @picture = Picture.find(id)
+      @picture.destroy
+      File.delete("app/assets/images/#{@picture.address}")
+    end
+    respond_to do |format|
+      format.html { redirect_back fallback_location: pictures_path, notice: 'Picture was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+  
   # GET /pictures
   # GET /pictures.json
   def index
     @pictures = Picture.order('date DESC').page(params[:page]).per(50)
-    @pictures_left =[]
-    @pictures_right =[]
-    @pictures.each_with_index do |picture, i|
-      if i.even?
-        @pictures_left << picture
-      else
-        @pictures_right << picture
-      end
-    end
   end
 
   # GET /pictures/1
@@ -68,7 +76,7 @@ class PicturesController < ApplicationController
     # delete picture from directory
     File.delete("app/assets/images/#{@picture.address}")
     respond_to do |format|
-      format.html { redirect_to pictures_url, notice: 'Picture was successfully destroyed.' }
+      format.html { redirect_back fallback_location: pictures_path, notice: 'Picture was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

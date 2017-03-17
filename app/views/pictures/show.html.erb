@@ -1,26 +1,26 @@
 <p id="notice"><%= notice %></p>
 
-<div class="left">
-  <%= image_tag(@picture.address) %>
-</div>
+<div class="container">
+  <%= image_tag @picture.address, class: "left" %>
 
-<div class="right">
-  <p>
-    <strong>Member:</strong>
-    <%= @picture.member %>
-  </p>
+  <div class="left">
+    <p>
+      <strong>Member:</strong>
+      <%= @picture.member %>
+    </p>
 
-  <p>
-    <strong>Date:</strong>
-    <%= @picture.date %>
-  </p>
+    <p>
+      <strong>Date:</strong>
+      <%= @picture.date %>
+    </p>
 
-  <p>
-    <strong>Tags:</strong>
-    <% @picture.tags.each do |t| %>
-      <%= t.tag %>
-    <% end %>
-  </p>
+    <p>
+      <strong>Tags:</strong>
+      <% @picture.tags.each do |t| %>
+        <%= t.tag %>
+      <% end %>
+    </p>
+  </div>
 </div>
 
 <div class="footer">

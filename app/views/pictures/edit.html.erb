@@ -1,11 +1,10 @@
 <h1>Editing Picture</h1>
 
-<div class="left">
-  <%= image_tag(@picture.address) %>
-</div>
-
-<div class="right">
-  <%= render 'form', picture: @picture %>
+<div class="container">
+  <%= image_tag @picture.address, class: "left" %>
+  <div class="left">
+    <%= render 'form', picture: @picture %>
+  </div>
 </div>
 
 <div class="footer">

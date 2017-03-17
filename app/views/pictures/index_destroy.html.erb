@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+<ul>
+<%= form_tag multiple_destroy_path do |f| %>
+  <% @pictures.each do |picture| %>
+    <li class="picture_list">
+      <div class="picture">
+        <%= image_tag picture.address, class: "thumbnail" %>
+        <%= check_box_tag 'pictures[]', picture.id, false, class: 'multiple_checkbox' %>
+        <%= image_tag 'item/checkmark2.png', class: "checkmark" %>
+      </div>
+    </li>
+  <% end %>
+</ul>
+
+<div class="footer">
+<%= paginate @pictures %>
+<%= submit_tag '一括削除', data: { confirm: '削除しますか？' }, class: "button" %>
+<%= link_to '閲覧モードへ', pictures_path, class: "link" %>
+</div>
+<% end %>

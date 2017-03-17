@@ -1,37 +1,17 @@
 <p id="notice"><%= notice %></p>
 
-<div class="left">
-  <% @pictures_left.each do |picture| %>
-  <%= link_to image_tag(picture.address), edit_picture_path(picture)  %>
-  <table>
-    <tr>
-      <td><%= picture.member %>
-      <td><%= picture.date %>
-      <% picture.tags.each do |t| %>
-        <td><%= t.tag %>
-      <% end %>
-      <td><%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' }, style:"font-size:20px;" %>
-  </table>
+<ul>
+  <% @pictures.each do |picture| %>
+    <li class="picture_list">
+      <div class="picture">
+        <%= link_to image_tag(picture.address, class: "thumbnail"), edit_picture_path(picture)  %>
+      </div>
+    </li>
   <% end %>
-</div>
-
-<div class="right">
-  <% @pictures_right.each do |picture| %>
-  <%= link_to image_tag(picture.address), edit_picture_path(picture)  %>
-  <table>
-    <tr>
-      <td><%= picture.member %>
-      <td><%= picture.date %>
-      <% picture.tags.each do |t| %>
-        <td><%= t.tag %>
-      <% end %>
-      <td><%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' }, style:"font-size:20px;" %>
-  </table>
-  <% end %>
-</div>
-
+</ul>
 
 <div class="footer">
 <%= paginate @pictures %>
-<%= link_to 'New Picture', new_picture_path, class:"link" %>
+<%= link_to '削除モードへ', index_destroy_path, class: "link" %>
+<%= link_to '画像を追加（未実装）', new_picture_path, class: "link" %>
 </div>
