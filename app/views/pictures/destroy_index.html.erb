@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <ul>
-<%= form_tag multiple_destroy_path do |f| %>
+<%= form_tag pictures_multiple_destroy_path do |f| %>
   <% @pictures.each do |picture| %>
     <li class="picture_list">
       <div class="picture">
@@ -13,9 +13,9 @@
   <% end %>
 </ul>
 
-<div class="footer">
+<footer>
 <%= paginate @pictures %>
 <%= submit_tag '一括削除', data: { confirm: '削除しますか？' }, class: "button" %>
 <%= link_to '閲覧モードへ', pictures_path, class: "link" %>
-</div>
+</footer>
 <% end %>

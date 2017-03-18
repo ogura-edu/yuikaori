@@ -2,7 +2,7 @@ class PicturesController < ApplicationController
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
 
   
-  def index_destroy
+  def destroy_index
     index
   end
   

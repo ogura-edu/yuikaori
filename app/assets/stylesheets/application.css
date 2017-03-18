@@ -13,3 +13,53 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+  background: -webkit-repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
+  background: -moz-repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
+  background: repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
+}
+
+header {
+position: fixed;
+background-color: #eee8aa;
+top: 0;
+left: 0;
+width: 100%;
+height: 30px;
+z-index: 2;
+}
+
+header nav {
+float: right;
+margin-right:50px;
+padding-top: 5px;
+padding-bottom: 5px;
+font-size: 20px;
+}
+
+.section {
+padding-top: 30px;
+padding-bottom: 30px;
+}
+
+footer {
+position: fixed;
+background-color: #eee8aa;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 30px;
+}
+
+footer .pagination {
+float: left;
+margin-left: 50px;
+font-size: 20px;
+}
+
+footer .link, footer .button {
+float: right;
+margin-right: 50px;
+font-size: 20px;
+}

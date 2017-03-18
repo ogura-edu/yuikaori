@@ -10,8 +10,8 @@
   <% end %>
 </ul>
 
-<div class="footer">
+<footer>
 <%= paginate @pictures %>
-<%= link_to '削除モードへ', index_destroy_path, class: "link" %>
+<%= link_to '削除モードへ', pictures_destroy_index_path, class: "link" %>
 <%= link_to '画像を追加（未実装）', new_picture_path, class: "link" %>
-</div>
+</footer>
