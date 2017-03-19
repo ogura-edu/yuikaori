@@ -1,32 +1,26 @@
-<div class="container">
-  <%= image_tag @picture.address, class: "left" %>
-
-  <div class="left">
-    <p>
-      <strong>Member:</strong>
+<div class="wrapper">
+  <div class="original-image img-responsive">
+    <%= image_tag @picture.address, class: "left" %>
+  </div>
+  <div class="detail">
+    <div class="center-block">
       <%= @picture.member.member %>
-    </p>
+    </div>
 
-    <p>
-      <strong>Event:</strong>
+    <div class="center-block">
       <%= @picture.event.event %>
-    </p>
+    </div>
 
-    <p>
-      <strong>Date:</strong>
+    <div class="center-block">
       <%= @picture.date %>
-    </p>
+    </div>
 
-    <p>
-      <strong>Tags:</strong>
+    <div class="center-block">
       <% @picture.tags.each do |t| %>
         <%= t.tag %>
       <% end %>
-    </p>
+    </div>
   </div>
 </div>
 
-<footer>
-  <%= link_to 'Back', pictures_path, class:"link" %>
-  <%= link_to 'Edit', edit_picture_path(@picture), class:"link" %>
-</footer>
+<%= render 'footer' %>

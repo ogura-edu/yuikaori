@@ -1,0 +1,38 @@
+<footer>
+  <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <%- if action_name == 'index' || action_name == 'destroy_index' %>
+          <%= paginate @pictures %>
+        <% end -%>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <!-- index -->
+        <%- if action_name == 'index' %>
+          <li><%= link_to '画像を追加（未実装）', new_picture_path %></li>
+          <li><%= link_to '削除モードへ', pictures_destroy_index_path(page: params[:page]) %></li>
+        <% end -%>
+        <!-- destroy_index -->
+        <%- if action_name == 'destroy_index' %>
+          <li><%= link_to '閲覧モードへ', pictures_path(page: params[:page]) %></li>
+          <li><%= submit_tag '一括削除', data: { confirm: '削除しますか？' }, class: "btn btn-default" %></li>
+        <% end -%>
+        <!-- edit -->
+        <%- if action_name == 'edit' %>
+          <li><%= link_to 'Show', picture_path(@picture) %></li>
+          <li><%= link_to 'Back', pictures_path(page: params[:page]) %></li>
+        <% end -%>
+        <!-- new -->
+        <%- if action_name == 'new' %>
+          <li><%= link_to 'Back', pictures_path %></li>
+        <% end -%>
+        <!-- show -->
+        <%- if action_name == 'show' %>
+          <li><%= link_to 'Edit', edit_picture_path(@picture) %></li>
+          <li><%= link_to 'Back', pictures_path %></li>
+        <% end -%>
+      </ul> 
+    </div>
+  </nav>
+</footer>

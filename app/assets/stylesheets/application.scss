@@ -14,56 +14,36 @@
  *= require_self
  */
 
+@import 'bootstrap-sprockets';
+@import 'bootstrap-custom';
+
 body {
   background: -webkit-repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
   background: -moz-repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
   background: repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
 }
 
-header {
-position: fixed;
-background-color: #eee8aa;
-top: 0;
-left: 0;
-width: 100%;
-height: 30px;
-z-index: 2;
+section {
+  padding-top: 70px;
+  padding-bottom: 30px;
 }
 
-header nav {
-float: right;
-margin: 5px 50px 5px 0;
-font-size: 15px;
+ul .pagination {
+  margin-top: 5px;
 }
 
-.section {
-padding-top: 30px;
-padding-bottom: 30px;
+.btn {
+  margin-top: 5px;
+  margin-right: 15px;
 }
 
-footer {
-position: fixed;
-background-color: #eee8aa;
-bottom: 0;
-left: 0;
-width: 100%;
-height: 30px;
+.wrapper {
+  margin: 2em auto;
+  padding: 0 1em;
+  max-width: 80%;
 }
 
-footer .pagination {
-float: left;
-margin: 5px 0 5px 50px;
-font-size: 15px;
-}
-
-footer .link {
-float: right;
-margin: 5px 50px 5px 0;
-font-size: 15px;
-}
-
-footer .button {
-float: right;
-margin: 3px 50px 3px 0;
-font-size: 15px;
+.form-control {
+  height: 2em;
+  width: 10em;
 }

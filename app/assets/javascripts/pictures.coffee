@@ -6,7 +6,7 @@ $ ->
   $('.multiple_checkbox').click ->
     false
   
-  $('.thumbnail').click ->
+  $('.my-thumbnail').click ->
     if $(this).hasClass('checked')
       $(this).removeClass('checked')
       $(this).next('.multiple_checkbox').prop('checked', false)

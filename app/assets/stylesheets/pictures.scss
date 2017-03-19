@@ -12,17 +12,6 @@ margin-left: auto;
 margin-right: 0;
 }
 
-.left {
-float: left;
-margin-left: 5%;
-margin-right: auto;
-}
-
-.right {
-float: right;
-margin: 0 auto;
-}
-
 ul {
 text-align: center;
 }
@@ -38,11 +27,12 @@ position: relative;
 margin: 0 auto;
 }
 
-.thumbnail {
+.my-thumbnail {
 height: 100%;
 cursor: pointer;
+border: none;
 }
-.thumbnail.checked{
+.my-thumbnail.checked{
 border: 5px solid violet;
 box-sizing: border-box;
 }
@@ -61,4 +51,17 @@ right: 20px;
 
 .multiple_checkbox:checked + .checkmark {
 display: block;
+}
+
+.original-image {
+}
+
+.detail {
+  .center-block {
+    text-align: center;
+    padding-top: 1em;
+  }
+  .right-block {
+    text-align: right;
+  }
 }

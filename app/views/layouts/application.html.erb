@@ -10,20 +10,11 @@
 
   <body>
     <header>
-      <nav>
-        <% if user_signed_in? %>
-          <strong><%= link_to current_user.username, toppage_path %></strong>
-          <%= link_to 'modify profile', edit_user_registration_path %>
-          <%= link_to 'log out', destroy_user_session_path, method: :delete %>
-        <% else %>
-          <%= link_to 'sign up', new_user_registration_path %>
-          <%= link_to 'log in', new_user_session_path %>
-        <% end %>
-      </nav>
+      <%= render 'layouts/header' %>
     </header>
     
-    <div class="section">
+    <section>
       <%= yield %>
-    </div>
+    </section>
   </body>
 </html>

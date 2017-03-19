@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   resources :videos, constraints: { id: /\d+/ }
   resources :pictures, constraints: { id: /\d+/ }
+  get 'pictures/search'
   get 'pictures/destroy_index'
   post 'pictures/multiple_destroy'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

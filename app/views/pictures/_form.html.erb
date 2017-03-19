@@ -11,33 +11,29 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :member %>
+  <div class="field center-block">
     <%= f.collection_select :member_id, Member.all, :id, :member %>
   </div>
 
-  <div class="field">
+  <div class="field center-block">
     <%= f.hidden_field :address %>
   </div>
 
-  <div class="field">
-    <%= f.label :event %>
+  <div class="field center-block">
     <%= f.collection_select :event_id, Event.all, :id, :event %>
   </div>
 
-  <div class="field">
-    <%= f.label :date %>
+  <div class="field center-block">
     <%= f.date_select :date %>
   </div>
 
-  <div class="field">
-    <%= f.label :tag %>
+  <div class="field center-block">
     <%= collection_check_boxes(:picture, :tag_ids, Tag.all, :id, :tag) do |t| %>
       <% t.label {t.check_box + t.text} %>
     <% end %>
   </div>
 
-  <div class="actions">
-    <%= f.submit %>
+  <div class="actions right-block">
+    <%= f.submit class: 'btn btn-default' %>
   </div>
 <% end %>

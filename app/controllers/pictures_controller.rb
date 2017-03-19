@@ -1,6 +1,12 @@
 class PicturesController < ApplicationController
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
 
+  def search
+    column = params[:column]
+    value = params[:value]
+    selected = Picture.where("#{column} = #{value}")
+    @pictures = selected.order('date DESC').page(params[:page]).per(50)
+  end
   
   def destroy_index
     index
