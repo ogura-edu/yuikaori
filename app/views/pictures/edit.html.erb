@@ -8,6 +8,6 @@
 </div>
 
 <footer>
-  <%= link_to 'Back', pictures_path, class:"link" %>
+  <%= link_to 'Back', pictures_path(page: params[:page]), class:"link" %>
   <%= link_to 'Show', picture_path(@picture), class:"link" %>
 </footer>

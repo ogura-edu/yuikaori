@@ -1,12 +1,15 @@
-<p id="notice"><%= notice %></p>
-
 <div class="container">
   <%= image_tag @picture.address, class: "left" %>
 
   <div class="left">
     <p>
       <strong>Member:</strong>
-      <%= @picture.member %>
+      <%= @picture.member.member %>
+    </p>
+
+    <p>
+      <strong>Event:</strong>
+      <%= @picture.event.event %>
     </p>
 
     <p>

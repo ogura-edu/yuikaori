@@ -59,7 +59,7 @@ class PicturesController < ApplicationController
   def update
     respond_to do |format|
       if @picture.update(picture_params)
-        format.html { redirect_to @picture, notice: 'Picture was successfully updated.' }
+        format.html { redirect_to pictures_path(page: params[:page]), notice: 'Picture was successfully updated.' }
         format.json { render :show, status: :ok, location: @picture }
       else
         format.html { render :edit }
@@ -89,6 +89,6 @@ class PicturesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def picture_params
-      params.require(:picture).permit(:member, :address, :date, :tag_ids => [])
+      params.require(:picture).permit(:member_id, :address, :event_id, :date, :tag_ids => [])
     end
 end

@@ -32,10 +32,8 @@ z-index: 2;
 
 header nav {
 float: right;
-margin-right:50px;
-padding-top: 5px;
-padding-bottom: 5px;
-font-size: 20px;
+margin: 5px 50px 5px 0;
+font-size: 15px;
 }
 
 .section {
@@ -54,12 +52,18 @@ height: 30px;
 
 footer .pagination {
 float: left;
-margin-left: 50px;
-font-size: 20px;
+margin: 5px 0 5px 50px;
+font-size: 15px;
 }
 
-footer .link, footer .button {
+footer .link {
 float: right;
-margin-right: 50px;
-font-size: 20px;
+margin: 5px 50px 5px 0;
+font-size: 15px;
+}
+
+footer .button {
+float: right;
+margin: 3px 50px 3px 0;
+font-size: 15px;
 }

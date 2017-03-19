@@ -1,10 +1,8 @@
-<p id="notice"><%= notice %></p>
-
 <ul>
   <% @pictures.each do |picture| %>
     <li class="picture_list">
       <div class="picture">
-        <%= link_to image_tag(picture.address, class: "thumbnail"), edit_picture_path(picture)  %>
+        <%= link_to image_tag(picture.address, class: "thumbnail"), edit_picture_path(picture, page: params[:page])  %>
       </div>
     </li>
   <% end %>
@@ -12,6 +10,6 @@
 
 <footer>
 <%= paginate @pictures %>
-<%= link_to '削除モードへ', pictures_destroy_index_path, class: "link" %>
+<%= link_to '削除モードへ', pictures_destroy_index_path(page: params[:page]), class: "link" %>
 <%= link_to '画像を追加（未実装）', new_picture_path, class: "link" %>
 </footer>

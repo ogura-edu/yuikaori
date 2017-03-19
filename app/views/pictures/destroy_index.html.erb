@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <ul>
 <%= form_tag pictures_multiple_destroy_path do |f| %>
   <% @pictures.each do |picture| %>
@@ -16,6 +14,6 @@
 <footer>
 <%= paginate @pictures %>
 <%= submit_tag '一括削除', data: { confirm: '削除しますか？' }, class: "button" %>
-<%= link_to '閲覧モードへ', pictures_path, class: "link" %>
+<%= link_to '閲覧モードへ', pictures_path(page: params[:page]), class: "link" %>
 </footer>
 <% end %>

@@ -13,12 +13,16 @@
 
   <div class="field">
     <%= f.label :member %>
-    <%= f.text_field :member %>
+    <%= f.collection_select :member_id, Member.all, :id, :member %>
   </div>
 
   <div class="field">
-    <%= f.label :address %>
-    <%= f.text_field :address %>
+    <%= f.hidden_field :address %>
+  </div>
+
+  <div class="field">
+    <%= f.label :event %>
+    <%= f.collection_select :event_id, Event.all, :id, :event %>
   </div>
 
   <div class="field">
