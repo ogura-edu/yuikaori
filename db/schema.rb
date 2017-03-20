@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170318163031) do
+ActiveRecord::Schema.define(version: 20170320155553) do
 
   create_table "events", force: :cascade do |t|
     t.string "event"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(version: 20170318163031) do
     t.datetime "updated_at", null: false
     t.integer  "member_id"
     t.integer  "event_id"
+    t.index ["address"], name: "index_videos_on_address", unique: true
   end
 
 end

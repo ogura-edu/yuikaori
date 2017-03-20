@@ -11,6 +11,7 @@ $media_dir = "#{$app_dir}app/assets/images/"
 $image_dir = "instagram/images/"
 $video_dir = "instagram/videos/"
 recent_result = "recentposts"
+all_result = Dir.glob("allpostdata*").first
 
 # check recent posts
 crawler = Instagram::Crawler.new($insta_host)
@@ -18,18 +19,19 @@ crawler.login
 crawler.visit('/yui_ogura_official/')
 case ARGV[0]
 when 'all'
-  # ただし最大240枚まで
+  # 効率は良くないが、現在のallpostdataファイルからとりあえず読み込み、
+  # ダメ押しで240枚読み込む。
+  Instagram.get_media(all_result)
   crawler.load_all_posts
   crawler.check_post(recent_result)
+  Instagram.get_media(recent_result)
 when 'recent'
   crawler.check_post(recent_result)
+  Instagram.get_media(recent_result)
 else
   puts 'invalid type. please retry.'
   raise ArgumentError
 end
-
-# get media from result_file
-Instagram.get_media(recent_result)
 
 # add media to database
 client = SQL_Client.new
@@ -38,7 +40,6 @@ client.insert_into("videos", $video_dir, 2)
 client.close
 
 # update allpostdata
-all_result = Dir.glob("allpostdata*").first
 timestr = Time.now.to_s
 File.open("allpostdata_#{timestr}", "w") do |new_file|
   ary = []

@@ -65,5 +65,6 @@ gem 'bootstrap-sass'
 gem 'anemone'
 gem 'nokogiri'
 gem 'capybara'
-gem 'selenium-webdriver'
-gem 'sqlite3'
+gem 'selenium-webdriver', '~> 3.1.0'
+
+gem 'whenever', require: false
