@@ -62,3 +62,8 @@ gem 'devise'
 gem 'omniauth-twitter'
 
 gem 'bootstrap-sass'
+gem 'anemone'
+gem 'nokogiri'
+gem 'capybara'
+gem 'selenium-webdriver'
+gem 'sqlite3'
