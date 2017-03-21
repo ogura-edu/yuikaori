@@ -19,28 +19,32 @@ module Instagram
       return urls
     end
     
-    def get_media(filename, removed_addresses)
+    def load_postdata_from(filename, removed_addresses)
       read_urls(filename).each do |url|
-        doc = Nokogiri::HTML.parse(open(url+"?hl=ja"))
-        
-        date = Time.new
-        datestr = doc.at('meta[@property="og:title"]').attribute('content').value
-        if datestr.include?('午前')
-          date = Time.local(*datestr.scan(/\d+/))
-        else
-          date = Time.local(*datestr.scan(/\d+/))+(60*60*12)
-        end
-        
-        if doc.at('//meta[@content="video"]')
-          mp4_url = doc.at('//meta[@property="og:video:secure_url"]').attribute('content').value
-          save_video(mp4_url, date, removed_addresses)
-        else
-          save_image(url, date, removed_addresses)
-        end
+        get_media(url, removed_addresses, 2, type: :auto)
+      end
+    end
+
+    def get_media(url, removed_addresses, member_id, type:)
+      doc = Nokogiri::HTML.parse(open(url+"?hl=ja"))
+      
+      date = Time.new
+      datestr = doc.at('meta[@property="og:title"]').attribute('content').value
+      if datestr.include?('午前')
+        date = Time.local(*datestr.scan(/\d+/))
+      else
+        date = Time.local(*datestr.scan(/\d+/))+(60*60*12)
+      end
+      
+      if doc.at('//meta[@content="video"]')
+        mp4_url = doc.at('//meta[@property="og:video:secure_url"]').attribute('content').value
+        save_video(mp4_url, date, removed_addresses, member_id, type: type)
+      else
+        save_image(url, date, removed_addresses, member_id, type: type)
       end
     end
     
-    def save_video(url, date, removed_addresses)
+    def save_video(url, date, removed_addresses, member_id, type:)
       basename = File.basename(url)
       filepath = "#{$media_dir}#{$video_dir}#{basename}"
       if File.exist?(filepath)
@@ -55,10 +59,20 @@ module Instagram
           end
         end
         File.utime(date, date, filepath)
+        
+        # save to database
+        case type
+        when :auto
+          $sqlclient.insert_into("videos", "#{$video_dir}#{basename}", member_id)
+        when :manually
+          $sqlclient.manually_insert("videos", "#{$video_dir}#{basename}", member_id)
+        else
+          puts 'please select correct type'
+        end
       end
     end
     
-    def save_image(url, date, removed_addresses)
+    def save_image(url, date, removed_addresses, member_id, type:)
       basename = File.basename(url) + '.jpg'
       filepath = "#{$media_dir}#{$image_dir}#{basename}"
       if File.exist?(filepath)
@@ -73,6 +87,16 @@ module Instagram
           end
         end
         File.utime(date, date, filepath)
+        
+        # save to database
+        case type
+        when :auto
+          $sqlclient.insert_into("pictures", "#{$image_dir}#{basename}", member_id)
+        when :manually
+          $sqlclient.manually_insert("pictures", "#{$image_dir}#{basename}", member_id)
+        else
+          puts 'please select correct type'
+        end
       end
     end
   end
