@@ -4,11 +4,10 @@ require 'open-uri'
 require './oauth'
 
 class MyTwitterClient
-  def initialize(type:, screen_name: nil, removed_addresses:)
-    @removed_addresses = removed_addresses
+  def initialize(type:)
+    @removed_addresses = $sqlclient.removed_addresses
     case type
     when :admin
-      puts 'type admin'
       @client = Twitter::REST::Client.new do |config|
         config.consumer_key = "HICQLnFdWvpD390L7hw6Y3Phx"
         config.consumer_secret = "x02WyH82h76ETJlpWvFu7R9Nhhfgty6TuMBKp1ZXaENRNPx2Qc"
@@ -47,7 +46,7 @@ class MyTwitterClient
     end
   end
   
-  def save_video(array, date)
+  def save_video(array, date, member_id, type:)
     url = array.select{|item| item[:bitrate]}.max_by{|item| item[:bitrate]}[:url]
     basename = File.basename(url)
     filepath = "#{$media_dir}#{$video_dir}#{basename}"
@@ -64,10 +63,18 @@ class MyTwitterClient
         end
       end
       File.utime(date, date, filepath)
+      
+      # save to database
+      case type
+      when :auto
+        $sqlclient.insert_into("videos", "#{$video_dir}#{basename}", member_id)
+      when :manually
+        $sqlclient.manually_insert("videos", "#{$video_dir}#{basename}", member_id)
+      end
     end
   end
   
-  def save_image(url, date)
+  def save_image(url, date, member_id, type:)
     basename = File.basename(url)
     filepath = "#{$media_dir}#{$image_dir}#{basename}"
     date = Time.parse(date)
@@ -83,6 +90,14 @@ class MyTwitterClient
         end
       end
       File.utime(date, date, filepath)
+      
+      # save to database
+      case type
+      when :auto
+        $sqlclient.insert_into("pictures", "#{$image_dir}#{basename}", member_id)
+      when :manually
+        $sqlclient.manually_insert("pictures", "#{$image_dir}#{basename}", member_id)
+      end
     end
   end
   
@@ -90,9 +105,9 @@ class MyTwitterClient
     date = hash[:created_at]
     hash[:extended_entities][:media].each do |media|
       if media[:video_info]
-        save_video(media[:video_info][:variants], date)
+        save_video(media[:video_info][:variants], date, 1, type: :auto)
       else
-        save_image(media[:media_url_https], date)
+        save_image(media[:media_url_https], date, 1, type: :auto)
       end
     end
     puts "saved madia successfully"
@@ -123,5 +138,9 @@ class MyTwitterClient
     @client.user_timeline(screen_name, options).each do |tweet|
       get_media(tweet)
     end
+  end
+  
+  def manually_get_media
+    puts '工事中！'
   end
 end

@@ -6,15 +6,14 @@ require '../sqlite3'
 
 # variables
 screen_name = "YUIKAORI_STAFF"
-options = {count: 50, include_rts: true, tweet_mode: "extended"}
+options = {count: 200, include_rts: true, tweet_mode: "extended"}
 $app_dir = '/home/ogura/rails/yuikaori/'
 $media_dir = "#{$app_dir}app/assets/images/"
 $image_dir = "twitter/images/"
 $video_dir = "twitter/videos/"
+$sqlclient = SQL_Client.new
 
-sqlclient = SQL_Client.new
-removed_addresses = sqlclient.removed_addresses
-client = MyTwitterClient.new(type: :admin, removed_addresses: removed_addresses)
+client = MyTwitterClient.new(type: :admin)
 
 case ARGV[0]
 when 'all'
@@ -26,6 +25,4 @@ else
   raise ArgumentError
 end
 
-sqlclient.insert_into("pictures", $image_dir, 1)
-sqlclient.insert_into("videos", $video_dir, 1)
-sqlclient.close
+$sqlclient.close
