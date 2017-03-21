@@ -1,10 +1,14 @@
 class PicturesController < ApplicationController
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
 
+  def tmp
+    @pictures = Picture.where("tmp = 't'").order('date DESC').page(params[:page]).per(50)
+  end
+  
   def search
     column = params[:column]
     value = params[:value]
-    selected = Picture.where("#{column} = #{value}")
+    selected = Picture.where("#{column} = #{value} AND tmp = 'f'")
     @pictures = selected.order('date DESC').page(params[:page]).per(50)
   end
   
@@ -12,22 +16,32 @@ class PicturesController < ApplicationController
     index
   end
   
-  def multiple_destroy
-    params[:pictures].each do |id|
-      @picture = Picture.find(id)
-      @picture.destroy
-      File.delete("app/assets/images/#{@picture.address}")
-    end
-    respond_to do |format|
-      format.html { redirect_back fallback_location: pictures_path, notice: 'Picture was successfully destroyed.' }
-      format.json { head :no_content }
+  def multiple
+    #submitボタンのname属性によって処理を分岐
+    if params[:request]
+      Picture.where("id IN (#{params[:pictures].join(',')})").update_all("tmp = 't'")
+    elsif params[:destroy]
+      puts "DESTROY"
+#      削除処理
+#      picturesテーブルから削除＆removed_addressesテーブルに格納＆元画像削除を書く必要あり。
+#      params[:pictures].each do |id|
+#        @picture = Picture.find(id)
+#        @picture.destroy
+#        File.delete("app/assets/images/#{@picture.address}")
+#      end
+#      respond_to do |format|
+#        format.html { redirect_back fallback_location: pictures_path, notice: 'Picture was successfully destroyed.' }
+#        format.json { head :no_content }
+#      end
+    elsif params[:permit]
+      Picture.where("id IN (#{params[:pictures].join(',')})").update_all("tmp = 'f'")
     end
   end
   
   # GET /pictures
   # GET /pictures.json
   def index
-    @pictures = Picture.order('date DESC').page(params[:page]).per(50)
+    @pictures = Picture.where("tmp = 'f'").order('date DESC').page(params[:page]).per(50)
   end
 
   # GET /pictures/1
@@ -95,6 +109,6 @@ class PicturesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def picture_params
-      params.require(:picture).permit(:member_id, :address, :event_id, :date, :tag_ids => [], :tmp)
+      params.require(:picture).permit(:member_id, :address, :event_id, :date, :tmp, :tag_ids => [])
     end
 end

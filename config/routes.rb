@@ -5,9 +5,10 @@ Rails.application.routes.draw do
 
   resources :videos, constraints: { id: /\d+/ }
   resources :pictures, constraints: { id: /\d+/ }
+  get 'pictures/tmp'
   get 'pictures/search'
   get 'pictures/destroy_index'
-  post 'pictures/multiple_destroy'
+  post 'pictures/multiple'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   
   get 'tweets' => 'tweet#index'

@@ -11,12 +11,18 @@
         <!-- index -->
         <%- if action_name == 'index' %>
           <li><%= link_to '画像を追加（未実装）', new_picture_path %></li>
-          <li><%= link_to '削除モードへ', pictures_destroy_index_path(page: params[:page]) %></li>
+          <li><%= link_to '削除申請モードへ', pictures_destroy_index_path(page: params[:page]) %></li>
         <% end -%>
         <!-- destroy_index -->
         <%- if action_name == 'destroy_index' %>
           <li><%= link_to '閲覧モードへ', pictures_path(page: params[:page]) %></li>
-          <li><%= submit_tag '一括削除', data: { confirm: '削除しますか？' }, class: "btn btn-default" %></li>
+          <li><%= submit_tag '削除申請', class: "btn btn-default", name: "request" %></li>
+        <% end -%>
+        <!-- tmp -->
+        <%- if action_name == 'tmp' %>
+          <li><%= link_to '閲覧モードへ', pictures_path %></li>
+          <li><%= submit_tag '削除', data: { confirm: '削除しますか？' }, class: "btn btn-default", name: "destroy" %></li>
+          <li><%= submit_tag '表示許可', class: "btn btn-default", name: "permit" %></li>
         <% end -%>
         <!-- edit -->
         <%- if action_name == 'edit' %>
