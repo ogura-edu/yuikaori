@@ -1,6 +1,8 @@
 <h1>こんにちは、<%=current_user.username%>さん</h1>
 
-<p><%= link_to '画像一覧へ', pictures_path %></p>
-<p><%= link_to '動画一覧へ', videos_path %></p>
+<div class="heading">
+  <%= button_to '画像一覧へ', pictures_path, method: :get, class: "btn btn-default" %>
+  <%= button_to '動画一覧へ(工事中)', videos_path, method: :get, class: "btn btn-default" %>
 
-<p><%= link_to 'ツイートする', tweets_path %></p>
+  <%= button_to 'ツイートする', tweets_path, method: :get, class: "btn btn-default" %>
+</div>
