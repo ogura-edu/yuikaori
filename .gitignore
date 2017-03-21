@@ -23,5 +23,6 @@
 # Ignore images and videos
 /app/assets/images/*
 
-# Ignore instagram allpostdata file
+# Ignore instagram result file
 /scripts/instagram/allpostdata*
+/scripts/instagram/recentposts

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170320155553) do
+ActiveRecord::Schema.define(version: 20170321032033) do
 
   create_table "events", force: :cascade do |t|
     t.string "event"
@@ -23,16 +23,22 @@ ActiveRecord::Schema.define(version: 20170320155553) do
   create_table "pictures", force: :cascade do |t|
     t.string   "address"
     t.date     "date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "member_id"
     t.integer  "event_id"
+    t.boolean  "tmp",        default: false, null: false
     t.index ["address"], name: "index_pictures_on_address", unique: true
   end
 
   create_table "pictures_tags", id: false, force: :cascade do |t|
     t.integer "picture_id"
     t.integer "tag_id"
+  end
+
+  create_table "removed_addresses", id: false, force: :cascade do |t|
+    t.string "address"
+    t.index ["address"], name: "index_removed_addresses_on_address", unique: true
   end
 
   create_table "tags", force: :cascade do |t|
@@ -72,10 +78,11 @@ ActiveRecord::Schema.define(version: 20170320155553) do
     t.string   "member"
     t.string   "address"
     t.date     "date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "member_id"
     t.integer  "event_id"
+    t.boolean  "tmp",        default: false, null: false
     t.index ["address"], name: "index_videos_on_address", unique: true
   end
 
