@@ -29,6 +29,20 @@ class SQL_Client
     end
   end
   
+  def add_label(column_name, value)
+    @db.transaction do
+      begin
+        @db.execute("INSERT INTO #{column_name}s(#{column_name}) VALUES (?);", value)
+      rescue
+        puts "#{tag_name} has already been added to database"
+      end
+    end
+  end
+  
+  def removed_addresses
+    @db.execute("SELECT address FROM removed_addresses;").flatten
+  end
+  
   def close
     @db.close
   end

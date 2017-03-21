@@ -19,7 +19,7 @@ module Instagram
       return urls
     end
     
-    def get_media(filename)
+    def get_media(filename, removed_addresses)
       read_urls(filename).each do |url|
         doc = Nokogiri::HTML.parse(open(url+"?hl=ja"))
         
@@ -33,18 +33,20 @@ module Instagram
         
         if doc.at('//meta[@content="video"]')
           mp4_url = doc.at('//meta[@property="og:video:secure_url"]').attribute('content').value
-          save_video(mp4_url, date)
+          save_video(mp4_url, date, removed_addresses)
         else
-          save_image(url, date)
+          save_image(url, date, removed_addresses)
         end
       end
     end
     
-    def save_video(url,date)
+    def save_video(url, date, removed_addresses)
       basename = File.basename(url)
       filepath = "#{$media_dir}#{$video_dir}#{basename}"
       if File.exist?(filepath)
         puts "#{basename} has already been saved"
+      elsif removed_addresses.include?("#{$video_dir}#{basename}")
+        puts "#{basename} has already been deleted"
       else
         puts "download #{basename} ..."
         open(filepath, "w") do |output|
@@ -56,13 +58,15 @@ module Instagram
       end
     end
     
-    def save_image(url,date)
-      basename = File.basename(url)
-      filepath = "#{$media_dir}#{$image_dir}#{basename}.jpg"
+    def save_image(url, date, removed_addresses)
+      basename = File.basename(url) + '.jpg'
+      filepath = "#{$media_dir}#{$image_dir}#{basename}"
       if File.exist?(filepath)
-        puts "#{basename}.jpg has already been saved"
+        puts "#{basename} has already been saved"
+      elsif removed_addresses.include?("#{$image_dir}#{basename}")
+        puts "#{basename} has alredy been deleted"
       else
-        puts "download #{basename}.jpg"
+        puts "download #{basename}"
         open(filepath, "w") do |output|
           open("#{url}media/?size=l") do |data|
             output.write(data.read)

@@ -3,10 +3,11 @@ require 'nokogiri'
 require 'open-uri'
 
 class Ameblo
-  def initialize(amebaID, dir_name)
+  def initialize(amebaID, dir_name, removed_addresses)
     @amebaID = amebaID
     @dir_name = dir_name
     @host = "http://ameblo.jp/#{amebaID}/"
+    @removed_addresses = removed_addresses
   end
   
   def all_entrylist
@@ -32,6 +33,8 @@ class Ameblo
     
     if File.exist?(filepath)
       puts "#{filename} has already been saved"
+    elsif @removed_addresses.include?("#{@dir_name}#{filename}")
+      puts "#{filename} has already been deleted"
     else
       puts "download #{filename}"
       open(filepath, "w") do |output|

@@ -4,7 +4,8 @@ require 'open-uri'
 require './oauth'
 
 class MyTwitterClient
-  def initialize(type:, screen_name: nil)
+  def initialize(type:, screen_name: nil, removed_addresses:)
+    @removed_addresses = removed_addresses
     case type
     when :admin
       puts 'type admin'
@@ -53,6 +54,8 @@ class MyTwitterClient
     date = Time.parse(date)
     if File.exist?(filepath)
       puts "#{basename} has already been saved"
+    elsif @removed_addresses.include?("#{$video_dir}#{basename}")
+      puts "#{basename} has already been deleted"
     else
       puts "download #{basename}"
       open(filepath, "w") do |output|
@@ -70,6 +73,8 @@ class MyTwitterClient
     date = Time.parse(date)
     if File.exist?(filepath)
       puts "#{basename} has already been saved"
+    elsif @removed_addresses.include?("#{$video_dir}#{basename}")
+      puts "#{basename} has already been deleted"
     else
       puts "download #{basename}"
       open(filepath, "w") do |output|

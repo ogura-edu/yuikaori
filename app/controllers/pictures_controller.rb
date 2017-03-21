@@ -20,21 +20,19 @@ class PicturesController < ApplicationController
     #submitボタンのname属性によって処理を分岐
     if params[:request]
       Picture.where("id IN (#{params[:pictures].join(',')})").update_all("tmp = 't'")
+      redirect_back fallback_location: pictures_path, notice: '削除申請を受け付けました'
     elsif params[:destroy]
-      puts "DESTROY"
-#      削除処理
-#      picturesテーブルから削除＆removed_addressesテーブルに格納＆元画像削除を書く必要あり。
-#      params[:pictures].each do |id|
-#        @picture = Picture.find(id)
-#        @picture.destroy
-#        File.delete("app/assets/images/#{@picture.address}")
-#      end
-#      respond_to do |format|
-#        format.html { redirect_back fallback_location: pictures_path, notice: 'Picture was successfully destroyed.' }
-#        format.json { head :no_content }
-#      end
+      #削除処理
+      params[:pictures].each do |id|
+        @picture = Picture.find(id)
+        @picture.destroy
+        RemovedAddress.create(address: @picture.address)
+        File.delete("app/assets/images/#{@picture.address}")
+      end
+      redirect_back fallback_location: pictures_tmp_path, notice: 'データベース及びストレージからの削除完了しました'
     elsif params[:permit]
       Picture.where("id IN (#{params[:pictures].join(',')})").update_all("tmp = 'f'")
+      redirect_back fallback_location: pictures_tmp_path, notice: '一覧に表示します'
     end
   end
   

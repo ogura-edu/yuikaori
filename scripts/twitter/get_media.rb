@@ -12,7 +12,9 @@ $media_dir = "#{$app_dir}app/assets/images/"
 $image_dir = "twitter/images/"
 $video_dir = "twitter/videos/"
 
-client = MyTwitterClient.new(type: :admin)
+sqlclient = SQL_Client.new
+removed_addresses = sqlclient.removed_addresses
+client = MyTwitterClient.new(type: :admin, removed_addresses: removed_addresses)
 
 case ARGV[0]
 when 'all'
@@ -24,7 +26,6 @@ else
   raise ArgumentError
 end
 
-sqlclient = SQL_Client.new
 sqlclient.insert_into("pictures", $image_dir, 1)
 sqlclient.insert_into("videos", $video_dir, 1)
 sqlclient.close

@@ -18,10 +18,11 @@ opt = {
 }
 
 # crawl
-ameblo = Ameblo.new(amebaID, dir_name)
+client = SQL_Client.new
+removed_addresses = client.removed_addresses
+ameblo = Ameblo.new(amebaID, dir_name, removed_addresses)
 ameblo.crawl(type: ARGV[0], opt: opt)
 
 # add to database
-client = SQL_Client.new
 client.insert_into("pictures", dir_name, 3)
 client.close
