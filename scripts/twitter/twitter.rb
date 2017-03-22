@@ -3,22 +3,22 @@ require 'json'
 require 'open-uri'
 require './oauth'
 
-class MyTwitterClient
+class MyTwitterClient < Twitter::REST::Client
+  
   def initialize(type:)
+    super
     @removed_addresses = $sqlclient.removed_addresses
     case type
     when :admin
-      @client = Twitter::REST::Client.new do |config|
-        config.consumer_key = "HICQLnFdWvpD390L7hw6Y3Phx"
-        config.consumer_secret = "x02WyH82h76ETJlpWvFu7R9Nhhfgty6TuMBKp1ZXaENRNPx2Qc"
-        config.access_token = "272968442-MnbnHokfqR9lyWS8pNm2JzhG426osPb777LYPDqm"
-        config.access_token_secret = "MsVaeBYwqzP0uWiNyiBwnrxTTFQYwPThuqik8EzdtmHR0"
-      end
+      self.consumer_key = "HICQLnFdWvpD390L7hw6Y3Phx"
+      self.consumer_secret = "x02WyH82h76ETJlpWvFu7R9Nhhfgty6TuMBKp1ZXaENRNPx2Qc"
+      self.access_token = "272968442-MnbnHokfqR9lyWS8pNm2JzhG426osPb777LYPDqm"
+      self.access_token_secret = "MsVaeBYwqzP0uWiNyiBwnrxTTFQYwPThuqik8EzdtmHR0"
     when :user
+      # 適当に書いてるのでエラーでる可能性高い
+      # 要検証
       user = User.new
-      @client = Twitter::REST::Client.new do |c|
-        user.config(c)
-      end
+      user.config(self)
     end
   end
   
@@ -29,7 +29,7 @@ class MyTwitterClient
     response.empty? ? collection.flatten : collect_with_max_id(collection, response.last.id - 1, &block)
   end
   
-  def @client.get_all_tweets(screen_name, options)
+  def get_all_tweets(screen_name, options)
     tweetary = []
     collect_with_max_id do |max_id|
       options[:max_id] = max_id unless max_id.nil?
@@ -40,13 +40,26 @@ class MyTwitterClient
     return tweetary
   end
   
+  def get_many_tweets(screen_name, options, tweet_num)
+    tweetary = []
+    collect_with_max_id do |max_id|
+      break if tweetary.size >= tweet_num
+      options[:max_id] = max_id unless max_id.nil?
+      puts options
+      user_timeline(screen_name, options).each do |tweet|
+        tweetary << tweet
+      end
+    end
+    return tweetary[0, tweet_num]
+  end
+  
   def save_result(str)
     File.open("result.json", "a") do |file|
       file.puts str
     end
   end
   
-  def save_video(array, date, member_id, type:)
+  def save_video(array, date, member_id, type)
     url = array.select{|item| item[:bitrate]}.max_by{|item| item[:bitrate]}[:url]
     basename = File.basename(url)
     filepath = "#{$media_dir}#{$video_dir}#{basename}"
@@ -74,7 +87,7 @@ class MyTwitterClient
     end
   end
   
-  def save_image(url, date, member_id, type:)
+  def save_image(url, date, member_id, type)
     basename = File.basename(url)
     filepath = "#{$media_dir}#{$image_dir}#{basename}"
     date = Time.parse(date)
@@ -101,27 +114,27 @@ class MyTwitterClient
     end
   end
   
-  def get_media_url(hash)
+  def get_media_url(hash, member_id, type)
     date = hash[:created_at]
     hash[:extended_entities][:media].each do |media|
       if media[:video_info]
-        save_video(media[:video_info][:variants], date, 1, type: :auto)
+        save_video(media[:video_info][:variants], date, member_id, type)
       else
-        save_image(media[:media_url_https], date, 1, type: :auto)
+        save_image(media[:media_url_https], date, member_id, type)
       end
     end
     puts "saved madia successfully"
   end
   
-  def get_media(tweet)
+  def get_media(tweet, member_id, type)
     hash = tweet.attrs
     begin
       if hash[:is_quote_status]
-        get_media_url(hash[:quoted_status])
+        get_media_url(hash[:quoted_status], member_id, type)
       elsif hash[:retweeted_status]
-        get_media_url(hash[:retweeted_status])
+        get_media_url(hash[:retweeted_status], member_id, type)
       else
-        get_media_url(hash)
+        get_media_url(hash, type)
       end
     rescue
       puts "no media in tweetID:#{hash[:id_str]}"
@@ -129,18 +142,25 @@ class MyTwitterClient
   end 
   
   def get_all_media(screen_name, options)
-    @client.get_all_tweets(screen_name, options).each do |tweet|
-      get_media(tweet)
+    get_all_tweets(screen_name, options).each do |tweet|
+      get_media(tweet, 1, :auto)
     end
   end
   
   def get_recent_media(screen_name, options)
-    @client.user_timeline(screen_name, options).each do |tweet|
-      get_media(tweet)
+    user_timeline(screen_name, options).each do |tweet|
+      get_media(tweet, 1, :auto)
     end
   end
   
-  def manually_get_media
-    puts '工事中！'
+  def manually_get_media(screen_name, options, add_opt)
+    case add_opt[:type]
+    when "date"
+      puts '工事中！'
+    when "number"
+      get_many_tweets(screen_name, options, add_opt[:number]).each do |tweet|
+        get_media(tweet, add_opt[:member_id], :manually)
+      end
+    end
   end
 end

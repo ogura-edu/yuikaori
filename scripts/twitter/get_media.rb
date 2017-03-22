@@ -13,13 +13,13 @@ $image_dir = "twitter/images/"
 $video_dir = "twitter/videos/"
 $sqlclient = SQL_Client.new
 
-client = MyTwitterClient.new(type: :admin)
+@client = MyTwitterClient.new(type: :admin)
 
 case ARGV[0]
 when 'all'
-  client.get_all_media(screen_name, options)
+  @client.get_all_media(screen_name, options)
 when 'recent'
-  client.get_recent_media(screen_name, options)
+  @client.get_recent_media(screen_name, options)
 else
   puts 'invalid type. please retry.'
   raise ArgumentError
