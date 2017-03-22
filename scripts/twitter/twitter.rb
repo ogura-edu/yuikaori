@@ -45,7 +45,6 @@ class MyTwitterClient < Twitter::REST::Client
     collect_with_max_id do |max_id|
       break if tweetary.size >= tweet_num
       options[:max_id] = max_id unless max_id.nil?
-      puts options
       user_timeline(screen_name, options).each do |tweet|
         tweetary << tweet
       end
@@ -134,7 +133,7 @@ class MyTwitterClient < Twitter::REST::Client
       elsif hash[:retweeted_status]
         get_media_url(hash[:retweeted_status], member_id, type)
       else
-        get_media_url(hash, type)
+        get_media_url(hash, member_id, type)
       end
     rescue
       puts "no media in tweetID:#{hash[:id_str]}"
