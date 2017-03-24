@@ -94,8 +94,6 @@ module Instagram
           $sqlclient.insert_into("pictures", "#{$image_dir}#{basename}", member_id)
         when :manually
           $sqlclient.manually_insert("pictures", "#{$image_dir}#{basename}", member_id)
-        else
-          puts 'please select correct type'
         end
       end
     end

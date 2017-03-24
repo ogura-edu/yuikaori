@@ -23,7 +23,7 @@ class Ameblo
     return urls
   end
   
-  def save_image(url)
+  def save_image(url, member_id, type:)
     savedir = "#{$media_dir}#{@dir_name}"
     filename = File.basename(url)
     filepath = savedir + filename
@@ -43,10 +43,18 @@ class Ameblo
         end
       end
       File.utime(date, date, filepath)
+      
+      # save to database
+      case type
+      when :auto
+        $sqlclient.insert_into("pictures", "#{@dir_name}#{filename}", member_id)
+      when :manually
+        $sqlclient.manually_insert("pictures", "#{@dir_name}#{filename}", member_id)
+      end
     end
   end
   
-  def single_crawl(url:, opt:)
+  def single_crawl(url, opt, member_id)
     Anemone.crawl(url, opt) do |anemone|
       anemone.focus_crawl do |page|
         page.links.keep_if do |link|
@@ -60,7 +68,7 @@ class Ameblo
           page.doc.xpath('//div[@class="articleText"]//a/img').each do |img|
             image_url = img.attribute('src').value.gsub(/t[\d]*_/, 'o').gsub(/\?.*$/, '')
             break if File.extname(image_url) == ".gif"
-            save_image(image_url)
+            save_image(image_url, member_id, type: :auto)
           end
         end
       rescue => ex
@@ -70,26 +78,26 @@ class Ameblo
     end
   end
   
-  def crawl(type:, opt:)
+  def crawl(member_id:, type:, opt:)
     case type
     when 'all'
       allentrylist.each do |entrylist_url|
-        single_crawl(url: entrylist_url, opt: opt)
+        single_crawl(entrylist_url, opt, member_id)
       end
     when 'recent'
-      single_crawl(url: "#{@host}entrylist.html", opt: opt)
+      single_crawl("#{@host}entrylist.html", opt, member_id)
     else
       puts 'invalid type. please retry.'
     end
   end
   
-  def manually_crawl(article_url)
+  def manually_crawl(article_url: , member_id:)
     doc = Nokogiri::HTML.parse(open(article_url))
     doc.xpath('//div[@class="articleText"]//a/img').each do |img|
       image_url = img.attribute('src').value.gsub(/t[\d]*_/, 'o').gsub(/\?.*$/, '')
       break if File.extname(image_url) == '.gif'
       puts image_url
-      save_image(image_url)
+      save_image(image_url, member_id, type: :manually)
     end
   end
 end
