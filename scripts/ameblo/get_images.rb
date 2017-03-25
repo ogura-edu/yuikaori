@@ -12,6 +12,7 @@ $sqlclient = SQL_Client.new
 opt = {
   :depth_limit => 1,
   :delay => 2,
+  :storage => Anemone::Storage.PStore("#{ARGV[0]}.dmp")
 }
 ## ARGV[0] ... amebaID
 ## ARGV[1] ... directory path from $media_dir

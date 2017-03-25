@@ -38,8 +38,12 @@ class Ameblo
     else
       puts "download #{filename}"
       open(filepath, "w") do |output|
-        open(url) do |data|
-          output.write(data.read)
+        begin
+          open(url) do |data|
+            output.write(data.read)
+          end
+        rescue OpenURI::HTTPError
+          puts "#{filename} was deleted from server"
         end
       end
       File.utime(date, date, filepath)
@@ -81,7 +85,7 @@ class Ameblo
   def crawl(member_id:, type:, opt:)
     case type
     when 'all'
-      allentrylist.each do |entrylist_url|
+      all_entrylist.each do |entrylist_url|
         single_crawl(entrylist_url, opt, member_id)
       end
     when 'recent'
