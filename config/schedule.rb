@@ -23,17 +23,17 @@ set :output, 'log/crontab.log'
 set :environment, :development
 
 every '0 0 * * *' do
-  script '/home/ogura/rails/yuikaori/scripts/ameblo/get_images.rb ogurayui-0815 ameblo/yui-teatime/ 2 recent'
+  script 'ameblo/get_images.rb ogurayui-0815 ameblo/yui-teatime/ 2 recent'
 end
 
 every '5 0 * * *' do
-  script '/home/ogura/rails/yuikaori/scripts/ameblo/get_images.rb ishiharakaori-0806 ameblo/kaori-mahalo/ 3 recent'
+  script 'ameblo/get_images.rb ishiharakaori-0806 ameblo/kaori-mahalo/ 3 recent'
 end
 
 every '10 0 * * *' do
-  script '/home/ogura/rails/yuikaori/scripts/instagram/get_media.rb recent'
+  script 'instagram/get_media.rb recent'
 end
 
 every '15 0 * * *' do
-  script '/home/ogura/rails/yuikaori/scripts/twitter/get_media.rb recent'
+  script 'twitter/get_media.rb recent'
 end
