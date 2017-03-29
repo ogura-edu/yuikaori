@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  post 'scrape' => 'scrape#scrape'
+  get 'scrape/index'
+  get 'scrape/ameblo'
+  get 'scrape/instagram'
+  get 'scrape/twitter'
+
   devise_for :users, controllers: { :omniauth_callbacks => 'omniauth_callbacks' }
   root 'top_page#index'
   get 'toppage' => 'top_page#show'

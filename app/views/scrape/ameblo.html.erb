@@ -1,0 +1,24 @@
+<div class='heading'>
+  <%= form_tag scrape_path do %>
+    <div class='center-block'>
+      <%= url_field_tag :article_url, nil, placeholder: 'アメブロの記事URLを入力してください' %>
+    </div>
+
+    <div class='center-block'>
+      <% Member.all.each do |m| %>
+        <%= radio_button_tag :member_id, m.id %>
+        <%= label_tag :member_id, m.member, value: m.id %>
+      <% end %>
+    </div>
+
+    <div class='center-block'>
+      <%= select_tag :event_id, options_from_collection_for_select(Event.all, :id, :event) %>
+    </div>
+
+    <div class='center-block'>
+      <%= submit_tag '追加', class: 'btn btn-default' %>
+    </div>
+  <% end %>
+</div>
+
+<%= render 'footer' %>
