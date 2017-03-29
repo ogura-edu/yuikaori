@@ -24,5 +24,6 @@
 /app/assets/images/*
 
 # Ignore instagram result file
-/scripts/instagram/allpostdata*
-/scripts/instagram/recentposts
+/script/instagram/allpostdata*
+/script/instagram/recentposts
+/script/ameblo/*.dmp

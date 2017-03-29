@@ -22,8 +22,10 @@
 set :output, 'log/crontab.log'
 set :environment, :development
 
+job_type :capybara, 'export DISPLAY=:0 && export PATH=$PATH:/usr/local/bin && cd :path && :environment_variable=:environment bundle exec script/:task :output'
+
 every '0 0 * * *' do
-  script 'ameblo/get_images.rb ogurayui-0815 ameblo/yui-teatime/ 2 recent'
+  capybara 'instagram/get_media.rb recent'
 end
 
 every '5 0 * * *' do
@@ -31,7 +33,7 @@ every '5 0 * * *' do
 end
 
 every '10 0 * * *' do
-  script 'instagram/get_media.rb recent'
+  script 'ameblo/get_images.rb ogurayui-0815 ameblo/yui-teatime/ 2 recent'
 end
 
 every '15 0 * * *' do
