@@ -10,17 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321032033) do
+ActiveRecord::Schema.define(version: 20170330134019) do
 
-  create_table "events", force: :cascade do |t|
+  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "event"
   end
 
-  create_table "members", force: :cascade do |t|
+  create_table "members", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "member"
   end
 
-  create_table "pictures", force: :cascade do |t|
+  create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "address"
     t.date     "date"
     t.datetime "created_at",                 null: false
@@ -28,24 +28,20 @@ ActiveRecord::Schema.define(version: 20170321032033) do
     t.integer  "member_id"
     t.integer  "event_id"
     t.boolean  "tmp",        default: false, null: false
-    t.index ["address"], name: "index_pictures_on_address", unique: true
+    t.boolean  "removed",    default: false, null: false
+    t.index ["address"], name: "index_pictures_on_address", unique: true, using: :btree
   end
 
-  create_table "pictures_tags", id: false, force: :cascade do |t|
+  create_table "pictures_tags", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "picture_id"
     t.integer "tag_id"
   end
 
-  create_table "removed_addresses", id: false, force: :cascade do |t|
-    t.string "address"
-    t.index ["address"], name: "index_removed_addresses_on_address", unique: true
-  end
-
-  create_table "tags", force: :cascade do |t|
+  create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "tag"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -68,13 +64,13 @@ ActiveRecord::Schema.define(version: 20170321032033) do
     t.string   "username"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
   end
 
-  create_table "videos", force: :cascade do |t|
+  create_table "videos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "member"
     t.string   "address"
     t.date     "date"
@@ -83,7 +79,8 @@ ActiveRecord::Schema.define(version: 20170321032033) do
     t.integer  "member_id"
     t.integer  "event_id"
     t.boolean  "tmp",        default: false, null: false
-    t.index ["address"], name: "index_videos_on_address", unique: true
+    t.boolean  "removed",    default: false, null: false
+    t.index ["address"], name: "index_videos_on_address", unique: true, using: :btree
   end
 
 end

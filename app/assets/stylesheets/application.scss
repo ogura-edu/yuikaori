@@ -17,10 +17,15 @@
 @import 'bootstrap-sprockets';
 @import 'bootstrap-custom';
 
+html{
+  height: 100%;
+}
+
 body {
   background: -webkit-repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
   background: -moz-repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
   background: repeating-linear-gradient(-45deg, #f8bbd0, #f8bbd0 20px, #bbdefb 0, #bbdefb 40px);
+  height: 100%;
 }
 
 section {

@@ -1,0 +1,5 @@
+%h1 Top Page
+.heading
+  %p サインアップ または ログイン してください
+  = button_to 'sign up', new_user_registration_path, method: :get, class: 'btn btn-default'
+  = button_to 'log in', new_user_session_path, class: 'btn btn-default'

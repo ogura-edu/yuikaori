@@ -1,0 +1,21 @@
+ameblo:
+  regular_crawl:
+    - ID: 'ogurayui-0815'
+      member_id: 2
+    - ID: 'ishiharakaori-0806'
+      member_id: 3
+  stopped_updating:
+    - ID: 'ogura-yui'
+      member_id: 2
+    - ID: 'ishiharakaori'
+      member_id: 3
+
+instagram:
+  regular_crawl:
+    - ID: 'yui_ogura_official'
+      member_id: 2
+
+twitter:
+  regular_crawl:
+    - ID: 'YUIKAORI_STAFF'
+      member_id: 1

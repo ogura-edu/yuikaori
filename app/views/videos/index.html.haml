@@ -1,0 +1,13 @@
+%p#notice= notice
+%h1 Videos
+- @videos.each do |video|
+  %tr
+    / <td><haml_loud> video_tag(video.address) </haml_loud></td>
+    %td= video.member
+    %td= video.date
+    %td= link_to 'Show', video
+    %td= link_to 'Edit', edit_video_path(video)
+    %td= link_to 'Destroy', video, method: :delete, data: { confirm: 'Are you sure?' }
+  %br/
+%br/
+= link_to 'New Video', new_video_path

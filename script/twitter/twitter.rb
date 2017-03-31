@@ -10,10 +10,10 @@ class MyTwitterClient < Twitter::REST::Client
     @removed_addresses = $sqlclient.removed_addresses
     case type
     when :admin
-      self.consumer_key = "HICQLnFdWvpD390L7hw6Y3Phx"
-      self.consumer_secret = "x02WyH82h76ETJlpWvFu7R9Nhhfgty6TuMBKp1ZXaENRNPx2Qc"
-      self.access_token = "272968442-MnbnHokfqR9lyWS8pNm2JzhG426osPb777LYPDqm"
-      self.access_token_secret = "MsVaeBYwqzP0uWiNyiBwnrxTTFQYwPThuqik8EzdtmHR0"
+      self.consumer_key = 
+      self.consumer_secret = 
+      self.access_token = 
+      self.access_token_secret = 
     when :user
       # 適当に書いてるのでエラーでる可能性高い
       # 要検証

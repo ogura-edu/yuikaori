@@ -9,7 +9,7 @@ end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+# gem 'sqlite3'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
@@ -68,3 +68,15 @@ gem 'capybara'
 gem 'selenium-webdriver', '~> 3.1.0'
 
 gem 'whenever', require: false
+
+gem 'pry-rails'
+
+gem 'carrierwave'
+gem 'rmagick'
+
+gem 'haml-rails'
+gem 'erb2haml'
+
+gem 'mysql2'
+
+gem 'config'

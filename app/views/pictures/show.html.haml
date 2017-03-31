@@ -1,0 +1,14 @@
+.wrapper
+  .original-image.img-responsive
+    = image_tag @picture.address, class: "left"
+  .detail
+    .center-block
+      = @picture.member.member
+    .center-block
+      = @picture.event.event
+    .center-block
+      = @picture.date
+    .center-block
+      - @picture.tags.each do |t|
+        = t.tag
+= render 'footer'

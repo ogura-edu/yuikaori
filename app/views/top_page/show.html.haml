@@ -1,0 +1,6 @@
+%h1
+  こんにちは、#{current_user.username}さん
+.heading
+  = button_to '画像一覧へ', pictures_path, method: :get, class: "btn btn-default"
+  = button_to '動画一覧へ(工事中)', videos_path, method: :get, class: "btn btn-default"
+  = button_to 'ツイートする', tweets_path, method: :get, class: "btn btn-default"

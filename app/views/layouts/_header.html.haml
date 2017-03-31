@@ -1,0 +1,44 @@
+%nav.navbar.navbar-default.navbar-fixed-top{:role => "navigation"}
+  .container-fluid
+    / Brand and toggle get grouped for better mobile display
+    .navbar-header
+      = link_to 'YuiKaori', root_path, class: 'navbar-brand'
+    / Collect the nav links, forms, and other content for toggling
+    #bs-example-navbar-collapse-1.collapse.navbar-collapse
+      / 左側のコンポーネント
+      %ul.nav.navbar-nav
+        %li.dropdown
+          %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+            MENU
+            %span.caret
+          %ul.dropdown-menu
+            %li= link_to 'ゆいかおり', pictures_search_path(column: 'member_id',value: 1)
+            %li= link_to '小倉唯', pictures_search_path(column: 'member_id',value: 2)
+            %li= link_to '石原夏織', pictures_search_path(column: 'member_id',value: 3)
+            %li.divider{:role => "separator"}
+            %li= link_to '日付順', pictures_path
+            %li.divider{:role => "separator"}
+            / 検索フォーム
+            %li
+              = form_tag pictures_search_path(column: 'event'), method: :get, class: 'navbar-form navbar-left', role: 'search' do
+                .form-group
+                  = text_field_tag(:value, nil, class: 'form-control', placeholder: 'イベント検索')
+                = submit_tag '検索', class: 'btn btn-default'
+            %li.divider{:role => "separator"}
+            %li
+              = form_tag pictures_search_path(column: 'tag'), method: :get, class: 'navbar-form navbar-left', role: 'search' do
+                .form-group
+                  = text_field_tag(:value, nil, class: 'form-control', placeholder: 'タグ検索')
+                = submit_tag '検索', class: 'btn btn-default'
+        %li= link_to '削除／表示確認', pictures_tmp_path
+      / 右側のコンポーネント
+      %ul.nav.navbar-nav.navbar-right
+        - if user_signed_in?
+          %li= link_to current_user.username, toppage_path
+          %li= link_to 'modify profile', edit_user_registration_path
+          %li= link_to 'log out', destroy_user_session_path, method: :delete
+        - else
+          %li= link_to 'sign up', new_user_registration_path
+          %li= link_to 'log in', new_user_session_path
+    / /.navbar-collapse
+  / /.container-fluid

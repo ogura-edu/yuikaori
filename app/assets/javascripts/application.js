@@ -15,5 +15,6 @@
 //= require jquery.turbolinks
 //= require turbolinks
 //= require jquery.infinitescroll
+//= require imagesloaded.pkgd.min
 //= require_tree .
 //= require bootstrap-sprockets-custom

@@ -1,0 +1,20 @@
+.heading
+  = form_tag scrape_path do
+    .center-block
+      = text_field_tag :screen_name, nil, placeholder: 'TwitterID'
+    .center-block
+      = radio_button_tag :type, 'date'
+      = label_tag :type, '期間を指定して取得', value: 1
+      = radio_button_tag :type, 'number'
+      = label_tag :type, 'ツイート数を指定して取得', value: 2
+    .center-block
+      - Member.all.each do |m|
+        = radio_button_tag :member_id, m.id
+        = label_tag :member_id, m.member, value: m.id
+    .center-block
+      = select_tag :event_id, options_from_collection_for_select(Event.all, :id, :event)
+    .center-block
+      = text_field_tag :options, nil, placeholder: 'オプション'
+    .center-block
+      = submit_tag '追加', class: 'btn btn-default'
+= render 'footer'

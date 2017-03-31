@@ -1,0 +1,6 @@
+%ul
+  - @pictures.each do |picture|
+    %li.picture_list
+      .picture
+        = link_to image_tag(picture.address, class: "my-thumbnail img-rounded"), edit_picture_path(picture, page: params[:page])
+= render 'footer'
