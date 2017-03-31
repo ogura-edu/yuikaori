@@ -11,11 +11,7 @@ class Scrape::Downloader
       return
     end
     
-    if File.exist?(filepath)
-      puts "#{filapath} exists"
-    else
-      download(filepath, url, date)
-    end
+    download(filepath, url, date)
     
     case media_type
     when :image
@@ -44,7 +40,12 @@ class Scrape::Downloader
   private
   
   def download(filepath, url, date)
-    fullpath = "#{Settings.media.root}#{filepath}"
+    fullpath = Scrape::Helper.fullpath(filepath)
+    
+    if File.exist?(fullpath)
+      puts "#{filepath} exists"
+      return
+    end
     
     Scrape::Helper.mkdir_if_not_exist(fullpath)
     

@@ -7,4 +7,8 @@ class Scrape::Helper
     dir_name = File.dirname(fullpath)
     Dir.mkdir(dir_name) unless Dir.exist?(dir_name)
   end
+
+  def self.fullpath(filepath)
+    "#{Settings.media.root}#{filepath}"
+  end
 end

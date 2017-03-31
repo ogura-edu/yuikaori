@@ -1,26 +1,63 @@
-require 'twitter'
-require 'json'
-require 'open-uri'
-require './oauth'
-
-class Scrape::MyTwitterClient < Twitter::REST::Client
+class Scrape::TwitterCrawler < Twitter::REST::Client
   
-  def initialize(type:)
+  def initialize(user_type:)
     super
-    @removed_addresses = $sqlclient.removed_addresses
-    case type
+    case user_type
     when :admin
       self.consumer_key = Settings.twitter.consumer_key
       self.consumer_secret = Settings.twitter.consumer_secret
       self.access_token = Settings.twitter.access_token
       self.access_token_secret = Settings.twitter.access_token_secret
     when :user
-      # 適当に書いてるのでエラーでる可能性高い
-      # 要検証
-      user = User.new
-      user.config(self)
+      # いずれユーザに投稿させるときに必要になる
     end
   end
+  
+  def validate(screen_name)
+    screen_name = screen_name.downcase
+    raise ArgumentError, '追跡済みのIDは指定しないでください' if skip_IDs.include?(screen_name)
+  end
+  
+  def crawl(screen_name:, member_id:, type: :recent)
+    screen_name = screen_name.downcase
+    @downloader = Scrape::Downloader.new("twitter/#{screen_name}/")
+    options = {
+      count: 200,
+      include_rts: true,
+      tweet_mode: 'extended'
+    }
+    
+    case type
+    when :all
+      get_all_tweets(screen_name, options).each do |tweet|
+        classify_tweet(tweet, member_id, 1, false)
+      end
+    when :recent
+      user_timeline(screen_name, options).each do |tweet|
+        classify_tweet(tweet, member_id, 1, false)
+      end
+    end
+  end
+  
+  def manually_crawl(screen_name:, member_id:, event_id:, add_opt:)
+    screen_name = screen_name.downcase
+    @downloader = Scrape::Downloader.new("twitter/#{screen_name}/")
+    options = {
+      count: 200,
+      include_rts: true,
+      tweet_mode: 'extended'
+    }
+    
+    case add_opt[:type]
+    when "date"
+      puts '工事中！'
+    when "number"
+      get_many_tweets(screen_name, options, add_opt[:number]).each do |tweet|
+      end
+    end
+  end
+  
+  private
   
   # get all tweet(up to 3,200)
   def collect_with_max_id(collection=[], max_id=nil, &block)
@@ -52,114 +89,37 @@ class Scrape::MyTwitterClient < Twitter::REST::Client
     return tweetary[0, tweet_num]
   end
   
-  def save_result(str)
-    File.open("result.json", "a") do |file|
-      file.puts str
-    end
-  end
-  
-  def save_video(array, date, member_id, type)
-    url = array.select{|item| item[:bitrate]}.max_by{|item| item[:bitrate]}[:url]
-    basename = File.basename(url)
-    filepath = "#{$media_dir}#{$video_dir}#{basename}"
-    date = Time.parse(date)
-    if File.exist?(filepath)
-      puts "#{basename} has already been saved"
-    elsif @removed_addresses.include?("#{$video_dir}#{basename}")
-      puts "#{basename} has already been deleted"
-    else
-      puts "download #{basename}"
-      open(filepath, "w") do |output|
-        open(url) do |data|
-          output.write(data.read)
-        end
-      end
-      File.utime(date, date, filepath)
-      
-      # save to database
-      case type
-      when :auto
-        $sqlclient.insert_into("videos", "#{$video_dir}#{basename}", member_id)
-      when :manually
-        $sqlclient.manually_insert("videos", "#{$video_dir}#{basename}", member_id)
-      end
-    end
-  end
-  
-  def save_image(url, date, member_id, type)
-    basename = File.basename(url)
-    filepath = "#{$media_dir}#{$image_dir}#{basename}"
-    date = Time.parse(date)
-    if File.exist?(filepath)
-      puts "#{basename} has already been saved"
-    elsif @removed_addresses.include?("#{$video_dir}#{basename}")
-      puts "#{basename} has already been deleted"
-    else
-      puts "download #{basename}"
-      open(filepath, "w") do |output|
-        open(url) do |data|
-          output.write(data.read)
-        end
-      end
-      File.utime(date, date, filepath)
-      
-      # save to database
-      case type
-      when :auto
-        $sqlclient.insert_into("pictures", "#{$image_dir}#{basename}", member_id)
-      when :manually
-        $sqlclient.manually_insert("pictures", "#{$image_dir}#{basename}", member_id)
-      end
-    end
-  end
-  
-  def get_media_url(hash, member_id, type)
-    date = hash[:created_at]
-    hash[:extended_entities][:media].each do |media|
-      if media[:video_info]
-        save_video(media[:video_info][:variants], date, member_id, type)
-      else
-        save_image(media[:media_url_https], date, member_id, type)
-      end
-    end
-    puts "saved madia successfully"
-  end
-  
-  def get_media(tweet, member_id, type)
+  def classify_tweet(tweet, member_id, event_id, tmp)
     hash = tweet.attrs
     begin
       if hash[:is_quote_status]
-        get_media_url(hash[:quoted_status], member_id, type)
+        parse_tweet(hash[:quoted_status], member_id, event_id, tmp)
       elsif hash[:retweeted_status]
-        get_media_url(hash[:retweeted_status], member_id, type)
+        parse_tweet(hash[:retweeted_status], member_id, event_id, tmp)
       else
-        get_media_url(hash, member_id, type)
+        parse_tweet(hash, member_id, event_id, tmp)
       end
     rescue
       puts "no media in tweetID:#{hash[:id_str]}"
     end
   end 
   
-  def get_all_media(screen_name, options)
-    get_all_tweets(screen_name, options).each do |tweet|
-      get_media(tweet, 1, :auto)
-    end
-  end
-  
-  def get_recent_media(screen_name, options)
-    user_timeline(screen_name, options).each do |tweet|
-      get_media(tweet, 1, :auto)
-    end
-  end
-  
-  def manually_get_media(screen_name, options, add_opt)
-    case add_opt[:type]
-    when "date"
-      puts '工事中！'
-    when "number"
-      get_many_tweets(screen_name, options, add_opt[:number]).each do |tweet|
-        get_media(tweet, add_opt[:member_id], :manually)
+  def parse_tweet(hash, member_id, event_id, tmp)
+    date = Time.parse(hash[:created_at])
+    hash[:extended_entities][:media].each do |media|
+      if media[:video_info]
+        url_list = media[:video_info][:variants].select{|item| item[:bitrate]}
+        video_url = url_list.max_by{|item| item[:bitrate]}[:url]
+        @downloader.save_media(:video, video_url, date, member_id, event_id, tmp)
+      else
+        image_url = media[:media_url_https]
+        @downloader.save_media(:image, image_url, date, member_id, event_id, tmp)
       end
     end
+    puts "saved madia successfully"
+  end
+  
+  def skip_IDs
+    Settings.twitter.regular_crawl.map{|obj| obj.ID}
   end
 end
