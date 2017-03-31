@@ -32,11 +32,13 @@ class Scrape::InstagramCrawler
     when :recent
       check_post(member_id)
     end
+    page.current_window.close
   end
   
   def manually_crawl(params:)
     raise ArgumentError, '記事URLを指定してください' unless params[:post].match(%r{https://www.instagram.com/p/.*?/$})
     parse_post(params[:post], params[:member_id], params[:event_id], true)
+    page.current_window.close
   end
   
   private
