@@ -88,10 +88,10 @@ class Scrape::InstagramCrawler
     
     if doc.at('//meta[@content="video"]')
       video_url = doc.at('//meta[@property="og:video:secure_url"]').attribute('content').value
-      @downloader.save_media(:video, video_url, date, member_id, event_id, tmp)
+      @downloader.save_media(:video, video_url, url, date, member_id, event_id, tmp)
     else
       image_url = doc.at('//meta[@property="og:image"]').attribute('content').value
-      @downloader.save_media(:image, image_url, date, member_id, event_id, tmp)
+      @downloader.save_media(:image, image_url, url, date, member_id, event_id, tmp)
     end
   end
 end

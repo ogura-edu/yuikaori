@@ -21,6 +21,9 @@ class ScrapeController < ApplicationController
       insta.validate
       insta.manually_crawl(params: params)
     elsif params[:twitter]
+      twitter = Scrape::TwitterCrawler.new(user_type: :admin)
+      twitter.validate(params[:screen_name])
+      twitter.manually_crawl(params: params)
     end
     redirect_to scrape_index_path
   end

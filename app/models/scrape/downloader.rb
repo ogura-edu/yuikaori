@@ -3,7 +3,7 @@ class Scrape::Downloader
     @dir_name = dir_name
   end
   
-  def save_media(media_type, url, date, member_id, event_id, tmp)
+  def save_media(media_type, url, article_url, date, member_id, event_id, tmp)
     filepath = "#{@dir_name}#{File.basename(url)}"
     
     if Picture.find_by_address(filepath) || Video.find_by_address(filepath)
@@ -17,6 +17,7 @@ class Scrape::Downloader
     when :image
       Picture.create(
         address: filepath,
+        article_url: article_url,
         member_id: member_id,
         event_id: event_id,
         date: date.strftime("%Y-%m-%d %H:%M:%S"),
@@ -27,6 +28,7 @@ class Scrape::Downloader
     when :video
       Video.create(
         address: filepath,
+        article_url: article_url,
         member_id: member_id,
         event_id: event_id,
         date: date.strftime("%Y-%m-%d %H:%M:%S"),

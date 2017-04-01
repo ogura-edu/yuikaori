@@ -39,8 +39,8 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     end
   end
   
-  def manually_crawl(screen_name:, member_id:, event_id:, add_opt:)
-    screen_name = screen_name.downcase
+  def manually_crawl(params:)
+    screen_name = params[:screen_name].downcase
     @downloader = Scrape::Downloader.new("twitter/#{screen_name}/")
     options = {
       count: 200,
@@ -48,11 +48,14 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
       tweet_mode: 'extended'
     }
     
-    case add_opt[:type]
-    when "date"
-      puts '工事中！'
-    when "number"
-      get_many_tweets(screen_name, options, add_opt[:number]).each do |tweet|
+    case params[:type]
+    when 'period'
+      get_tweets_in_certain_period(screen_name, options, params[:since], params[:until]).each do |tweet|
+        classify_tweet(tweet, params[:member_id], params[:event_id], true)
+      end
+    when 'number'
+      get_many_tweets(screen_name, options, params[:number].to_i).each do |tweet|
+        classify_tweet(tweet, params[:member_id], params[:event_id], true)
       end
     end
   end
@@ -75,6 +78,13 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
       end
     end
     return tweetary
+  end
+  
+  def get_tweets_in_certain_period(screen_name, options, since, till)
+    options[:from] = screen_name
+    options[:since] = since
+    options[:until] = till
+    return search('', options)
   end
   
   def get_many_tweets(screen_name, options, tweet_num)
@@ -106,14 +116,16 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
   
   def parse_tweet(hash, member_id, event_id, tmp)
     date = Time.parse(hash[:created_at])
+    tweet_url = "https://twitter.com/#{hash[:user][:screen_name]}/status/#{hash[:id_str]}"
+    
     hash[:extended_entities][:media].each do |media|
       if media[:video_info]
         url_list = media[:video_info][:variants].select{|item| item[:bitrate]}
         video_url = url_list.max_by{|item| item[:bitrate]}[:url]
-        @downloader.save_media(:video, video_url, date, member_id, event_id, tmp)
+        @downloader.save_media(:video, video_url, tweet_url, date, member_id, event_id, tmp)
       else
         image_url = media[:media_url_https]
-        @downloader.save_media(:image, image_url, date, member_id, event_id, tmp)
+        @downloader.save_media(:image, image_url, tweet_url, date, member_id, event_id, tmp)
       end
     end
     puts "saved madia successfully"

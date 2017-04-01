@@ -10,9 +10,7 @@ ActiveRecordを使う
 
 優先度 高：
 masonryを使ってきれいに表示
-データベースに元記事URLの格納カラムを作成
 tmp画面に全選択・全解除ボタンの設置
-member,tag,eventの値をuniqueに設定する
 検索機能を実装。今は形だけ。。。
 タグとイベントの新規作成をいかに簡単に見やすくするか(非同期処理を使うのが良さそう？)
 タグ用のgemがある act as taggable
@@ -40,3 +38,5 @@ multipleアクションのdestroy機能を作成する
 Configを使って定数管理
 application_controllerで全体にauthenticaete_user!をbefore_action設定したことでログインを必須にできた
 Ameblo,Instagram,Twitterに関しては、アカウントや期間、記事ID、URLを指定することで画像をかき集めてくれるような機能追加
+member,tag,eventの値をuniqueに設定する
+データベースに元記事URLの格納カラムを作成

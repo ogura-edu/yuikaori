@@ -1,12 +1,7 @@
-.heading
+.detail
   = form_tag scrape_path do
     .center-block
       = text_field_tag :screen_name, nil, placeholder: 'TwitterID'
-    .center-block
-      = radio_button_tag :type, 'date'
-      = label_tag :type, '期間を指定して取得', value: 1
-      = radio_button_tag :type, 'number'
-      = label_tag :type, 'ツイート数を指定して取得', value: 2
     .center-block
       - Member.all.each do |m|
         = radio_button_tag :member_id, m.id
@@ -14,7 +9,18 @@
     .center-block
       = select_tag :event_id, options_from_collection_for_select(Event.all, :id, :event)
     .center-block
-      = text_field_tag :options, nil, placeholder: 'オプション'
+      = radio_button_tag :type, 'period'
+      = label_tag :type, '期間を指定して取得', value: 1
+      = radio_button_tag :type, 'number'
+      = label_tag :type, 'ツイート数を指定して取得', value: 2
+    -#
+      ここまでは表示。以下はtypeの選択により表示、非表示を切り替えるように設定したい。
     .center-block
-      = submit_tag '追加', class: 'btn btn-default'
+      = text_field_tag :since, nil, placeholder: 'いつから(YYYY-MM-DD)'
+    .center-block
+      = text_field_tag :until, nil, placeholder: 'いつまで(YYYY-MM-DD)'
+    .center-block
+      = number_field_tag :number, max: 3200
+    .center-block
+      = submit_tag '追加', class: 'btn btn-default', name: 'twitter'
 = render 'footer'

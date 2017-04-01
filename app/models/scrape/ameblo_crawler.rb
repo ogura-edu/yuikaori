@@ -21,8 +21,7 @@ class Scrape::AmebloCrawler
   end
   
   def manually_crawl(params:)
-    doc = Nokogiri::HTML.parse(open(params[:article_url]))
-    parse_article(doc, params[:member_id], params[:event_id], true)
+    parse_article(params[:article_url], params[:member_id], params[:event_id], true)
   end
   
   private
@@ -56,7 +55,7 @@ class Scrape::AmebloCrawler
       begin
         anemone.on_every_page do |page|
           puts "image on #{page.url} :"
-          parse_article(page.doc, member_id, 1, false)
+          parse_article(page.url, member_id, 1, false)
         end
       rescue => ex
         puts ex
@@ -65,7 +64,8 @@ class Scrape::AmebloCrawler
     end
   end
 
-  def parse_article(doc, member_id, event_id, tmp)
+  def parse_article(article_url, member_id, event_id, tmp)
+    doc = Nokogiri::HTML.parse(open(article_url))
     doc.xpath('//div[@class="articleText" or  @class="subContentsInner"]//a/img').each do |img|
       image_url = img.attribute('src').value.gsub(/t[\d]*_/, 'o').gsub(/\?.*$/, '')
       break if File.extname(image_url) == ".gif"
@@ -76,7 +76,7 @@ class Scrape::AmebloCrawler
       dateary = [datestr.slice(0,4), datestr.slice(4,2), datestr.slice(6,2)]
       date = Time.local(*dateary)
       
-      @downloader.save_media(:image, image_url, date, member_id, event_id, tmp)
+      @downloader.save_media(:image, image_url, article_url, date, member_id, event_id, tmp)
     end
   end
   
