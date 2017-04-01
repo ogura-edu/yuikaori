@@ -10,25 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170330134019) do
+ActiveRecord::Schema.define(version: 20170401151914) do
 
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "event"
+    t.index ["event"], name: "index_events_on_event", unique: true, using: :btree
   end
 
   create_table "members", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "member"
+    t.index ["member"], name: "index_members_on_member", unique: true, using: :btree
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "address"
     t.date     "date"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.integer  "member_id"
     t.integer  "event_id"
-    t.boolean  "tmp",        default: false, null: false
-    t.boolean  "removed",    default: false, null: false
+    t.boolean  "tmp",         default: false, null: false
+    t.boolean  "removed",     default: false, null: false
+    t.string   "article_url"
     t.index ["address"], name: "index_pictures_on_address", unique: true, using: :btree
   end
 
@@ -39,6 +42,7 @@ ActiveRecord::Schema.define(version: 20170330134019) do
 
   create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "tag"
+    t.index ["tag"], name: "index_tags_on_tag", unique: true, using: :btree
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -74,12 +78,13 @@ ActiveRecord::Schema.define(version: 20170330134019) do
     t.string   "member"
     t.string   "address"
     t.date     "date"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.integer  "member_id"
     t.integer  "event_id"
-    t.boolean  "tmp",        default: false, null: false
-    t.boolean  "removed",    default: false, null: false
+    t.boolean  "tmp",         default: false, null: false
+    t.boolean  "removed",     default: false, null: false
+    t.string   "article_url"
     t.index ["address"], name: "index_videos_on_address", unique: true, using: :btree
   end
 
