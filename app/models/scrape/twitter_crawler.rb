@@ -57,6 +57,15 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
       get_many_tweets(screen_name, options, params[:number].to_i).each do |tweet|
         classify_tweet(tweet, params[:member_id], params[:event_id], true)
       end
+    when 'tweet'
+      params[:tweet_url] =~ %r{https://twitter.com/(.*?)/status/(.*?)$}
+      screen_name = $1
+      tweet_id =$2
+      hash = status(Twitter::Tweet.new(id: tweet_id)).attrs
+      
+      validate(screen_name)
+      
+      parse_tweet(hash, params[:member_id], params[:event_id], true)
     end
   end
   
@@ -80,6 +89,7 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     return tweetary
   end
   
+  # limit: about 10 days ago
   def get_tweets_in_certain_period(screen_name, options, since, till)
     options[:from] = screen_name
     options[:since] = since

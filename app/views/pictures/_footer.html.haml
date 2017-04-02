@@ -4,7 +4,6 @@
       %ul.nav.navbar-nav.navbar-right
         / index
         - if action_name == 'index'
-          %li= link_to '画像を追加（未実装）', new_picture_path
           %li= link_to '削除申請モードへ', pictures_destroy_index_path(page: params[:page])
         / destroy_index
         - if action_name == 'destroy_index'

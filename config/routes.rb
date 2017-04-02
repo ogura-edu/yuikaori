@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'scrape/ameblo'
   get 'scrape/instagram'
   get 'scrape/twitter'
+  get 'scrape/official_site'
 
   devise_for :users, controllers: { :omniauth_callbacks => 'omniauth_callbacks' }
   root 'top_page#index'
