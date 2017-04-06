@@ -9,7 +9,7 @@ get_images.rb側で責任を持つべき処理はそちらで全て終わらせ�
 ActiveRecordを使う
 
 優先度 高：
-masonryを使ってきれいに表示
+画像追加フォームで、正しい組み合わせでないとエラーを吐くor通知させる
 tmp画面に全選択・全解除ボタンの設置
 検索機能を実装。今は形だけ。。。
 タグとイベントの新規作成をいかに簡単に見やすくするか(非同期処理を使うのが良さそう？)
@@ -25,6 +25,7 @@ tmp画面に全選択・全解除ボタンの設置
 タグは手動はきついので機械学習させたい。
 CarrierWaveは使いにくかった。。
 画像クリック時に、もダルを使って表示
+masonryの表示の修正
 
 済：
 ユーザーつくる
@@ -40,3 +41,4 @@ application_controllerで全体にauthenticaete_user!をbefore_action設定し�
 Ameblo,Instagram,Twitterに関しては、アカウントや期間、記事ID、URLを指定することで画像をかき集めてくれるような機能追加
 member,tag,eventの値をuniqueに設定する
 データベースに元記事URLの格納カラムを作成
+masonryを入れた

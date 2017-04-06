@@ -18,3 +18,4 @@
 //= require imagesloaded.pkgd.min
 //= require_tree .
 //= require bootstrap-sprockets-custom
+//= require masonry/masonry.min

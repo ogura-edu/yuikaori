@@ -80,3 +80,5 @@ gem 'erb2haml'
 gem 'mysql2'
 
 gem 'config'
+
+gem 'masonry-rails'

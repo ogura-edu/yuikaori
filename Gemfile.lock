@@ -153,6 +153,8 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    masonry-rails (0.2.4)
+      railties
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
@@ -313,6 +315,7 @@ DEPENDENCIES
   jquery-turbolinks
   kaminari
   listen (~> 3.0.5)
+  masonry-rails
   mysql2
   nokogiri
   omniauth-twitter

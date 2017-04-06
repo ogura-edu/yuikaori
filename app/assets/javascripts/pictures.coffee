@@ -10,18 +10,28 @@ $(document).on 'turbolinks:load', ->
     else
       $(this).addClass('checked')
       $(this).next('.multiple_checkbox').prop('checked', true)
-  $("#pictures .page").infinitescroll
-    loading: {
+
+  $container = $('#masonry-container')
+  $container.imagesLoaded ->
+    $container.masonry
+      itemSelector: '.picture'
+      isFitWidth: true
+      isAnimated: true
+      isResizable: true
+    return
+
+  $container.infinitescroll {
+    loading:
       img:     '/assets/item/loading.gif'
       msgText: ''
-    }
-    navSelector: "nav .pagination" # selector for the paged navigation (it will be hidden)
-    nextSelector: "nav .pagination a[rel=next]" # selector for the NEXT link (to page 2)
-    itemSelector: "#pictures div.picture" # selector for all items you'll retrieve
-    (newElements) ->
-      $newElems = $(newElements).css(opacity:0)
+    navSelector: "nav .pagination"
+    nextSelector: "nav .pagination a[rel=next]"
+    itemSelector: ".picture"
+    animate: true
+    }, (newElements) ->
+      $newElems = $(newElements)
       $newElems.imagesLoaded ->
-        $newElems.animate opacity: 1
+        $container.masonry 'appended', $newElems, true
       $newElems.children('.my-thumbnail').click ->
         if $(this).hasClass('checked')
           $(this).removeClass('checked')
