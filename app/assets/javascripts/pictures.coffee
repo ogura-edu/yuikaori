@@ -39,3 +39,14 @@ $(document).on 'turbolinks:load', ->
         else
           $(this).addClass('checked')
           $(this).next('.multiple_checkbox').prop('checked', true)
+  
+  $('#check_all').click ->
+    for element in $('.my-thumbnail')
+      if $(element).not('.checked')
+        $(element).addClass('checked')
+        $(element).next('.multiple_checkbox').prop('checked', true)
+  $('#uncheck_all').click ->
+    for element in $('.my-thumbnail')
+      if $(element).hasClass('checked')
+        $(element).removeClass('checked')
+        $(element).next('.multiple_checkbox').prop('checked', false)

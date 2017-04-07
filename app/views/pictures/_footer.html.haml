@@ -1,6 +1,11 @@
 %footer
   %nav.navbar.navbar-default.navbar-fixed-bottom{:role => "navigation"}
     .container-fluid
+      %ul.nav.navbar-nav
+        - if action_name == 'tmp'
+          %li= button_tag 'すべて選択', id: 'check_all', type: 'button'
+          %li= button_tag 'すべて解除', id: 'uncheck_all', type: 'button'
+      
       %ul.nav.navbar-nav.navbar-right
         / index
         - if action_name == 'index'
