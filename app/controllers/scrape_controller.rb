@@ -28,6 +28,9 @@ class ScrapeController < ApplicationController
       twitter.validate(params[:screen_name])
       twitter.manually_crawl(params: params)
     elsif params[:official_site]
+      site = Scrape::OfficialSiteCrawler.new(params[:top_page_url], params[:accept_domains])
+      site.validate
+      site.manually_crawl(params: params)
     end
     redirect_to scrape_index_path
   end

@@ -19,3 +19,23 @@ twitter:
   regular_crawl:
     - ID: 'yuikaori_staff'
       member_id: 1
+
+official_site:
+  regular_crawl:
+    - domain: 'http://www.yuikaori.info/'
+      member_id: 1
+      accept: ''
+    - domain: 'http://www.ogurayui.jp/'
+      member_id: 1
+      accept: ''
+    - domain: 'http://yuikaori-report.info/'
+      member_id: 1
+      accept: 'http://img-cdn.jg.jugem.jp'
+
+extname:
+  images:
+    - '.jpg'
+    - '.png'
+    - '.jpeg'
+  videos:
+    - '.mp4'
