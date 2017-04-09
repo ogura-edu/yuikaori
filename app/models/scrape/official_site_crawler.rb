@@ -14,7 +14,7 @@ class Scrape::OfficialSiteCrawler
   end
   
   def crawl(member_id:)
-    crawl_media(member_id, 1, false)
+    crawl_media(member_id, 1, true)
   end
   
   # 削除も検討
