@@ -1,83 +1,106 @@
 class Scrape::OfficialSiteCrawler
   def initialize(url, *domains)
     url = url.gsub(/$/, '/') unless url =~ /\/$/
-    uri = URI.parse(url)
+    uri = Addressable::URI.parse(url).normalize
+    @cache = []
     @top_page = uri
-    @accept_domains = [ url, domains ].flatten
-    @downloader = Scrape::Downloader.new("official_site/#{uri.host}#{uri.path}")
+    @http = Net::HTTP.new(uri.host)
+    @allowed_domains = [ url, domains ].flatten
+    @downloader = Scrape::Downloader.new("official_site/")
   end
   
   def validate
     raise ArgumentError, '追跡済みのURLは指定しないでください' if skip_domains.include?(@top_page.host)
   end
   
-  def crawl(member_id:, type: :recent)
-    s = Time.now
+  def crawl(member_id:)
+    crawl_media(member_id, 1, false)
+  end
+  
+  # 削除も検討
+  # 使うとしてもdepth_limitの指定は必須
+  def manually_crawl(params:)
+    crawl_media(params[:member_id], params[:event_id], true, params[:depth_limit])
+  end
+  
+  private
+  
+  def crawl_media(member_id, event_id, tmp, depth_limit = false)
     options = {
-      depth_limit: 2,
+      depth_limit: depth_limit,
       delay: 2,
-      # proxy_host: 'localhost',
-      # proxy_port: '5432',
       obey_robots_txt: true,
       storage: Anemone::Storage.PStore("tmp/anemone/#{@top_page.host}.dmp")
     }
+    
     Anemone.crawl(@top_page, options) do |anemone|
+      anemone.skip_links_like(/PHPSESSID/)
+      
       anemone.focus_crawl do |page|
         page.links.keep_if do |link|
-          @accept_domains.each do |domain|
-            link.to_s.match(domain)
-          end
+          allowed?(link.to_s)
         end
       end
       
       anemone.on_every_page do |page|
         puts '-----------------------------------------------'
-        puts "checking #{page.url}..."
+        puts "checking #{page.url} ..."
         doc = Nokogiri::HTML.parse(page.body)
-        doc.xpath('//img').each do |a_tag|
-          image_url = a_tag.attribute('src')
-          uri = URI.parse(image_url)
-          path = "app/assets/images/official_site/#{uri.host}#{uri.path}"
-          
-          if File.exist?(path)
-            puts 'already exist'
-            next
-          elsif !(Settings.extname.images.include?(File.extname(image_url)))
-            puts 'not jpg or png'
-            next
-          elsif !(FileTest.exist?(File.dirname(path)))
-            puts 'made directory'
-            FileUtils.mkdir_p(File.dirname(path))
-          end
-          
-          puts "download #{image_url}"
-          open(path, Scrape::Helper.write_mode(image_url)) do |output|
-            open(image_url) do |data|
-              output.write(data.read)
-            end
-          end
+        
+        doc.xpath('//img').each do |img_tag|
+          extract_data(img_tag, page.url, :image, member_id, event_id, tmp)
         end
+        
+        doc.xpath('//video').each do |video_tag|
+          extract_data(video_tag, page.url, :video, member_id, event_id, tmp)
+        end
+        
         doc.xpath('//link[@rel="stylesheet"]').each do |link_tag|
-          puts link_tag.attribute('href')
+          puts 'cssはまだでーす'
         end
-        # if Settings.extname.images.include?(File.extname(page.url.to_s))
       end
     end
-    puts Time.now - s
   end
   
-  def manually_crawl(params:)
+  def extract_data(tag, page_url, type, member_id, event_id, tmp)
+    media_url = url(page_url, tag.attribute('src').value)
+    # インスタンス変数@cacheを参照してチェック済みのURLをスキップ
+    return if @cache.include?(media_url)
     
+    uri = Addressable::URI.parse(media_url).normalize
+    date = Time.parse(response_header(uri)['last-modified'] || Time.now.to_s)
+    filepath = "official_site/#{uri.host}#{uri.path}"
+    @downloader.save_media(type, uri.to_s, page_url, date, member_id, event_id, tmp, filepath)
+    @cache << media_url
   end
   
-  private
-  
-  def a
-    a
+  def url(current_url, src)
+    if absolute_path?(src)
+      return src
+    else
+      base_uri = Addressable::URI.parse(current_url).normalize
+      return (base_uri + src).to_s
+    end
   end
   
-  def a
-    a
+  def allowed?(str)
+    @allowed_domains.each do |domain|
+      return true if str.match(domain)
+    end
+    return false
+  end
+  
+  def absolute_path?(str)
+    Addressable::URI.parse(str).scheme != nil
+  end
+  
+  def response_header(uri)
+    if @http.address == uri.host
+      http = @http
+    else
+      http = Net::HTTP.new(uri.host)
+    end
+    return http.head(uri.path)
   end
   
   def skip_domains

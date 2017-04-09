@@ -26,11 +26,11 @@ official_site:
       member_id: 1
       accept: ''
     - domain: 'http://www.ogurayui.jp/'
-      member_id: 1
+      member_id: 2
       accept: ''
     - domain: 'http://yuikaori-report.info/'
       member_id: 1
-      accept: 'http://img-cdn.jg.jugem.jp'
+      accept: 'http://img-cdn.jg.jugem.jp/'
 
 extname:
   images:

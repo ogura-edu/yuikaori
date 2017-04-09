@@ -25,5 +25,9 @@ set :environment, :development
 job_type :myrunner, "export DISPLAY=:0 && export PATH=$PATH:/usr/local/bin && cd :path && bin/rails runner -e :environment ':task' :output"
 
 every '0 0 * * *' do
-  myrunner 'RegularCrawl.execute'
+  myrunner 'RegularCrawl.daily_execute'
+end
+
+every '10 0 1 * *' do
+  runner 'RegularCrawl.monthly_execute'
 end

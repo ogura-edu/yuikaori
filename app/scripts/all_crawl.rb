@@ -19,5 +19,10 @@ class AllCrawl
       twitter = Scrape::TwitterCrawler.new(user_type: :admin)
       twitter.crawl(screen_name: obj.ID, member_id: obj.member_id, type: :all)
     end
+
+    Settings.official_site.regular_crawl.each do |obj|
+      site = Scrape::OfficialSiteCrawler.new(obj.domain, obj,accept)
+      site.crawl(member_id: obj.member_id)
+    end
   end
 end
