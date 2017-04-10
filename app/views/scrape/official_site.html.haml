@@ -1,13 +1,4 @@
 .detail
-  = form_tag scrape_path do
-    .center-block
-      = url_field_tag :top_page_url, nil, placeholder: 'Top Page URL'
-    .center-block
-      - Member.all.each do |m|
-        = radio_button_tag :member_id, m.id
-        = label_tag :member_id, m.member, value: m.id
-    .center-block
-      = select_tag :event_id, options_from_collection_for_select(Event.all, :id, :event)
-    .center-block
-      = submit_tag '追加', class: 'btn btn-default', name: 'official_site'
+  = form_tag scrape_path, name: 'official_site' do
+    =render 'form'
 = render 'footer'

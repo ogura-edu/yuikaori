@@ -1,11 +1,11 @@
 class Scrape::OfficialSiteCrawler
-  def initialize(url, *domains)
-    url = url.gsub(/$/, '/') unless url =~ /\/$/
+  def initialize(url, *links)
     uri = Addressable::URI.parse(url).normalize
+    linked_hosts = links.map{|domain| Addressable::URI.parse(domain).normalize.host}
     @cache = []
     @top_page = uri
     @http = Net::HTTP.new(uri.host)
-    @allowed_domains = [ url, domains ].flatten
+    @allowed_hosts = [ uri.host, *linked_hosts ]
     @downloader = Scrape::Downloader.new("official_site/")
   end
   
@@ -17,8 +17,6 @@ class Scrape::OfficialSiteCrawler
     crawl_media(member_id, 1, true)
   end
   
-  # 削除も検討
-  # 使うとしてもdepth_limitの指定は必須
   def manually_crawl(params:)
     crawl_media(params[:member_id], params[:event_id], true, params[:depth_limit])
   end
@@ -84,7 +82,7 @@ class Scrape::OfficialSiteCrawler
   end
   
   def allowed?(str)
-    @allowed_domains.each do |domain|
+    @allowed_hosts.each do |domain|
       return true if str.match(domain)
     end
     return false
