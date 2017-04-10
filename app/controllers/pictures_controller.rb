@@ -6,10 +6,27 @@ class PicturesController < ApplicationController
   end
   
   def search
-    column = params[:column]
-    value = params[:value]
-    selected = Picture.where("#{column} = #{value} AND tmp = 'f'")
-    @pictures = selected.order('date DESC').page(params[:page]).per(50)
+    #columnの値によって処理を分岐
+    case params[:column]
+    when 'date'
+      # since, untilの値から検索
+      selected = Picture.where('date >= ? AND date <= ? AND tmp IS false AND removed IS false', params[:since], params[:until])
+      @pictures = selected.order('date DESC').page(params[:page]).per(50)
+    when 'event'
+      # 正規表現を使って検索
+      event_ids = Event.where('event = ?', params[:value])[:id]
+      selected = Picture.where('event_id IN ? AND tmp IS false AND removed IS false', event_ids)
+      @pictures = selected.order('date DESC').page(params[:page]).per(50)
+    when 'tag'
+      # 正規表現を使って検索
+      tag_ids = Tag.where('tag = ?', params[:value])[:id]
+      selected = Picture.where('tag_id IN ? AND tmp IS false AND removed IS false', tag_ids)
+      @pictures = selected.order('date DESC').page(params[:page]).per(50)
+    when 'member_id'
+      # valueの値から一致するものを検索
+      selected = Picture.where('member_id = ? AND tmp IS false AND removed IS false', params[:value])
+      @pictures = selected.order('date DESC').page(params[:page]).per(50)
+    end
   end
   
   def destroy_index

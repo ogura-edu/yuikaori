@@ -7,9 +7,11 @@
   .center-block.switch.period
     = text_field_tag :screen_name, nil, placeholder: 'TwitterID'
   .center-block.switch.period
-    = text_field_tag :since, nil, placeholder: 'いつから(YYYY-MM-DD)'
+    %span since:
+    = date_field_tag :since, Date.today, max: Date.today
   .center-block.switch.period
-    = text_field_tag :until, nil, placeholder: 'いつまで(YYYY-MM-DD)'
+    %span until:
+    = date_field_tag :until, Date.today, max: Date.today
   .center-block.switch.number
     = text_field_tag :screen_name, nil, placeholder: 'TwitterID'
   .center-block.switch.number
