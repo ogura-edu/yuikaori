@@ -26,10 +26,10 @@
   .center-block
     = url_field_tag :page_url, nil, placeholder: '取得するページのURLを指定してください', required: true
   .center-block
-    = url_field_tag :allowed_links, nil, placeholder: '取得を許可するドメインを指定してください', required: true
+    = url_field_tag :allowed_links, nil, placeholder: 'もし異なるドメインに飛んでから画像をとるなら指定してください（通常は不要）'
   .center-block
-    %p ページ内のみ：1、1つ先のリンクまで：2
-    = number_field_tag :depth_limit, nil, min:1, max:2, required: true
+    %p ページ内のみ：0、1つ先のリンクまで：1
+    = number_field_tag :depth_limit, nil, min:0, max:1, required: true
 .center-block
   %span メンバー：
   = select_tag :member_id, options_from_collection_for_select(Member.all, :id, :member), include_blank: true, required: true

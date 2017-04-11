@@ -1,7 +1,7 @@
 class Scrape::OfficialSiteCrawler
   def initialize(url, *links)
     uri = Addressable::URI.parse(url).normalize
-    linked_hosts = links.map{|domain| Addressable::URI.parse(domain).normalize.host}
+    linked_hosts = links.map{|link| Addressable::URI.parse(link).normalize.host}
     @cache = []
     @top_page = uri
     @http = Net::HTTP.new(uri.host)
@@ -10,7 +10,7 @@ class Scrape::OfficialSiteCrawler
   end
   
   def validate
-    raise ArgumentError, '追跡済みのURLは指定しないでください' if skip_domains.include?(@top_page.host)
+    raise ArgumentError, '追跡済みのURLは指定しないでください' if skip_hosts.include?(@top_page.host)
   end
   
   def crawl(member_id:)
@@ -18,7 +18,7 @@ class Scrape::OfficialSiteCrawler
   end
   
   def manually_crawl(params:)
-    crawl_media(params[:member_id], params[:event_id], true, params[:depth_limit])
+    crawl_media(params[:member_id], params[:event_id], true, params[:depth_limit].to_i)
   end
   
   private
@@ -82,8 +82,8 @@ class Scrape::OfficialSiteCrawler
   end
   
   def allowed?(str)
-    @allowed_hosts.each do |domain|
-      return true if str.match(domain)
+    @allowed_hosts.each do |host|
+      return true if str.match(host)
     end
     return false
   end
@@ -101,7 +101,7 @@ class Scrape::OfficialSiteCrawler
     return http.head(uri.path)
   end
   
-  def skip_domains
-    Settings.official_site.regular_crawl.map{|obj| obj.domain}
+  def skip_hosts
+    Settings.official_site.regular_crawl.map{|obj| obj.host}
   end
 end

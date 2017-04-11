@@ -22,15 +22,15 @@ twitter:
 
 official_site:
   regular_crawl:
-    - domain: 'http://www.yuikaori.info/'
+    - host: 'www.yuikaori.info'
       member_id: 1
       accept: ''
-    - domain: 'http://www.ogurayui.jp/'
+    - host: 'www.ogurayui.jp'
       member_id: 2
       accept: ''
-    - domain: 'http://yuikaori-report.info/'
+    - host: 'yuikaori-report.info'
       member_id: 1
-      accept: 'http://img-cdn.jg.jugem.jp/'
+      accept: ''
 
 extname:
   images:
