@@ -40,6 +40,12 @@
                   = hidden_field_tag :column, 'tag'
                   = text_field_tag(:value, nil, class: 'form-control', placeholder: 'タグ検索')
                 = submit_tag '検索', class: 'btn btn-default'
+            %li
+              = form_tag pictures_search_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+                .form-group
+                  = hidden_field_tag :column, 'media'
+                  = text_field_tag :value, nil, class: 'form-control', placeholder: 'メディア名検索'
+                = submit_tag '検索', class: 'btn btn-default'
         %li= link_to '一覧表示', pictures_path
         %li= link_to '削除／表示許可', pictures_tmp_path
       / 右側のコンポーネント
