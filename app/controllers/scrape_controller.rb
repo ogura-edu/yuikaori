@@ -31,6 +31,9 @@ class ScrapeController < ApplicationController
       site = Scrape::OfficialSiteCrawler.new(params[:page_url], params[:allowed_links])
       site.validate
       site.manually_crawl(params: params)
+    elsif params[:news_site]
+      site = Scrape:: NewsSiteCrawler.new(params[:article_url])
+      site.manually_crawl(params: params)
     end
     redirect_to scrape_index_path
   end

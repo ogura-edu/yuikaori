@@ -1,6 +1,7 @@
 - if action_name == 'instagram'
   .center-block
     = text_field_tag :post, nil, placeholder: 'ポストURLを入力してください', required: true
+
 - if action_name == 'twitter'
   .center-block
     = select_tag :type, options_for_select([ ['期間を指定して取得(約10日前まで)', 'period'], ['ツイート数を指定して取得(3,200まで)', 'number'], ['ツイートURLを直接指定して取得', 'tweet'] ]), include_blank: true, required: true
@@ -19,9 +20,11 @@
     = number_field_tag :number, nil, max: 3200
   .center-block.switch.tweet
     = url_field_tag :tweet_url, nil, placeholder: 'https://twitter.com/<user_id>/status/<tweet_id>'
+
 - if action_name == 'ameblo'
   .center-block
     = url_field_tag :article_url, nil, placeholder: 'アメブロの記事URLを入力してください', required: true
+
 - if action_name == 'official_site'
   .center-block
     = url_field_tag :page_url, nil, placeholder: '取得するページのURLを指定してください', required: true
@@ -30,6 +33,11 @@
   .center-block
     %p ページ内のみ：0、1つ先のリンクまで：1
     = number_field_tag :depth_limit, nil, min:0, max:1, required: true
+
+- if action_name = 'news_site'
+  .center-block
+    = url_field_tag :article_url, nil, placeholder: '記事URLを指定してください', required: true
+
 .center-block
   %span メンバー：
   = select_tag :member_id, options_from_collection_for_select(Member.all, :id, :member), include_blank: true, required: true

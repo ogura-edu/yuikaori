@@ -32,6 +32,13 @@ official_site:
       member_id: 1
       accept: ''
 
+news_site:
+  - 'natalie.mu/music/news'
+  - 'natalie.mu/music/pp'
+  - 'www.animatetimes.com/news'
+  - 'top.tsite.jp/news'
+  - 'www.barks.jp/news'
+
 extname:
   images:
     - '.jpg'

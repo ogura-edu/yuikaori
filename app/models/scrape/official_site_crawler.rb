@@ -6,7 +6,7 @@ class Scrape::OfficialSiteCrawler
     @top_page = uri
     @http = Net::HTTP.new(uri.host)
     @allowed_hosts = [ uri.host, *linked_hosts ]
-    @downloader = Scrape::Downloader.new("official_site/")
+    @downloader = Scrape::Downloader.new('')
   end
   
   def validate
@@ -14,7 +14,7 @@ class Scrape::OfficialSiteCrawler
   end
   
   def crawl(member_id:)
-    crawl_media(member_id, 1, true)
+    crawl_media(member_id, 1, true, false)
   end
   
   def manually_crawl(params:)
@@ -23,7 +23,7 @@ class Scrape::OfficialSiteCrawler
   
   private
   
-  def crawl_media(member_id, event_id, tmp, depth_limit = false)
+  def crawl_media(member_id, event_id, tmp, depth_limit)
     options = {
       depth_limit: depth_limit,
       delay: 2,
@@ -61,35 +61,22 @@ class Scrape::OfficialSiteCrawler
   end
   
   def extract_data(tag, page_url, type, member_id, event_id, tmp)
-    media_url = url(page_url, tag.attribute('src').value)
+    media_url = Scrape::Helper.url(page_url, tag.attribute('src').value)
     # インスタンス変数@cacheを参照してチェック済みのURLをスキップ
     return if @cache.include?(media_url)
     
     uri = Addressable::URI.parse(media_url).normalize
     date = Time.parse(response_header(uri)['last-modified'] || Time.now.to_s)
-    filepath = "official_site/#{uri.host}#{uri.path}"
+    filepath = "#{uri.host}#{uri.path}"
     @downloader.save_media(type, uri.to_s, page_url, date, member_id, event_id, tmp, filepath)
     @cache << media_url
-  end
-  
-  def url(current_url, src)
-    if absolute_path?(src)
-      return src
-    else
-      base_uri = Addressable::URI.parse(current_url).normalize
-      return (base_uri + src).to_s
-    end
   end
   
   def allowed?(str)
     @allowed_hosts.each do |host|
       return true if str.match(host)
     end
-    return false
-  end
-  
-  def absolute_path?(str)
-    Addressable::URI.parse(str).scheme != nil
+    false
   end
   
   def response_header(uri)
@@ -98,7 +85,7 @@ class Scrape::OfficialSiteCrawler
     else
       http = Net::HTTP.new(uri.host)
     end
-    return http.head(uri.path)
+    http.head(uri.path)
   end
   
   def skip_hosts
