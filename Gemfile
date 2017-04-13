@@ -82,3 +82,5 @@ gem 'mysql2'
 gem 'config'
 
 gem 'masonry-rails'
+
+gem 'youtube-dl.rb'

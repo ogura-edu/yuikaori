@@ -3,6 +3,41 @@ class Scrape::Downloader
     @dir_name = dir_name
   end
   
+  def save_youtube(uri, article_uri, date, member_id, event_id, tmp)
+    basename = uri.query.tr('=', '')
+    filepath = "youtube/#{basename}.mp4"
+    fullpath = Scrape::Helper.fullpath(filepath)
+    
+    if Video.find_by_address(filepath)
+      puts "#{uri} has been already saved or deleted"
+      return
+    elsif File.exist?(fullpath)
+      puts "#{filepath} already exists"
+      return
+    end
+    
+    # ディレクトリはgem側で作成してくれる
+    
+    puts "download #{uri} to #{filepath}"
+    options = {
+      output: fullpath,
+      format: :best,
+      no_warnings: true
+    }
+    YoutubeDL.download(uri, options)
+    
+    Video.create(
+      address: filepath,
+      article_url: article_uri.to_s,
+      member_id: member_id,
+      event_id: event_id,
+      date: date.strftime("%Y-%m-%d %H:%M:%S"),
+      created_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+      updated_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+      tmp: tmp
+    )
+  end
+  
   def save_media(media_type, uri, article_uri, date, member_id, event_id, tmp, filepath = nil)
     # filepathを指定したい時は指定してもらう感じで。
     filepath ||= "#{@dir_name}#{File.basename(uri)}"
@@ -11,7 +46,10 @@ class Scrape::Downloader
     if Settings.extname.images.exclude?(File.extname(uri)) && Settings.extname.videos.exclude?(File.extname(uri))
       puts "#{uri}'s extension is not allowed to download"
       return
-    elsif Picture.find_by_address(filepath) || Video.find_by_address(filepath)
+    elsif media_type == :image && Picture.find_by_address(filepath)
+      puts "#{uri} has already been saved or deleted"
+      return
+    elsif media_type == :video && Video.find_by_address(filepath)
       puts "#{uri} has already been saved or deleted"
       return
     end
