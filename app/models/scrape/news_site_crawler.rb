@@ -29,10 +29,10 @@ class Scrape::NewsSiteCrawler
     date = Time.parse(date)
     doc.xpath('//article//span[@class="NA_thumb"]').each do |thumb|
       thumb.attribute('style').value.match(%r{url\((.*?)\)})
-      image_url = Scrape::Helper.url(@article_uri.to_s, $1.gsub('list_thumb_inbox', 'xlarge'))
+      image_url = Scrape::Helper.url(@article_uri, $1.gsub('list_thumb_inbox', 'xlarge'))
       uri = Addressable::URI.parse(image_url)
       filepath = "#{uri.host}#{uri.path}"
-      @downloader.save_media(:image, uri.to_s, @article_uri.to_s, date, params[:member_id], params[:event_id], true, filepath)
+      @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
     end
   end
   
@@ -42,7 +42,7 @@ class Scrape::NewsSiteCrawler
     Anemone.crawl(@article_uri, {depth_limit:1}) do |anemone|
       anemone.focus_crawl do |page|
         page.links.keep_if do |link|
-          link.to_s.match(@article_uri.to_s)
+          link.to_s.match(@article_uri)
         end
       end
       anemone.on_every_page do |page|
@@ -51,7 +51,7 @@ class Scrape::NewsSiteCrawler
           image_url = Scrape::Helper.url(page.url, img_tag.attribute('src').value.gsub(%r{(photo\d*)s}, '\1'))
           uri = Addressable::URI.parse(image_url)
           filepath = "#{uri.host}#{uri.path}"
-          @downloader.save_media(:image, uri.to_s, @article_uri.to_s, date, params[:member_id], params[:event_id], true, filepath)
+          @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
         end
       end
     end
@@ -61,19 +61,43 @@ class Scrape::NewsSiteCrawler
     date = doc.xpath('//div[@class="news-date"]').text
     date = Time.parse(date)
     doc.xpath('//div[@class="entry"]//img').each do |img_tag|
-      image_url = Scrape::Helper.url(@article_uri.to_s, img_tag.attribute('src').value)
+      image_url = Scrape::Helper.url(@article_uri, img_tag.attribute('src').value)
       uri = Addressable::URI.parse(image_url)
       filepath = "#{uri.host}#{uri.path}"
-      @downloader.save_media(:image, uri.to_s, @article_uri.to_s, date, params[:member_id], params[:event_id], true, filepath)
+      @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
     end
   end
   
   define_method 'top_tsite_jp/news' do |doc, params|
-    a
+    date = doc.xpath('//p[@class="c_article_date"]').text.gsub(%r{(\d+)年(\d+)月(\d+)日.*}, '\1-\2-\3')
+    date = Time.parse(date)
+    doc.xpath('//div[@class="gallery_thumb"]//img').each do |img_tag|
+      image_url = Scrape::Helper.url(@article_uri, img_tag.attribute('src').value)
+      uri = Addressable::URI.parse(image_url)
+      filepath = "#{uri.host}#{uri.path}"
+      @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
+    end
   end
   
   define_method 'www_barks_jp/news' do |doc, params|
-    a
+    date = doc.xpath('//p[@class="article-postdate"]').text
+    date = Time.parse(date)
+    Anemone.crawl(@article_uri, {depth_limit:1}) do |anemone|
+      anemone.focus_crawl do |page|
+        page.links.keep_if do |link|
+          link.to_s.match(Regexp.escape(@article_uri))
+        end
+      end
+      anemone.on_every_page do |page|
+        doc = Nokogiri::HTML.parse(page.body)
+        doc.xpath('//section[@class="article-body"]//img').each do |img_tag|
+          image_url = Scrape::Helper.url(page.url, img_tag.attribute('src').value)
+          uri = Addressable::URI.parse(image_url)
+          filepath = "#{uri.host}#{uri.path}"
+          @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
+        end
+      end
+    end
   end
   
   def registered?(url)

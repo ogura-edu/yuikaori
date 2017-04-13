@@ -3,26 +3,26 @@ class Scrape::Downloader
     @dir_name = dir_name
   end
   
-  def save_media(media_type, url, article_url, date, member_id, event_id, tmp, filepath = nil)
+  def save_media(media_type, uri, article_uri, date, member_id, event_id, tmp, filepath = nil)
     # filepathを指定したい時は指定してもらう感じで。
-    filepath ||= "#{@dir_name}#{File.basename(url)}"
+    filepath ||= "#{@dir_name}#{File.basename(uri)}"
     
     # そもそもダウンロードしないものを弾く
-    if Settings.extname.images.exclude?(File.extname(url)) && Settings.extname.videos.exclude?(File.extname(url))
-      puts "#{url}'s extension is not allowed to download"
+    if Settings.extname.images.exclude?(File.extname(uri)) && Settings.extname.videos.exclude?(File.extname(uri))
+      puts "#{uri}'s extension is not allowed to download"
       return
     elsif Picture.find_by_address(filepath) || Video.find_by_address(filepath)
-      puts "#{url} has already been saved or deleted"
+      puts "#{uri} has already been saved or deleted"
       return
     end
     
-    download(filepath, url, date)
+    download(filepath, uri, date)
     
     case media_type
     when :image
       Picture.create(
         address: filepath,
-        article_url: article_url,
+        article_url: article_uri.to_s,
         member_id: member_id,
         event_id: event_id,
         date: date.strftime("%Y-%m-%d %H:%M:%S"),
@@ -33,7 +33,7 @@ class Scrape::Downloader
     when :video
       Video.create(
         address: filepath,
-        article_url: article_url,
+        article_url: article_uri.to_s,
         member_id: member_id,
         event_id: event_id,
         date: date.strftime("%Y-%m-%d %H:%M:%S"),
@@ -46,7 +46,7 @@ class Scrape::Downloader
   
   private
   
-  def download(filepath, url, date)
+  def download(filepath, uri, date)
     fullpath = Scrape::Helper.fullpath(filepath)
     
     # 既にダウンロードしてある場合はスキップ
@@ -57,14 +57,14 @@ class Scrape::Downloader
     
     Scrape::Helper.mkdir(fullpath)
     
-    puts "download #{url} to #{fullpath}"
-    open(fullpath, Scrape::Helper.write_mode(url)) do |output|
+    puts "download #{uri} to #{fullpath}"
+    open(fullpath, Scrape::Helper.write_mode(uri)) do |output|
       begin
-        open(url) do |data|
+        open(uri) do |data|
           output.write(data.read)
         end
       rescue OpenURI::HTTPError
-        puts "#{url} was deleted from server"
+        puts "#{uri} was deleted from server"
       end
     end
     File.utime(date, date, fullpath)

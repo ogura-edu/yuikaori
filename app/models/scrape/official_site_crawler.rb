@@ -68,7 +68,7 @@ class Scrape::OfficialSiteCrawler
     uri = Addressable::URI.parse(media_url).normalize
     date = Time.parse(response_header(uri)['last-modified'] || Time.now.to_s)
     filepath = "#{uri.host}#{uri.path}"
-    @downloader.save_media(type, uri.to_s, page_url, date, member_id, event_id, tmp, filepath)
+    @downloader.save_media(type, uri, page_url, date, member_id, event_id, tmp, filepath)
     @cache << media_url
   end
   

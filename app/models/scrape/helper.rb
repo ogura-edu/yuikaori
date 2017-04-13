@@ -1,6 +1,6 @@
 class Scrape::Helper
-  def self.write_mode(url)
-    "w:#{open(url).to_s.encoding.to_s}"
+  def self.write_mode(uri)
+    "w:#{open(uri).to_s.encoding.to_s}"
   end
 
   def self.mkdir(fullpath)
