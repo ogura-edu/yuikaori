@@ -24,6 +24,17 @@ class Scrape::NewsSiteCrawler
     downcase
   end
   
+  def youtube(doc, page_url, member_id, event_id, tmp)
+    puts 'checking youtube embedded video ...'
+    doc.xpath('//iframe').each do |youtube_tag|
+      url = youtube_tag.attribute('src').value
+      next unless url.match('youtube')
+      id = File.basename(URI.parse(url).path)
+      video_uri = URI.parse(url.gsub('embed/', 'watch/?v='))
+      @downloader.save_youtube(id, video_uri, page_url, member_id, event_id, tmp)
+    end
+  end
+  
   define_method 'natalie_mu/music/news' do |doc, params|
     date = doc.xpath('//p[@class="NA_date"]/time').text.tr('年月日', '/')
     date = Time.parse(date)
@@ -34,6 +45,7 @@ class Scrape::NewsSiteCrawler
       filepath = "#{uri.host}#{uri.path}"
       @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
     end
+    youtube(doc, @article_uri, params[:member_id], params[:event_id], true)
   end
   
   define_method 'natalie_mu/music/pp' do |doc, params|
@@ -53,6 +65,7 @@ class Scrape::NewsSiteCrawler
           filepath = "#{uri.host}#{uri.path}"
           @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
         end
+        youtube(doc, @article_uri, params[:member_id], params[:event_id], true)
       end
     end
   end
@@ -66,6 +79,7 @@ class Scrape::NewsSiteCrawler
       filepath = "#{uri.host}#{uri.path}"
       @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
     end
+    youtube(doc, @article_uri, params[:member_id], params[:event_id], true)
   end
   
   define_method 'top_tsite_jp/news' do |doc, params|
@@ -77,6 +91,7 @@ class Scrape::NewsSiteCrawler
       filepath = "#{uri.host}#{uri.path}"
       @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
     end
+    youtube(doc, @article_uri, params[:member_id], params[:event_id], true)
   end
   
   define_method 'www_barks_jp/news' do |doc, params|
@@ -96,6 +111,7 @@ class Scrape::NewsSiteCrawler
           filepath = "#{uri.host}#{uri.path}"
           @downloader.save_media(:image, uri, @article_uri, date, params[:member_id], params[:event_id], true, filepath)
         end
+        youtube(doc, @article_uri, params[:member_id], params[:event_id], true)
       end
     end
   end

@@ -3,9 +3,8 @@ class Scrape::Downloader
     @dir_name = dir_name
   end
   
-  def save_youtube(uri, article_uri, date, member_id, event_id, tmp)
-    basename = uri.query.tr('=', '')
-    filepath = "youtube/#{basename}.mp4"
+  def save_youtube(id, uri, article_uri, member_id, event_id, tmp)
+    filepath = "youtube/#{id}.mp4"
     fullpath = Scrape::Helper.fullpath(filepath)
     
     if Video.find_by_address(filepath)
@@ -24,7 +23,8 @@ class Scrape::Downloader
       format: :best,
       no_warnings: true
     }
-    YoutubeDL.download(uri, options)
+    YoutubeDL.download(uri.to_s, options)
+    date = File.mtime(fullpath)
     
     Video.create(
       address: filepath,

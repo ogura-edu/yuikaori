@@ -34,6 +34,10 @@ class ScrapeController < ApplicationController
     elsif params[:news_site]
       site = Scrape:: NewsSiteCrawler.new(params[:article_url])
       site.manually_crawl(params: params)
+    elsif params[:youtube]
+      youtube = Scrape::YoutubeCrawler.new(params[:youtube_url], params[:article_url])
+      youtube.validate
+      youtube.manually_crawl(params: params)
     end
     redirect_to scrape_index_path
   end

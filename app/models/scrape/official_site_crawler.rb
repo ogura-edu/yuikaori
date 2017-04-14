@@ -53,6 +53,16 @@ class Scrape::OfficialSiteCrawler
           extract_data(video_tag, page.url, :video, member_id, event_id, tmp)
         end
         
+        # youtube公式が公開しているのはiframeタグだがこれを使っていないサイトもある模様
+        # それらに関しては、扱いが面倒なので個別でyoutube動画を取得するページを用意することにする
+        doc.xpath('//iframe').each do |youtube_tag|
+          url = youtube_tag.attribute('src').value
+          next unless url.match('youtube')
+          id = File.basename(URI.parse(url).path)
+          video_uri = URI.parse(url.gsub('embed/', 'watch/?v='))
+          @downloader.save_youtube(id, video_uri, page.url, member_id, event_id, tmp)
+        end
+        
         doc.xpath('//link[@rel="stylesheet"]').each do |link_tag|
           puts 'cssはまだでーす'
         end

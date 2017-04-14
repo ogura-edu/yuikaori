@@ -34,9 +34,15 @@
     %p ページ内のみ：0、1つ先のリンクまで：1
     = number_field_tag :depth_limit, nil, min:0, max:1, required: true
 
-- if action_name = 'news_site'
+- if action_name == 'news_site'
   .center-block
     = url_field_tag :article_url, nil, placeholder: '記事URLを指定してください', required: true
+
+- if action_name == 'youtube'
+  .center-block
+    = url_field_tag :youtube_url, nil, placeholder: '< https://www.youtube.com/watch?v=... >', required: true
+  .center-block
+    = url_field_tag :article_url, nil, placeholder: '本記事のURLがあれば指定してください'
 
 .center-block
   %span メンバー：
