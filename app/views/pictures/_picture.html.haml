@@ -1,8 +1,8 @@
 .picture
   - if action_name == 'index' || action_name == 'search'
-    = link_to image_tag(picture.address, class: "my-thumbnail img-rounded"), edit_picture_path(picture, page: params[:page])
+    = image_tag picture.address, class: "my-thumbnail img-rounded modalable"
   
   - if action_name == 'destroy_index' || action_name == 'tmp'
-    = image_tag picture.address, class: "my-thumbnail img-rounded"
+    = image_tag picture.address, class: "my-thumbnail img-rounded selectable"
     = check_box_tag 'pictures[]', picture.id, false, class: 'multiple_checkbox'
     = image_tag 'item/checkmark2.png', class: "checkmark"

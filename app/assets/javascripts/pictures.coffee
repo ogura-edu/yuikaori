@@ -3,7 +3,14 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).on 'turbolinks:load', ->
-  $('.my-thumbnail').click ->
+  $('.my-thumbnail.modalable').click ->
+    src = $(this).prop('src')
+    $modal = $('#show_modal')
+    $modal.find('.modal-image').attr('src', src)
+    $modal.modal ->
+      show: true
+  
+  $('.my-thumbnail.selectable').click ->
     if $(this).hasClass('checked')
       $(this).removeClass('checked')
       $(this).next('.multiple_checkbox').prop('checked', false)
@@ -32,7 +39,7 @@ $(document).on 'turbolinks:load', ->
       $newElems = $(newElements)
       $newElems.imagesLoaded ->
         $container.masonry 'appended', $newElems, true
-      $newElems.children('.my-thumbnail').click ->
+      $newElems.children('.my-thumbnail.selectable').click ->
         if $(this).hasClass('checked')
           $(this).removeClass('checked')
           $(this).next('.multiple_checkbox').prop('checked', false)
@@ -41,12 +48,12 @@ $(document).on 'turbolinks:load', ->
           $(this).next('.multiple_checkbox').prop('checked', true)
   
   $('#check_all').click ->
-    for element in $('.my-thumbnail')
+    for element in $('.my-thumbnail.selectable')
       if $(element).not('.checked')
         $(element).addClass('checked')
         $(element).next('.multiple_checkbox').prop('checked', true)
   $('#uncheck_all').click ->
-    for element in $('.my-thumbnail')
+    for element in $('.my-thumbnail.selectable')
       if $(element).hasClass('checked')
         $(element).removeClass('checked')
         $(element).next('.multiple_checkbox').prop('checked', false)
