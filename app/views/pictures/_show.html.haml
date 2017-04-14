@@ -1,0 +1,14 @@
+.modal-image.img-responsive
+  = image_tag @picture.address, class: 'modal-image img-rounded'
+.modal-detail
+  .center-block
+    %p メンバー：#{@picture.member.member}
+  .center-block
+    %p イベント：#{@picture.event.event}
+  .center-block
+    %p 日時：#{@picture.date}
+  .center-block
+    - @picture.tags.each do |t|
+      %span t.tag
+  .center-block
+    %p 記事URL：#{@picture.article_url}

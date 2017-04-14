@@ -3,13 +3,6 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).on 'turbolinks:load', ->
-  $('.my-thumbnail.modalable').click ->
-    src = $(this).prop('src')
-    $modal = $('#show_modal')
-    $modal.find('.modal-image').attr('src', src)
-    $modal.modal ->
-      show: true
-  
   $('.my-thumbnail.selectable').click ->
     if $(this).hasClass('checked')
       $(this).removeClass('checked')

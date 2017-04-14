@@ -1,6 +1,6 @@
 .picture
   - if action_name == 'index' || action_name == 'search'
-    = image_tag picture.address, class: "my-thumbnail img-rounded modalable"
+    = link_to image_tag(picture.address, class: "my-thumbnail img-rounded modalable"), picture, method: :get, remote: true
   
   - if action_name == 'destroy_index' || action_name == 'tmp'
     = image_tag picture.address, class: "my-thumbnail img-rounded selectable"
