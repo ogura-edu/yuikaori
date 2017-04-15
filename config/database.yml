@@ -27,7 +27,9 @@ test:
   password: Password7@
 
 production:
-  <<: *default
+  adapter: postgresql
+  encoding: utf8
+  pool: 5
   database: db_production
   username: yui
   password: Kaori0806@
