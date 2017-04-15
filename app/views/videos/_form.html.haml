@@ -7,14 +7,17 @@
       %ul
         - video.errors.full_messages.each do |message|
           %li= message
-  .field
-    = f.label :member
-    = f.text_field :member
-  .field
-    = f.label :address
-    = f.text_field :address
-  .field
-    = f.label :date
-    = f.date_select :date
-  .actions
-    = f.submit
+  .detail
+    .field.center-block
+      = f.collection_select :member_id, Member.all, :id, :member
+    .field.center-block
+      = f.hidden_field :address
+    .field.center-block
+      = f.collection_select :event_id, Event.all, :id, :event
+    .field.center-block
+      = f.date_select :date
+    .field.center-block
+      = collection_check_boxes(:video, :tag_ids, Tag.all, :id, :tag) do |t|
+        - t.label {t.check_box + t.text}
+    .actions.right-block
+      = f.submit class: 'btn btn-default'

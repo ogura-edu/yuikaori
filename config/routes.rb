@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   get 'toppage' => 'top_page#show'
 
   resources :videos, constraints: { id: /\d+/ }
+  get 'videos/tmp'
+  get 'videos/search'
+  get 'videos/destroy_index'
+  post 'videos/multiple'
   resources :pictures, constraints: { id: /\d+/ }
   get 'pictures/tmp'
   get 'pictures/search'

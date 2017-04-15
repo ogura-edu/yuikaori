@@ -1,0 +1,14 @@
+.modal-video
+  = video_tag @video.address, class: 'modal-video'
+.modal-detail
+  .center-block
+    %p メンバー：#{@video.member.member}
+  .center-block
+    %p イベント：#{@video.event.event}
+  .center-block
+    %p 日時：#{@video.date}
+  .center-block
+    - @video.tags.each do |t|
+      %span t.tag
+  .center-block
+    %p 記事URL：#{@video.article_url}

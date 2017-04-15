@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170401151914) do
+ActiveRecord::Schema.define(version: 20170415124755) do
 
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "event"
@@ -45,6 +45,11 @@ ActiveRecord::Schema.define(version: 20170401151914) do
     t.index ["tag"], name: "index_tags_on_tag", unique: true, using: :btree
   end
 
+  create_table "tags_videos", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "video_id"
+    t.integer "tag_id"
+  end
+
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -75,7 +80,6 @@ ActiveRecord::Schema.define(version: 20170401151914) do
   end
 
   create_table "videos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "member"
     t.string   "address"
     t.date     "date"
     t.datetime "created_at",                  null: false

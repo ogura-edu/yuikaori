@@ -1,0 +1,3 @@
+$('.modal-body').html("<%= escape_javascript(render 'show') %>");
+$('.modal-footer').html("<%= escape_javascript(link_to 'Edit', edit_video_path(@video), class: 'btn btn-primary') %>");
+$('#show_modal').modal('show');

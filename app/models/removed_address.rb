@@ -1,2 +1,0 @@
-class RemovedAddress < ApplicationRecord
-end

@@ -1,10 +1,56 @@
 class VideosController < ApplicationController
   before_action :set_video, only: [:show, :edit, :update, :destroy]
 
+  def tmp
+    @videos = Video.where('tmp IS true AND removed IS false').order('date DESC').page(params[:page]).per(50)
+  end
+
+  def search
+    case params[:column]
+    when 'date'
+      selected = Video.where('date >= ? AND date <= ? AND tmp IS false AND removed IS false', params[:since], params[:until])
+    when 'event'
+      event_ids = Event.where('event LIKE ?', "%#{params[:value]}%")[:id]
+      selected = Video.where('event_id IN ? AND tmp IS false AND removed IS false', event_ids)
+    when 'tag'
+      tag_ids = Tag.where('tag LIKE ?', "%#{params[:value]}%")[:id]
+      selected = Video.where('tag_id IN ? AND tmp IS false AND removed IS false', tag_ids)
+    when 'member_id'
+      selected = Video.where('member_id = ? AND tmp IS false AND removed IS false', params[:value])
+    when 'media'
+      selected = Video.where('address LIKE ? AND tmp IS false AND removed IS false', "%#{params[:value]}%")
+    end
+    @videos = selected.order('date DESC').page(params[:page]).per(50)
+  end
+
+  def destroy_index
+    index
+  end
+
+  def multiple
+    #submitボタンのname属性によって処理を分岐
+    if params[:request]
+      Video.where("id IN (#{params[:video].join(',')})").update_all("tmp = true")
+      redirect_back fallback_location: videos_path, notice: '削除申請を受け付けました'
+    elsif params[:destroy]
+      #削除処理
+      params[:videos].each do |id|
+        video = Video.find(id)
+        video.update(removed: true)
+        File.delete("#{Settings.media.root}#{video.address}")
+        File.delete("#{Settings.media.root}#{video.ss_address}")
+      end
+      redirect_back fallback_location: pictures_tmp_path, notice: 'データベース及びストレージからの削除完了しました'
+    elsif params[:permit]
+      Video.where("id IN (#{params[:videos].join(',')})").update_all("tmp = false")
+      redirect_back fallback_location: videos_tmp_path, notice: '一覧に表示します'
+    end
+  end
+
   # GET /videos
   # GET /videos.json
   def index
-    @videos = Video.all
+    @videos = Video.where('tmp IS false AND removed IS false').order('date DESC').page(params[:page]).per(50)
   end
 
   # GET /videos/1
@@ -12,53 +58,8 @@ class VideosController < ApplicationController
   def show
   end
 
-  # GET /videos/new
-  def new
-    @video = Video.new
-  end
-
   # GET /videos/1/edit
   def edit
-  end
-
-  # POST /videos
-  # POST /videos.json
-  def create
-    @video = Video.new(video_params)
-
-    respond_to do |format|
-      if @video.save
-        format.html { redirect_to @video, notice: 'Video was successfully created.' }
-        format.json { render :show, status: :created, location: @video }
-      else
-        format.html { render :new }
-        format.json { render json: @video.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /videos/1
-  # PATCH/PUT /videos/1.json
-  def update
-    respond_to do |format|
-      if @video.update(video_params)
-        format.html { redirect_to @video, notice: 'Video was successfully updated.' }
-        format.json { render :show, status: :ok, location: @video }
-      else
-        format.html { render :edit }
-        format.json { render json: @video.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /videos/1
-  # DELETE /videos/1.json
-  def destroy
-    @video.destroy
-    respond_to do |format|
-      format.html { redirect_to videos_url, notice: 'Video was successfully destroyed.' }
-      format.json { head :no_content }
-    end
   end
 
   private
@@ -69,6 +70,6 @@ class VideosController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def video_params
-      params.require(:video).permit(:member, :address, :date)
+      params.require(:video).permit(:member_id, :event_id, :address, :date, :tmp, :removed, tag_ids: [])
     end
 end

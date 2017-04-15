@@ -1,5 +1,6 @@
-%h1 Editing Video
-= render 'form', video: @video
-= link_to 'Show', @video
-|
-= link_to 'Back', videos_path
+.wrapper
+  .original-video
+    = video_tag @video.address, class: "left"
+  .detail
+    = render 'form', video: @video
+= render 'footer'

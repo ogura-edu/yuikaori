@@ -13,11 +13,11 @@ class PicturesController < ApplicationController
       selected = Picture.where('date >= ? AND date <= ? AND tmp IS false AND removed IS false', params[:since], params[:until])
     when 'event'
       # 正規表現を使って検索
-      event_ids = Event.where('event = ?', params[:value])[:id]
+      event_ids = Event.where('event LIKE ?', "%#{params[:value]}%")[:id]
       selected = Picture.where('event_id IN ? AND tmp IS false AND removed IS false', event_ids)
     when 'tag'
       # 正規表現を使って検索
-      tag_ids = Tag.where('tag = ?', params[:value])[:id]
+      tag_ids = Tag.where('tag LIKE ?', "%#{params[:value]}%")[:id]
       selected = Picture.where('tag_id IN ? AND tmp IS false AND removed IS false', tag_ids)
     when 'member_id'
       # valueの値から一致するものを検索

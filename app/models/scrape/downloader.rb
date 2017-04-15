@@ -26,7 +26,7 @@ class Scrape::Downloader
     YoutubeDL.download(uri.to_s, options)
     date = File.mtime(fullpath)
     
-    Video.create(
+    video = Video.create(
       address: filepath,
       article_url: article_uri.to_s,
       member_id: member_id,
@@ -36,6 +36,7 @@ class Scrape::Downloader
       updated_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
       tmp: tmp
     )
+    video.screenshot
   end
   
   def save_media(media_type, uri, article_uri, date, member_id, event_id, tmp, filepath = nil)
@@ -69,7 +70,7 @@ class Scrape::Downloader
         tmp: tmp
       )
     when :video
-      Video.create(
+      video = Video.create(
         address: filepath,
         article_url: article_uri.to_s,
         member_id: member_id,
@@ -79,6 +80,7 @@ class Scrape::Downloader
         updated_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
         tmp: tmp
       )
+      video.screenshot
     end
   end
   
