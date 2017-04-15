@@ -40,6 +40,7 @@ class Scrape::AmebloCrawler
   end
   
   def single_crawl(url, member_id)
+    Dir.mkdir('tmp/anemone/') unless Dir.exist?('tmp/anemone')
     options = {
       depth_limit: 1,
       delay: 2,

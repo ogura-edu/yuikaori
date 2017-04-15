@@ -24,6 +24,7 @@ class Scrape::OfficialSiteCrawler
   private
   
   def crawl_media(member_id, event_id, tmp, depth_limit)
+    Dir.mkdir('tmp/anemone/') unless Dir.exist?('tmp/anemone')
     options = {
       depth_limit: depth_limit,
       delay: 2,
