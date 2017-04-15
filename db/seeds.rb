@@ -5,3 +5,5 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Member.create([{ member: 'ゆいかおり' }, { member: '小倉唯' }, { member: '石原夏織' }])
+Event.create( event: '---------------' )
