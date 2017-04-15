@@ -23,11 +23,6 @@
 # Ignore images and videos
 /app/assets/images/*
 
-# Ignore instagram result file
-/script/instagram/allpostdata*
-/script/instagram/recentposts
-/script/ameblo/*.dmp
-
 config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
