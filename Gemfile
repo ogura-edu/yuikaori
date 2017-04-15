@@ -84,3 +84,5 @@ gem 'config'
 gem 'masonry-rails'
 
 gem 'youtube-dl.rb'
+
+gem 'streamio-ffmpeg'
