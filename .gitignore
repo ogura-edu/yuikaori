@@ -22,6 +22,7 @@
 
 # Ignore images and videos
 /app/assets/images/*
+!/app/assets/images/item/
 
 config/settings.local.yml
 config/settings/*.local.yml
