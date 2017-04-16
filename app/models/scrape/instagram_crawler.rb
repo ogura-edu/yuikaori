@@ -5,7 +5,7 @@ class Scrape::InstagramCrawler
     ::Capybara.current_driver = :poltergeist
     ::Capybara.javascript_driver = :poltergeist
     ::Capybara.default_max_wait_time = 20
-    ::Capybara.app_host = 'https://www.instagram.com/'
+    ::Capybara.app_host = 'https://www.instagram.com/?hl=eg'
     ::Capybara.register_driver :poltergeist do |app|
       ::Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: false)
     end
@@ -28,7 +28,7 @@ class Scrape::InstagramCrawler
   
   def crawl(member_id:, type: :recent)
     login
-    visit(@instaID)
+    visit("#{@instaID}?hl=eg")
     case type
     when :all
       load_all_posts
@@ -47,14 +47,14 @@ class Scrape::InstagramCrawler
   private
   
   def login
-    visit('/accounts/login/')
+    visit('/accounts/login/?hl=eg')
     page.fill_in 'username', with: Settings.instagram.username
     page.fill_in 'password', with: Settings.instagram.password
-    click_button 'ログイン'
+    click_button 'Log in'
   end
   
   def load_all_posts
-    click_link "さらに表示"
+    click_link 'Load more'
     y_offset = 0
     loop do
       page.execute_script("window.scrollBy(0,3000);")
