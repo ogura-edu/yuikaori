@@ -53,7 +53,6 @@ end
 
 group :production do
   gem 'pg'
-  gem 'aws-sdk'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -96,3 +95,5 @@ gem 'youtube-dl.rb'
 gem 'streamio-ffmpeg'
 
 gem 'dotenv-rails'
+
+gem 'aws-sdk'
