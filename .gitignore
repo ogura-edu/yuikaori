@@ -30,4 +30,4 @@ config/environments/*.local.yml
 
 todo
 
-# a
+!.env
