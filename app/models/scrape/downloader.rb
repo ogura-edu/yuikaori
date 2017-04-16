@@ -1,6 +1,6 @@
 class Scrape::Downloader
   def initialize(dir_name)
-    @dir_name = dir_name
+    @dir_name = "#{Settings.media.url}#{dir_name}"
   end
   
   def save_youtube(id, uri, article_uri, member_id, event_id, tmp)
