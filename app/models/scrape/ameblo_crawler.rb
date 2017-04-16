@@ -71,8 +71,6 @@ class Scrape::AmebloCrawler
       image_url = img.attribute('src').value.gsub(/t[\d]*_/, 'o').gsub(/\?.*$/, '')
       break if File.extname(image_url) == ".gif"
       
-      puts image_url
-      
       datestr = image_url.gsub(/.*user_images\/(.*?)\//, '\1')
       dateary = [datestr.slice(0,4), datestr.slice(4,2), datestr.slice(6,2)]
       date = Time.local(*dateary)

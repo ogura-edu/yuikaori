@@ -1,3 +1,4 @@
 require 'capybara'
 require 'capybara/dsl'
-require 'selenium-webdriver'
+require 'capybara/poltergeist'
+# require 'selenium-webdriver'
