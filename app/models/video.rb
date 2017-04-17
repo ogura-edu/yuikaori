@@ -8,11 +8,11 @@ class Video < ApplicationRecord
   end
   
   def s3_ss_address
-    s3_address.gsub(%r{\..*?$}, '.jpg')
+    s3_address.gsub(%r{\.[^.]*?$}, '.jpg')
   end
   
   def ss_address
-    attributes['address'].gsub(%r{\..*?$}, '.jpg')
+    attributes['address'].gsub(%r{\.[^.]*?$}, '.jpg')
   end
   
   def screenshot
