@@ -12,6 +12,10 @@ $(document).on 'turbolinks:load', ->
       $(this).next('.multiple_checkbox').prop('checked', true)
 
   $container = $('#masonry-container')
+  num = $container.find('.picture').length
+  if num < 4
+    percent = (100/num) + '%'
+    $container.find('.sizer').css('width', percent)
   $container.imagesLoaded ->
     $container.masonry
       itemSelector: '.picture'
