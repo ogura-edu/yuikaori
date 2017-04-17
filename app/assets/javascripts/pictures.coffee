@@ -22,7 +22,7 @@ $(document).on 'turbolinks:load', ->
 
   $container.infinitescroll {
     loading:
-      img:     '/assets/item/loading.gif'
+      img:     image-url('item/loading.gif')
       msgText: ''
     navSelector: "nav .pagination"
     nextSelector: "nav .pagination a[rel=next]"
