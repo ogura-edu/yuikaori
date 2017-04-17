@@ -18,7 +18,7 @@ $(document).on 'turbolinks:load', ->
       columnWidth: '.sizer'
       gutter: 10
       percentPosition: true
-      fitWidth: true
+      isFitWidth: true
       isAnimated: true
       resize: true
     return
