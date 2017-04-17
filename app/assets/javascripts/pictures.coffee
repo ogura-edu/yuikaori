@@ -13,9 +13,9 @@ $(document).on 'turbolinks:load', ->
 
   $container = $('#masonry-container')
   num = $container.find('.picture').length
-  if num < 4
-    for i in (4-num)
-      $container.find('.page').append('<div class="picture dummy"></div>')
+  while num < 4
+    $container.find('.page').append('<div class="picture dummy"></div>')
+    num++
   $container.imagesLoaded ->
     $container.masonry
       itemSelector: '.picture'
