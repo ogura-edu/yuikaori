@@ -15,6 +15,8 @@ $(document).on 'turbolinks:load', ->
   $container.imagesLoaded ->
     $container.masonry
       itemSelector: '.picture'
+      columnWidth: '.sizer'
+      percentPosition: true
       isFitWidth: true
       isAnimated: true
       isResizable: true

@@ -2,18 +2,13 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#masonry-container {
-  column-count: 4;
-  column-gap: 1em;
-}
-
 .page {
 text-align: center;
-width: 100%;
-margin: 0 0 1em;
 }
 
+.sizer,
 .picture {
+width: 25%;
 display: inline-block;
 }
 
