@@ -14,10 +14,7 @@ $(document).on 'turbolinks:load', ->
   $container = $('#masonry-container')
   num = $container.find('.picture').length
   if num < 4
-    percent = (100/num) + '%'
-    $container.find('.sizer, .picture').css('width', percent)
-  else
-    $container.find('.sizer, .picture').css('width', '24%')
+    $container.find('.page').append('<div class="picture dummy"></div>')
   $container.imagesLoaded ->
     $container.masonry
       itemSelector: '.picture'
