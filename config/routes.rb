@@ -16,12 +16,12 @@ Rails.application.routes.draw do
   root 'top_page#index'
   get 'toppage' => 'top_page#show'
 
-  resources :videos, constraints: { id: /\d+/ }, only: [ :index, :edit ]
+  resources :videos, constraints: { id: /\d+/ }, only: [ :index, :edit, :show ]
   get 'videos/tmp'
   get 'videos/search'
   get 'videos/destroy_index'
   post 'videos/multiple'
-  resources :pictures, constraints: { id: /\d+/ }, only: [ :index, :edit ]
+  resources :pictures, constraints: { id: /\d+/ }, only: [ :index, :edit, :show ]
   get 'pictures/tmp'
   get 'pictures/search'
   get 'pictures/destroy_index'
