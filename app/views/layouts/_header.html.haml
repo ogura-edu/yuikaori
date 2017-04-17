@@ -48,7 +48,7 @@
                 = submit_tag '検索', class: 'btn btn-default'
         %li= link_to '画像一覧表示', pictures_path
         %li= link_to '動画一覧表示', videos_path
-        - if current_user.admin?
+        - if current_user.try(:admin?)
           %li= link_to '画像削除／表示許可', pictures_tmp_path
           %li= link_to '動画削除／表示許可', videos_tmp_path
       / 右側のコンポーネント
