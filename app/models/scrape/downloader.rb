@@ -1,13 +1,13 @@
 class Scrape::Downloader
   def initialize(dir_name)
-    @dir_name = dir_name
+    @dir_name = "images/#{dir_name}"
   end
   
   def save_youtube(id, uri, article_uri, member_id, event_id, tmp)
-    filepath = "youtube/#{id}.mp4"
+    filepath = "images/youtube/#{id}.mp4"
     fullpath = Scrape::Helper.fullpath(filepath)
     tmpfile = "tmp/#{id}.mp4"
-    obj = S3_BUCKET.object("images/#{filepath}")
+    obj = S3_BUCKET.object(filepath)
     
     if Video.find_by_address(fullpath)
       puts "#{uri} has been already saved or deleted"
@@ -43,7 +43,7 @@ class Scrape::Downloader
   
   def save_media(media_type, uri, article_uri, date, member_id, event_id, tmp, filepath = nil)
     # filepathを指定したい時は指定してもらう感じで。
-    filepath ||= "#{@dir_name}#{File.basename(uri)}"
+    filepath = filepath ? "images/#{filepath}" : "#{@dir_name}#{File.basename(uri)}"
     fullpath = Scrape::Helper.fullpath(filepath)
     
     # そもそもダウンロードしないものを弾く

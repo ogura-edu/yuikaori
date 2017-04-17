@@ -54,4 +54,4 @@ extname:
     - '.mp4'
 
 media:
-  root: 'https://s3-us-west-2.amazonaws.com/yuikaori-herokuapp-com/images/'
+  root: 'https://s3-us-west-2.amazonaws.com/yuikaori-herokuapp-com/'

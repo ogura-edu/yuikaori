@@ -43,7 +43,7 @@ class PicturesController < ApplicationController
       params[:pictures].each do |id|
         picture = Picture.find(id)
         picture.update(removed: true)
-        File.delete("#{Settings.media.root}#{picture.address}")
+        S3_BUCKET.object(picture.s3_address).delete
       end
       redirect_back fallback_location: pictures_tmp_path, notice: 'データベース及びストレージからの削除完了しました'
     elsif params[:permit]

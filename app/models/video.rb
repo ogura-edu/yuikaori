@@ -3,17 +3,28 @@ class Video < ApplicationRecord
   belongs_to :member
   belongs_to :event
   
+  def s3_address
+    attributes['address'].gsub(Settings.media.root, '')
+  end
+  
+  def s3_ss_address
+    s3_address.gsub(%r{\..*?$}, '.jpg')
+  end
+  
   def ss_address
     attributes['address'].gsub(%r{\..*?$}, '.jpg')
   end
   
   def screenshot
-    filepath = Settings.media.root + ss_address
-    if File.exist?(filepath)
-      puts "screenshot #{filepath} already exists."
+    ss = S3_BUCKET.object(s3_ss_address)
+    tmp_ss = "tmp/screenshot.jpg"
+    if ss.exists?
+      puts "screenshot #{ss_address} already exists."
       return
     end
     movie = FFMPEG::Movie.new(address)
-    movie.screenshot(filepath)
+    movie.screenshot(tmp_ss)
+    ss.put(body: File.open(tmp_ss))
+    File.delete(tmp_ss)
   end
 end

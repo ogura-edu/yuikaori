@@ -37,8 +37,8 @@ class VideosController < ApplicationController
       params[:videos].each do |id|
         video = Video.find(id)
         video.update(removed: true)
-        File.delete("#{Settings.media.root}#{video.address}")
-        File.delete("#{Settings.media.root}#{video.ss_address}")
+        S3_BUCKET.object(video.s3_address).delete
+        S3_BUCKET.object(video.s3_ss_address).delete
       end
       redirect_back fallback_location: pictures_tmp_path, notice: 'データベース及びストレージからの削除完了しました'
     elsif params[:permit]
