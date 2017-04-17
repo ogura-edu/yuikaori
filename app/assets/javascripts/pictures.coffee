@@ -16,10 +16,11 @@ $(document).on 'turbolinks:load', ->
     $container.masonry
       itemSelector: '.picture'
       columnWidth: '.sizer'
+      gutter: 10
       percentPosition: true
-      isFitWidth: true
+      fitWidth: true
       isAnimated: true
-      isResizable: true
+      resize: true
     return
 
   $container.infinitescroll {
