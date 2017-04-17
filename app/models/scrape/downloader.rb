@@ -90,7 +90,7 @@ class Scrape::Downloader
   private
   
   def download(filepath, fullpath, uri)
-    obj = S3_BUCKET.object("images/#{filepath}")
+    obj = S3_BUCKET.object(filepath)
     
     # 既にダウンロードしてある場合はスキップ
     if obj.exists?
