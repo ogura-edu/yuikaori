@@ -5,7 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-User.create( email: '272968442-twitter@example.com', password: Devise.friendly_token, provider: 'twitter', uid: '272968442', username: 'JAS', admin: true )
+User.create( email: '272968442-twitter@example.com', password: Devise.friendly_token, provider: 'twitter', uid: '272968442', username: 'JAS', admin: true, approved: true )
 
 Member.create([{ member: 'ゆいかおり' }, { member: '小倉唯' }, { member: '石原夏織' }])
 Event.create( event: '---------------' )

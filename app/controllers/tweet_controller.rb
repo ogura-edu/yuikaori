@@ -11,6 +11,7 @@ class TweetController < ApplicationController
   end
   
   def index
+    redirect_back fallback_location: toppage_path, alert: '一般ユーザはは入れません' unless current_user.admin?
     @tweets = []
     @client.user_timeline("justice_vsbr", {count:200, include_rts:true}).each {|tweet|
       @tweets << tweet

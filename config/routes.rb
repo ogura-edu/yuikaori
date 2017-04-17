@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'users/index'
+
   post 'scrape' => 'scrape#scrape'
   get 'scrape/index'
   get 'scrape/ameblo'
@@ -9,15 +11,17 @@ Rails.application.routes.draw do
   get 'scrape/youtube'
 
   devise_for :users, controllers: { :omniauth_callbacks => 'omniauth_callbacks' }
+  get 'users' => 'users#index'
+  post 'users/approve' => 'users#approve'
   root 'top_page#index'
   get 'toppage' => 'top_page#show'
 
-  resources :videos, constraints: { id: /\d+/ }
+  resources :videos, constraints: { id: /\d+/ }, only: [ :index, :edit ]
   get 'videos/tmp'
   get 'videos/search'
   get 'videos/destroy_index'
   post 'videos/multiple'
-  resources :pictures, constraints: { id: /\d+/ }
+  resources :pictures, constraints: { id: /\d+/ }, only: [ :index, :edit ]
   get 'pictures/tmp'
   get 'pictures/search'
   get 'pictures/destroy_index'

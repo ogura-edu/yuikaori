@@ -1,0 +1,11 @@
+- provide :title, 'ユーザ管理'
+%h1 ユーザ一覧
+
+%ul.users
+  - @users.each do |user|
+    %li= "Name: #{user.username}"
+    %li= "UID: #{user.uid}"
+    %li= "Admin: #{user.admin}"
+    %li= "Approved: #{user.approved}"
+    - unless user.approved?
+      %li= link_to '承認！', users_approve_path

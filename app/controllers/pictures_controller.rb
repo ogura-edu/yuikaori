@@ -2,6 +2,7 @@ class PicturesController < ApplicationController
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
 
   def tmp
+    redirect_back fallback_location: pictures_path, alert: '管理画面です 一般ユーザはは入れません' unless current_user.admin?
     @pictures = Picture.where("tmp IS true AND removed IS false").order('date DESC').page(params[:page]).per(50)
   end
   
@@ -30,10 +31,12 @@ class PicturesController < ApplicationController
   end
   
   def destroy_index
+    redirect_back fallback_location: pictures_path, alert: '削除申請は承認されたユーザのみ可能です\n管理者(@justice_vsbr)に連絡してください\n承認は基本的に相互フォローのみになります' unless current_user.approved?
     index
   end
   
   def multiple
+    redirect_back fallback_location: pictures_path, alert: '削除申請は承認されたユーザのみ可能です\n管理者(@justice_vsbr)に連絡してください\n承認は基本的に相互フォローのみになります' unless current_user.approved?
     #submitボタンのname属性によって処理を分岐
     if params[:request]
       Picture.where("id IN (#{params[:pictures].join(',')})").update_all("tmp = true")
