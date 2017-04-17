@@ -16,6 +16,8 @@ $(document).on 'turbolinks:load', ->
   if num < 4
     percent = (100/num) + '%'
     $container.find('.sizer, .picture').css('width', percent)
+  else
+    $container.find('.sizer, .picture').css('width', '24%')
   $container.imagesLoaded ->
     $container.masonry
       itemSelector: '.picture'
