@@ -58,8 +58,11 @@
             %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :role => "button"}
               = current_user.username
             %ul.dropdown-menu
-              %li 管理者：#{current_user.admin}
+              %li= image_tag current_user.image, class: 'img-circle'
+              %li= current_user.username
+              %li @#{current_user.screen_name}
               %li 承認：#{current_user.approved}
+              %li 管理者：#{current_user.admin}
               %li.divider{:role => "separator"}
               %li= link_to 'ログアウト', users_logout_path, method: :delete
               %li= link_to 'アカウント削除', users_destroy_path, method: :delete

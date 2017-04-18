@@ -1,11 +1,19 @@
 - provide :title, 'ユーザ管理'
 %h1 ユーザ一覧
 
-%ul.users
+%table.table
+  %tr
+    %th ユーザ名
+    %th ユーザID
+    %th 承認
+    %th 管理者
+    %th
+    %th
   - @users.each do |user|
-    %li= "Name: #{user.username}"
-    %li= "UID: #{user.uid}"
-    %li= "Admin: #{user.admin}"
-    %li= "Approved: #{user.approved}"
-    - unless user.approved?
-      %li= link_to '承認！', users_approve_path(id: user.id), method: :post
+    %tr
+      %td= user.username
+      %td= user.screen_name
+      %td= user.approved
+      %td= user.admin
+      %td= link_to '承認on/off', users_approve_path(id: user.id), method: :post
+      %td= link_to '管理者on/off', users_admin_path(id: user.id), method: :post

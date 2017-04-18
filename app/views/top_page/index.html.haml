@@ -9,6 +9,7 @@
       = button_to 'メディアを追加する', scrape_index_path, method: :get, class: "btn btn-default"
       - if current_user.admin?
         = button_to 'ツイートする', tweets_path, method: :get, class: "btn btn-default"
+        = button_to 'ユーザ管理', users_index_path, method: :get, class: "btn btn-default"
 - else
   %h2 Twitter認証してログインしてください
   .heading

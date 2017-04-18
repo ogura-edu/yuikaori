@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170417142102) do
+ActiveRecord::Schema.define(version: 20170418144305) do
 
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "event"
@@ -75,6 +75,8 @@ ActiveRecord::Schema.define(version: 20170417142102) do
     t.datetime "updated_at",                             null: false
     t.boolean  "admin",                  default: false
     t.boolean  "approved",               default: false, null: false
+    t.string   "screen_name"
+    t.string   "image"
     t.index ["approved"], name: "index_users_on_approved", using: :btree
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree

@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     delete 'users/destroy', to: 'users/registrations#destroy'
     get 'users/index', to: 'users/admin#index'
     post 'users/approve', to: 'users/admin#approve'
+    post 'users/admin', to: 'users/admin#admin'
   end
 
   namespace :scrape do
