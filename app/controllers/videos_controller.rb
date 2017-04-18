@@ -1,6 +1,6 @@
 class VideosController < ApplicationController
   before_action :set_video, only: [:show, :edit]
-  before_action :approved_user!, only: [:tmp, :destroy_index, :request]
+  before_action :approved_user!, only: [:tmp, :destroy_index, :request_destroy]
   before_action :admin_user!, only: [:multiple]
 
   def tmp
@@ -35,7 +35,7 @@ class VideosController < ApplicationController
     index
   end
 
-  def request
+  def request_destroy
     Video.where("id IN (#{params[:video].join(',')})").update_all("tmp = true")
     redirect_back fallback_location: videos_path, notice: '削除申請を受け付けました'
   end

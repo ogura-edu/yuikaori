@@ -16,6 +16,6 @@ class ApplicationController < ActionController::Base
   end
   
   def admin_user!
-    redirect_to root_path, alert: '管理画面です\n一般ユーザはは入れません' unless current_user.admin?
+    redirect_to root_path, alert: '管理画面です\n一般ユーザは入れません' unless current_user.admin?
   end
 end
