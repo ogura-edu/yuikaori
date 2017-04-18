@@ -1,41 +1,48 @@
 class VideosController < ApplicationController
-  before_action :set_video, only: [:show, :edit, :update, :destroy]
+  before_action :set_video, only: [:show, :edit]
+  before_action :approved_user!, only: [:tmp, :destroy_index, :request]
+  before_action :admin_user!, only: [:multiple]
 
   def tmp
-    redirect_back fallback_location: videos_path, alert: '管理画面です 一般ユーザはは入れません' unless current_user.admin?
     @videos = Video.where('tmp IS true AND removed IS false').order('date DESC').page(params[:page]).per(50)
   end
 
   def search
+    #columnの値によって処理を分岐
     case params[:column]
     when 'date'
+      # since, untilの値から検索
       selected = Video.where('date >= ? AND date <= ? AND tmp IS false AND removed IS false', params[:since], params[:until])
     when 'event'
+      # 正規表現を使って検索
       event_ids = Event.where('event LIKE ?', "%#{params[:value]}%")[:id]
       selected = Video.where('event_id IN ? AND tmp IS false AND removed IS false', event_ids)
     when 'tag'
+      # 正規表現を使って検索
       tag_ids = Tag.where('tag LIKE ?', "%#{params[:value]}%")[:id]
       selected = Video.where('tag_id IN ? AND tmp IS false AND removed IS false', tag_ids)
     when 'member_id'
+      # valueの値から一致するものを検索
       selected = Video.where('member_id = ? AND tmp IS false AND removed IS false', params[:value])
     when 'media'
+      # 正規表現を使って検索
       selected = Video.where('address LIKE ? AND tmp IS false AND removed IS false', "%#{params[:value]}%")
     end
     @videos = selected.order('date DESC').page(params[:page]).per(50)
   end
 
   def destroy_index
-    redirect_back fallback_location: videos_path, alert: '削除申請は承認されたユーザのみ可能です\n管理者(@justice_vsbr)に連絡してください\n承認は基本的に相互フォローのみになります' unless current_user.approved?
     index
   end
 
+  def request
+    Video.where("id IN (#{params[:video].join(',')})").update_all("tmp = true")
+    redirect_back fallback_location: videos_path, notice: '削除申請を受け付けました'
+  end
+
   def multiple
-    redirect_back fallback_location: videos_path, alert: '削除申請は承認されたユーザのみ可能です\n管理者(@justice_vsbr)に連絡してください\n承認は基本的に相互フォローのみになります' unless current_user.approved?
     #submitボタンのname属性によって処理を分岐
-    if params[:request]
-      Video.where("id IN (#{params[:video].join(',')})").update_all("tmp = true")
-      redirect_back fallback_location: videos_path, notice: '削除申請を受け付けました'
-    elsif params[:destroy]
+    if params[:destroy]
       #削除処理
       params[:videos].each do |id|
         video = Video.find(id)

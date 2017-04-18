@@ -1,5 +1,6 @@
 class TweetController < ApplicationController
   before_action :twitter_client
+  before_action :admin_user!
   
   def twitter_client
     @client = Twitter::REST::Client.new do |config|

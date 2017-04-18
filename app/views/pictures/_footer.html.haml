@@ -8,7 +8,7 @@
       
       %ul.nav.navbar-nav.navbar-right
         / index
-        - if action_name == 'index'
+        - if action_name == 'index' && current_user.approved?
           %li= link_to '削除申請モードへ', destroy_index_pictures_path(page: params[:page])
         / destroy_index
         - if action_name == 'destroy_index'
@@ -23,5 +23,5 @@
         - if action_name == 'edit'
           %li= link_to 'Back', pictures_path(page: params[:page])
         / search
-        - if action_name == 'search'
+        - if action_name == 'search' && current_user.approved?
           %li= link_to '削除申請モードへ', destroy_index_pictures_path(page: params[:page])

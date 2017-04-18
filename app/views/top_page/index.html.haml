@@ -5,9 +5,10 @@
   .heading
     = button_to '画像一覧へ', pictures_path, method: :get, class: "btn btn-default"
     = button_to '動画一覧へ', videos_path, method: :get, class: "btn btn-default"
-    = button_to 'メディアを追加する', scrape_index_path, method: :get, class: "btn btn-default"
-    - if current_user.admin?
-      = button_to 'ツイートする', tweets_path, method: :get, class: "btn btn-default"
+    - if current_user.approved?
+      = button_to 'メディアを追加する', scrape_index_path, method: :get, class: "btn btn-default"
+      - if current_user.admin?
+        = button_to 'ツイートする', tweets_path, method: :get, class: "btn btn-default"
 - else
   %h2 Twitter認証してログインしてください
   .heading

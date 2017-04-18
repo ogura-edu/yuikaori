@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       get :search
       get :destroy_index
       post :multiple
+      post :request
     end
   end
   

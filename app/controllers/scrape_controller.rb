@@ -1,18 +1,5 @@
 class ScrapeController < ApplicationController
-  def index
-  end
-  
-  def ameblo
-  end
-
-  def instagram
-  end
-
-  def twitter
-  end
-  
-  def official_site
-  end
+  before_action :approved_user!
   
   def scrape
     if params[:ameblo]
