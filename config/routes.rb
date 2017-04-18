@@ -2,10 +2,11 @@ Rails.application.routes.draw do
   root 'top_page#index'
   
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }, skip: :sessions
-  namespace :users do
-    delete :logout, to: 'sessions#destroy'
-    get :index, controller: :admin
-    post :approve, controller: :admin
+  devise_scope :user do
+    delete 'users/logout', to: 'users/sessions#destroy'
+    delete 'users/destroy', to: 'users/registrations#destroy'
+    get 'users/index', to: 'users/admin#index'
+    post 'users/approve', to: 'users/admin#approve'
   end
 
   namespace :scrape do

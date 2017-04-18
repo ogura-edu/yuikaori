@@ -54,11 +54,12 @@
       / 右側のコンポーネント
       %ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
-          %li= link_to current_user.username, root_path
-          %li= link_to 'edit profile', edit_user_registration_path
-          %li= link_to 'log out', destroy_user_session_path, method: :delete
-        - else
-          %li= link_to 'sign up', new_user_registration_path
-          %li= link_to 'log in', new_user_session_path
-    / /.navbar-collapse
-  / /.container-fluid
+          %li.dropdown
+            %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :role => "button"}
+              = current_user.username
+            %ul.dropdown-menu
+              %li 管理者：#{current_user.admin}
+              %li 承認：#{current_user.approved}
+              %li.divider{:role => "separator"}
+              %li= link_to 'ログアウト', users_logout_path, method: :delete
+              %li= link_to 'アカウント削除', users_destroy_path, method: :delete
