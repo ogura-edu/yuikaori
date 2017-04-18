@@ -9,5 +9,5 @@ class Users::AdminController < ApplicationController
   def approve
     redirect_back fallback_location: root_path, alert: '管理画面です 一般ユーザはは入れません' unless current_user.admin?
   end
-    User.find(params[:id]).update_attribute :approved, true
+    # User.find(params[:id]).update_attribute :approved, true
 end
