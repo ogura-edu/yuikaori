@@ -9,7 +9,7 @@
       %ul.nav.navbar-nav.navbar-right
         / index
         - if action_name == 'index'
-          %li= link_to '削除申請モードへ', videos_destroy_index_path(page: params[:page])
+          %li= link_to '削除申請モードへ', destroy_index_videos_path(page: params[:page])
         / destroy_index
         - if action_name == 'destroy_index'
           %li= link_to '閲覧モードへ', videos_path(page: params[:page])
@@ -24,4 +24,4 @@
           %li= link_to 'Back', videos_path(page: params[:page])
         / search
         - if action_name == 'search'
-          %li= link_to '削除申請モードへ', videos_destroy_index_path(page: params[:page])
+          %li= link_to '削除申請モードへ', destroy_index_videos_path(page: params[:page])

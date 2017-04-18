@@ -43,10 +43,10 @@ class VideosController < ApplicationController
         S3_BUCKET.object(video.s3_address).delete
         S3_BUCKET.object(video.s3_ss_address).delete
       end
-      redirect_back fallback_location: pictures_tmp_path, notice: 'データベース及びストレージからの削除完了しました'
+      redirect_back fallback_location: tmp_videos_path, notice: 'データベース及びストレージからの削除完了しました'
     elsif params[:permit]
       Video.where("id IN (#{params[:videos].join(',')})").update_all("tmp = false")
-      redirect_back fallback_location: videos_tmp_path, notice: '一覧に表示します'
+      redirect_back fallback_location: tmp_videos_path, notice: '一覧に表示します'
     end
   end
 

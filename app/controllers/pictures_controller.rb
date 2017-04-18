@@ -48,10 +48,10 @@ class PicturesController < ApplicationController
         picture.update(removed: true)
         S3_BUCKET.object(picture.s3_address).delete
       end
-      redirect_back fallback_location: pictures_tmp_path, notice: 'データベース及びストレージからの削除完了しました'
+      redirect_back fallback_location: tmp_pictures_path, notice: 'データベース及びストレージからの削除完了しました'
     elsif params[:permit]
       Picture.where("id IN (#{params[:pictures].join(',')})").update_all("tmp = false")
-      redirect_back fallback_location: pictures_tmp_path, notice: '一覧に表示します'
+      redirect_back fallback_location: tmp_pictures_path, notice: '一覧に表示します'
     end
   end
   

@@ -1,32 +1,33 @@
 Rails.application.routes.draw do
-  get 'users/index'
-
-  post 'scrape' => 'scrape#scrape'
-  get 'scrape/index'
-  get 'scrape/ameblo'
-  get 'scrape/instagram'
-  get 'scrape/twitter'
-  get 'scrape/official_site'
-  get 'scrape/news_site'
-  get 'scrape/youtube'
-
-  devise_for :users, controllers: { :omniauth_callbacks => 'omniauth_callbacks' }
-  get 'users' => 'users#index'
-  post 'users/approve' => 'users#approve'
   root 'top_page#index'
-  get 'toppage' => 'top_page#show'
+  
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }, skip: :sessions
+  namespace :users do
+    delete :logout, to: 'sessions#destroy'
+    get :index, controller: :admin
+    post :approve, controller: :admin
+  end
 
-  resources :videos, constraints: { id: /\d+/ }, only: [ :index, :edit, :show ]
-  get 'videos/tmp'
-  get 'videos/search'
-  get 'videos/destroy_index'
-  post 'videos/multiple'
-  resources :pictures, constraints: { id: /\d+/ }, only: [ :index, :edit, :show ]
-  get 'pictures/tmp'
-  get 'pictures/search'
-  get 'pictures/destroy_index'
-  post 'pictures/multiple'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  namespace :scrape do
+    post :scrape, as: ''
+    get :index
+    get :ameblo
+    get :instagram
+    get :twitter
+    get :official_site
+    get :news_site
+    get :youtube
+  end
+
+
+  resources :pictures, :videos, constraints: { id: /\d+/ }, only: [ :index, :edit, :show ] do
+    collection do
+      get :tmp
+      get :search
+      get :destroy_index
+      post :multiple
+    end
+  end
   
   get 'tweets' => 'tweet#index'
 end

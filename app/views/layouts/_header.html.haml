@@ -12,13 +12,13 @@
             MENU
             %span.caret
           %ul.dropdown-menu
-            %li= link_to 'ゆいかおり', pictures_search_path(column: 'member_id', value: 1)
-            %li= link_to '小倉唯', pictures_search_path(column: 'member_id', value: 2)
-            %li= link_to '石原夏織', pictures_search_path(column: 'member_id', value: 3)
+            %li= link_to 'ゆいかおり', search_pictures_path(column: 'member_id', value: 1)
+            %li= link_to '小倉唯', search_pictures_path(column: 'member_id', value: 2)
+            %li= link_to '石原夏織', search_pictures_path(column: 'member_id', value: 3)
             %li.divider{:role => "separator"}
             / 検索フォーム
             %li
-              = form_tag pictures_search_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+              = form_tag search_pictures_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
                 .form-group
                   = hidden_field_tag :column, 'date'
                   %p since:
@@ -28,20 +28,20 @@
                 = submit_tag '検索', class: 'btn btn-default'
             %li.divider{:role => "separator"}
             %li
-              = form_tag pictures_search_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+              = form_tag search_pictures_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
                 .form-group
                   = hidden_field_tag :column, 'event'
                   = text_field_tag(:value, nil, class: 'form-control', placeholder: 'イベント検索')
                 = submit_tag '検索', class: 'btn btn-default'
             %li.divider{:role => "separator"}
             %li
-              = form_tag pictures_search_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+              = form_tag search_pictures_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
                 .form-group
                   = hidden_field_tag :column, 'tag'
                   = text_field_tag(:value, nil, class: 'form-control', placeholder: 'タグ検索')
                 = submit_tag '検索', class: 'btn btn-default'
             %li
-              = form_tag pictures_search_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+              = form_tag search_pictures_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
                 .form-group
                   = hidden_field_tag :column, 'media'
                   = text_field_tag :value, nil, class: 'form-control', placeholder: 'メディア名検索'
@@ -49,12 +49,12 @@
         %li= link_to '画像一覧表示', pictures_path
         %li= link_to '動画一覧表示', videos_path
         - if current_user.try(:admin?)
-          %li= link_to '画像削除／表示許可', pictures_tmp_path
-          %li= link_to '動画削除／表示許可', videos_tmp_path
+          %li= link_to '画像削除／表示許可', tmp_pictures_path
+          %li= link_to '動画削除／表示許可', tmp_videos_path
       / 右側のコンポーネント
       %ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
-          %li= link_to current_user.username, toppage_path
+          %li= link_to current_user.username, root_path
           %li= link_to 'edit profile', edit_user_registration_path
           %li= link_to 'log out', destroy_user_session_path, method: :delete
         - else

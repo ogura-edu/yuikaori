@@ -8,4 +8,4 @@
     %li= "Admin: #{user.admin}"
     %li= "Approved: #{user.approved}"
     - unless user.approved?
-      %li= link_to '承認！', users_approve_path
+      %li= link_to '承認！', users_approve_path(user), method: :post

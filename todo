@@ -9,6 +9,11 @@ get_images.rb側で責任を持つべき処理はそちらで全て終わらせ�
 ActiveRecordを使う
 
 優先度 高：
+deviseまわりをしっかり理解する。ネットに上げる以上、最優先事項。
+approveアクションの中身はcurren_user.update_attribute :approved, true
+routesをちゃんと書く。無駄な部分は削除
+redirectとともにalertを出す
+adminとapprovedをチェックする部分を簡略化できないか（メソッドを定義する？どのモデルに？）
 管理者をつくり、ユーザ管理できるようにする（削除など
 ユーザの権限を把握、設定
 strong_parametersをしっかり書く
