@@ -7,8 +7,10 @@
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   %body
-    = flash[:notice]
-    = flash[:alert]
+    - if flash[:notice]
+      = javascript_tag "alert(#{flash[:notice]})"
+    - if flash[:alert]
+      = javascript_tag "alert(#{flash[:alert]})"
     %header
       = render 'layouts/header'
     %section
