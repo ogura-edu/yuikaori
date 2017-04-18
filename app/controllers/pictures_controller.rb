@@ -11,22 +11,15 @@ class PicturesController < ApplicationController
     #columnの値によって処理を分岐
     case params[:column]
     when 'date'
-      # since, untilの値から検索
-      selected = Picture.where('date >= ? AND date <= ? AND tmp IS false AND removed IS false', params[:since], params[:until])
+      selected = Picture.selected_by_date(picture_params)
+    when 'member'
+      selected = Picture.selected_by_member(picture_params)
     when 'event'
-      # 正規表現を使って検索
-      event_ids = Event.where('event LIKE ?', "%#{params[:value]}%")[:id]
-      selected = Picture.where('event_id IN ? AND tmp IS false AND removed IS false', event_ids)
+      selected = Picture.selected_by_event(picture_params)
     when 'tag'
-      # 正規表現を使って検索
-      tag_ids = Tag.where('tag LIKE ?', "%#{params[:value]}%")[:id]
-      selected = Picture.where('tag_id IN ? AND tmp IS false AND removed IS false', tag_ids)
-    when 'member_id'
-      # valueの値から一致するものを検索
-      selected = Picture.where('member_id = ? AND tmp IS false AND removed IS false', params[:value])
+      selected = Picture.selected_by_tag(picture_params)
     when 'media'
-      # 正規表現を使って検索
-      selected = Picture.where('address LIKE ? AND tmp IS false AND removed IS false', "%#{params[:value]}%")
+      selected = Picture.selected_by_media(picture_params)
     end
     @pictures = selected.order('date DESC').page(params[:page]).per(50)
   end
@@ -80,6 +73,6 @@ class PicturesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def picture_params
-      params.require(:picture).permit(:member_id, :address, :event_id, :date, :tmp, :removed, :tag_ids => [])
+      params.require(:picture).permit(:since, :until, :member, :event, :tag, :media)
     end
 end

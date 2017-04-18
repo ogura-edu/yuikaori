@@ -11,22 +11,15 @@ class VideosController < ApplicationController
     #columnの値によって処理を分岐
     case params[:column]
     when 'date'
-      # since, untilの値から検索
-      selected = Video.where('date >= ? AND date <= ? AND tmp IS false AND removed IS false', params[:since], params[:until])
+      selected = Video.selected_by_date(video_params)
+    when 'member'
+      selected = Video.selected_by_member(video_params)
     when 'event'
-      # 正規表現を使って検索
-      event_ids = Event.where('event LIKE ?', "%#{params[:value]}%")[:id]
-      selected = Video.where('event_id IN ? AND tmp IS false AND removed IS false', event_ids)
+      selected = Video.selected_by_event(video_params)
     when 'tag'
-      # 正規表現を使って検索
-      tag_ids = Tag.where('tag LIKE ?', "%#{params[:value]}%")[:id]
-      selected = Video.where('tag_id IN ? AND tmp IS false AND removed IS false', tag_ids)
-    when 'member_id'
-      # valueの値から一致するものを検索
-      selected = Video.where('member_id = ? AND tmp IS false AND removed IS false', params[:value])
+      selected = Video.selected_by_tag(video_params)
     when 'media'
-      # 正規表現を使って検索
-      selected = Video.where('address LIKE ? AND tmp IS false AND removed IS false', "%#{params[:value]}%")
+      selected = Video.selected_by_media(video_params)
     end
     @videos = selected.order('date DESC').page(params[:page]).per(50)
   end
@@ -80,6 +73,6 @@ class VideosController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def video_params
-      params.require(:video).permit(:member_id, :event_id, :address, :date, :tmp, :removed, tag_ids: [])
+      params.require(:video).permit(:since, :until, :member, :event, :tag, :media)
     end
 end
