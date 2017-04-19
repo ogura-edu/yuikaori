@@ -7,9 +7,9 @@ $(document).on 'turbolinks:load', ->
     $('.switch').css('display', 'none')
     $('.switch input').removeAttr('required')
     switch document.twitter.twitter_type.value
-      when 'period'
-        $('.period').css('display', 'block')
-        $('.period input').attr('required', 'required')
+      when 'date'
+        $('.date').css('display', 'block')
+        $('.date input').attr('required', 'required')
       when 'number'
         $('.number').css('display', 'block')
         $('.number input').attr('required', 'required')

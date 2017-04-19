@@ -9,12 +9,12 @@
 - if action_name == 'twitter'
   .center-block
     = select_tag 'twitter[type]', options_for_select([ ['期間を指定して取得(約10日前まで)', 'date'], ['ツイート数を指定して取得(3,200まで)', 'number'], ['ツイートURLを直接指定して取得', 'tweet'] ]), include_blank: true, required: true
-  .center-block.switch.period
+  .center-block.switch.date
     = text_field_tag 'twitter[screen_name]', nil, placeholder: 'TwitterID'
-  .center-block.switch.period
+  .center-block.switch.date
     %span since:
     = date_field_tag 'twitter[since]', Date.today, max: Date.today
-  .center-block.switch.period
+  .center-block.switch.date
     %span until:
     = date_field_tag 'twitter[until]', Date.today, max: Date.today
   .center-block.switch.number
