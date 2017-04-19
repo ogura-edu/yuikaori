@@ -1,5 +1,12 @@
 class AllCrawl
   def self.execute
+    self.ameblo
+    self.instagram
+    self.twitter
+    self.official_site
+  end
+  
+  def self.ameblo
     Settings.ameblo.stopped_updating.each do |obj|
       params = {
         amebaID:   obj.ID,
@@ -19,7 +26,9 @@ class AllCrawl
       ameblo = Scrape::AmebloCrawler.new(params)
       ameblo.crawl(type: :all)
     end
+  end
 
+  def instagram
     Settings.instagram.regular_crawl.each do |obj|
       params = {
         instaID:   obj.ID,
@@ -29,7 +38,9 @@ class AllCrawl
       insta = Scrape::InstagramCrawler.new(params)
       insta.crawl(type: :all)
     end
+  end
 
+  def twitter
     Settings.twitter.regular_crawl.each do |obj|
       params = {
         type:        'auto',
@@ -40,7 +51,9 @@ class AllCrawl
       twitter = Scrape::TwitterCrawler.new(params, user_type: :admin)
       twitter.crawl(type: :all)
     end
+  end
 
+  def official_site
     Settings.official_site.regular_crawl.each do |obj|
       params = {
         page_url:      obj.domain,

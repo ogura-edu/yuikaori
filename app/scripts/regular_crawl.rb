@@ -1,5 +1,15 @@
 class RegularCrawl
-  def self.daily_execute
+  def self.daily
+    self.ameblo
+    self.instagram
+    self.twitter
+  end
+
+  def self.monthly
+    self.official_site
+  end
+  
+  def self.ameblo
     Settings.ameblo.regular_crawl.each do |obj|
       params = {
         amebaID:   obj.ID,
@@ -9,7 +19,9 @@ class RegularCrawl
       ameblo = Scrape::AmebloCrawler.new(params)
       ameblo.crawl
     end
+  end
 
+  def self.instagram
     Settings.instagram.regular_crawl.each do |obj|
       params = {
         instaID:   obj.ID,
@@ -19,7 +31,9 @@ class RegularCrawl
       insta = Scrape::InstagramCrawler.new(params)
       insta.crawl
     end
+  end
 
+  def self.twitter
     Settings.twitter.regular_crawl.each do |obj|
       params = {
         type:        'auto',
@@ -32,7 +46,7 @@ class RegularCrawl
     end
   end
   
-  def self.monthly_execute
+  def self.official_site
     Settings.official_site.regular_crawl.each do |obj|
       params = {
         page_url:      obj.domain,
