@@ -1,27 +1,31 @@
 class Scrape::AmebloCrawler
-  def initialize(url)
-    @amebaID = url.gsub(%r{http://ameblo.jp/(.*?)/.*}, '\1')
+  def initialize(params)
+    @member_id = params[:member_id].to_i
+    @event_id = params[:event_id].to_i
+    @article_url = params[:article_url]
+    @amebaID = params[:amebaID] || @article_url.match(%r{http://ameblo.jp/([^/]*?)/.*})[1]
     @host = "http://ameblo.jp/#{@amebaID}/"
     @downloader = Scrape::Downloader.new("ameblo/#{@amebaID}/")
   end
   
   def validate
-    raise ArgumentError, '追跡済みのIDは指定しないでください' if skip_IDs.include?(@amebaID)
+    raise ArgumentError, '無効なURLです' unless @article_url.match %r{http://ameblo.jp/#{@amebaID}/entry-\d+.html}
+    raise ArgumentError, '追跡済みのユーザは指定しないでください' if skip_IDs.include?(@amebaID)
   end
   
-  def crawl(member_id:, type: :recent)
+  def crawl(type: :recent)
     case type
     when :all
       all_entrylist.each do |entrylist_url|
-        single_crawl(entrylist_url, member_id)
+        single_crawl(entrylist_url)
       end
     when :recent
-      single_crawl("#{@host}entrylist.html", member_id)
+      single_crawl("#{@host}entrylist.html")
     end
   end
   
-  def manually_crawl(params:)
-    parse_article(params[:article_url], params[:member_id], params[:event_id], true)
+  def manually_crawl
+    parse_article(tmp: true)
   end
   
   private
@@ -39,7 +43,7 @@ class Scrape::AmebloCrawler
     return urls
   end
   
-  def single_crawl(url, member_id)
+  def single_crawl(url)
     Dir.mkdir('tmp/anemone/') unless Dir.exist?('tmp/anemone')
     options = {
       depth_limit: 1,
@@ -56,7 +60,8 @@ class Scrape::AmebloCrawler
       begin
         anemone.on_every_page do |page|
           puts "image on #{page.url} :"
-          parse_article(page.url, member_id, 1, false)
+          @article_url = page.url
+          parse_article(tmp: false)
         end
       rescue => ex
         puts ex
@@ -65,8 +70,8 @@ class Scrape::AmebloCrawler
     end
   end
 
-  def parse_article(article_url, member_id, event_id, tmp)
-    doc = Nokogiri::HTML.parse(open(article_url))
+  def parse_article(tmp:)
+    doc = Nokogiri::HTML.parse(open(@article_url))
     doc.xpath('//div[@class="articleText" or  @class="subContentsInner"]//a/img').each do |img|
       image_url = img.attribute('src').value.gsub(/t[\d]*_/, 'o').gsub(/\?.*$/, '')
       break if File.extname(image_url) == ".gif"
@@ -75,7 +80,7 @@ class Scrape::AmebloCrawler
       dateary = [datestr.slice(0,4), datestr.slice(4,2), datestr.slice(6,2)]
       date = Time.local(*dateary)
       
-      @downloader.save_media(:image, image_url, article_url, date, member_id, event_id, tmp)
+      @downloader.save_media(:image, image_url, @article_url, date, @member_id, @event_id, tmp)
     end
   end
   

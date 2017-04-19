@@ -1,4 +1,4 @@
 .detail
-  = form_tag scrape_path, name: 'instagram' do
+  = form_tag scrape_path(media: 'instagram'), name: 'instagram' do
     = render 'form'
 = render 'footer'

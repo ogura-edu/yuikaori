@@ -1,7 +1,7 @@
 class Scrape::TwitterCrawler < Twitter::REST::Client
   
-  def initialize(user_type:)
-    super
+  def initialize(params, user_type:)
+    super()
     case user_type
     when :admin
       self.consumer_key = Settings.twitter.consumer_key
@@ -11,61 +11,78 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     when :user
       # いずれユーザに投稿させるときに必要になる
     end
+    @member_id = params[:member_id].to_i
+    @event_id = params[:event_id].to_i
+    @type = params[:type]
+    case @type
+    when 'auto'
+      @screen_name = params[:screen_name].downcase
+    when 'date'
+      @screen_name = params[:screen_name].downcase
+      @since = Time.parse(params[:since])
+      @until = Time.parse(params[:until])
+    when 'number'
+      @screen_name = params[:screen_name].downcase
+      @tweet_num = params[:number].to_i
+    when 'tweet'
+      @article_url = params[:tweet_url]
+      @article_url.match %r{https://twitter.com/(.+?)/status/(\d+)$}
+      @screen_name = $1.downcase
+      @tweet_id = $2
+    end
+    @downloader = Scrape::Downloader.new("twitter/#{@screen_name}/")
   end
   
-  def validate(screen_name)
-    screen_name = screen_name.downcase
-    raise ArgumentError, '追跡済みのIDは指定しないでください' if skip_IDs.include?(screen_name)
+  def validate
+    raise ArgumentError, '追跡済みのユーザは指定しないでください' if skip_IDs.include?(@screen_name)
+    raise ArgumentError, '存在しないユーザです' unless user?(@screen_name)
+    # 現状ではバリデートすることは少ないが将来的に使うかも
+    case @type
+    when 'date'
+    when 'number'
+    when 'tweet'
+      raise ArgumentError, '無効なURLです' unless @screen_name
+      @tweet = status(Twitter::Tweet.new(id: @tweet_id))
+    end
   end
   
-  def crawl(screen_name:, member_id:, type: :recent)
-    screen_name = screen_name.downcase
-    @downloader = Scrape::Downloader.new("twitter/#{screen_name}/")
+  def crawl(type: :recent)
     options = {
-      count: 200,
+      count:       200,
       include_rts: true,
-      tweet_mode: 'extended'
+      tweet_mode:  'extended',
     }
     
     case type
     when :all
-      get_all_tweets(screen_name, options).each do |tweet|
-        classify_tweet(tweet, member_id, 1, false)
+      get_all_tweets(options).each do |tweet|
+        classify_tweet(tweet.attrs, tmp: false)
       end
     when :recent
-      user_timeline(screen_name, options).each do |tweet|
-        classify_tweet(tweet, member_id, 1, false)
+      user_timeline(@screen_name, options).each do |tweet|
+        classify_tweet(tweet.attrs, tmp: false)
       end
     end
   end
   
-  def manually_crawl(params:)
-    screen_name = params[:screen_name].downcase
-    @downloader = Scrape::Downloader.new("twitter/#{screen_name}/")
+  def manually_crawl
     options = {
-      count: 200,
+      count:       200,
       include_rts: true,
-      tweet_mode: 'extended'
+      tweet_mode:  'extended',
     }
     
-    case params[:type]
-    when 'period'
-      get_tweets_in_certain_period(screen_name, options, params[:since], params[:until]).each do |tweet|
-        classify_tweet(tweet, params[:member_id], params[:event_id], true)
+    case @type
+    when 'date'
+      get_tweets_in_certain_date(options).each do |tweet|
+        classify_tweet(tweet.attrs, tmp: true)
       end
     when 'number'
-      get_many_tweets(screen_name, options, params[:number].to_i).each do |tweet|
-        classify_tweet(tweet, params[:member_id], params[:event_id], true)
+      get_many_tweets(options).each do |tweet|
+        classify_tweet(tweet.attrs, tmp: true)
       end
     when 'tweet'
-      params[:tweet_url] =~ %r{https://twitter.com/(.*?)/status/(.*?)$}
-      screen_name = $1
-      tweet_id =$2
-      hash = status(Twitter::Tweet.new(id: tweet_id)).attrs
-      
-      validate(screen_name)
-      
-      parse_tweet(hash, params[:member_id], params[:event_id], true)
+      parse_tweet(@tweet.attrs, tmp: true)
     end
   end
   
@@ -78,64 +95,65 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     response.empty? ? collection.flatten : collect_with_max_id(collection, response.last.id - 1, &block)
   end
   
-  def get_all_tweets(screen_name, options)
+  def get_all_tweets(options)
     tweetary = []
     collect_with_max_id do |max_id|
       options[:max_id] = max_id unless max_id.nil?
-      user_timeline(screen_name, options).each do |tweet|
+      user_timeline(@screen_name, options).each do |tweet|
         tweetary << tweet
       end
     end
-    return tweetary
+    tweetary
   end
   
   # limit: about 10 days ago
-  def get_tweets_in_certain_period(screen_name, options, since, till)
-    options[:from] = screen_name
-    options[:since] = since
-    options[:until] = till
-    return search('', options)
+  def get_tweets_in_certain_date(options)
+    options.merge({
+      from: @screen_name,
+      since: @since,
+      until: @until,
+    })
+    search('', options)
   end
   
-  def get_many_tweets(screen_name, options, tweet_num)
+  def get_many_tweets(options)
     tweetary = []
     collect_with_max_id do |max_id|
-      break if tweetary.size >= tweet_num
+      break if tweetary.size >= @tweet_num
       options[:max_id] = max_id unless max_id.nil?
-      user_timeline(screen_name, options).each do |tweet|
+      user_timeline(@screen_name, options).each do |tweet|
         tweetary << tweet
       end
     end
-    return tweetary[0, tweet_num]
+    tweetary[0, @tweet_num]
   end
   
-  def classify_tweet(tweet, member_id, event_id, tmp)
-    hash = tweet.attrs
+  def classify_tweet(tweet, tmp:)
     begin
-      if hash[:is_quote_status]
-        parse_tweet(hash[:quoted_status], member_id, event_id, tmp)
-      elsif hash[:retweeted_status]
-        parse_tweet(hash[:retweeted_status], member_id, event_id, tmp)
+      if tweet[:is_quote_status]
+        parse_tweet(tweet[:quoted_status], tmp)
+      elsif tweet[:retweeted_status]
+        parse_tweet(tweet[:retweeted_status], tmp)
       else
-        parse_tweet(hash, member_id, event_id, tmp)
+        parse_tweet(tweet, tmp)
       end
     rescue
-      puts "no media in tweetID:#{hash[:id_str]}"
+      puts "no media in tweetID:#{tweet[:id_str]}"
     end
   end 
   
-  def parse_tweet(hash, member_id, event_id, tmp)
-    date = Time.parse(hash[:created_at])
-    tweet_url = "https://twitter.com/#{hash[:user][:screen_name]}/status/#{hash[:id_str]}"
+  def parse_tweet(tweet, tmp)
+    date = Time.parse(tweet[:created_at])
+    @article_url = "https://twitter.com/#{tweet[:user][:screen_name]}/status/#{tweet[:id_str]}"
     
-    hash[:extended_entities][:media].each do |media|
+    tweet[:extended_entities][:media].each do |media|
       if media[:video_info]
         url_list = media[:video_info][:variants].select{|item| item[:bitrate]}
         video_url = url_list.max_by{|item| item[:bitrate]}[:url]
-        @downloader.save_media(:video, video_url, tweet_url, date, member_id, event_id, tmp)
+        @downloader.save_media(:video, video_url, @article_url, date, @member_id, @event_id, tmp)
       else
         image_url = media[:media_url_https]
-        @downloader.save_media(:image, image_url, tweet_url, date, member_id, event_id, tmp)
+        @downloader.save_media(:image, image_url, @article_url, date, @member_id, @event_id, tmp)
       end
     end
     puts "saved madia successfully"

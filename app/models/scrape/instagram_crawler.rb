@@ -1,7 +1,7 @@
 class Scrape::InstagramCrawler
   include Capybara::DSL
   
-  def initialize(url)
+  def initialize(params)
     ::Capybara.current_driver = :poltergeist
     ::Capybara.javascript_driver = :poltergeist
     ::Capybara.default_max_wait_time = 20
@@ -9,39 +9,33 @@ class Scrape::InstagramCrawler
     ::Capybara.register_driver :poltergeist do |app|
       ::Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: false)
     end
-    case url
-    when %r{https://www.instagram.com/p/.*?/$}
-      open(url) do |source|
-        @instaID = source.read.match(/\(@(.*?)\)/)[1]
-      end
-    when %r{https://www.instagram.com/(.*?)/$}
-      @instaID = $1
-    else
-      raise ArgumentError, '無効なアドレスです'
-    end
+    
+    @member_id = params[:member_id].to_i
+    @event_id = pamras[:event_id].to_i
+    @article_url = params[:article_url]
+    @instaID = params[:instaID] || open(@article_url).read.match(%r{\(@(.*?)\)})[1]
     @downloader = Scrape::Downloader.new("instagram/#{@instaID}/")
   end
   
   def validate
-    raise ArgumentError, '追跡済みのIDは指定しないでください' if skip_IDs.include?(@instaID)
+    raise ArgumentError, '無効なURLです' unless @article_url.match %r{https://www.instagram.com/p/.+?/$}
+    raise ArgumentError, '追跡済みのユーザは指定しないでください' if skip_IDs.include?(@instaID)
   end
   
-  def crawl(member_id:, type: :recent)
+  def crawl(type: :recent)
     login
     visit("#{@instaID}?hl=eg")
     case type
     when :all
       load_all_posts
-      check_post(member_id)
+      check_post
     when :recent
-      check_post(member_id)
+      check_post
     end
   end
   
-  def manually_crawl(params:)
-    raise ArgumentError, '記事URLを指定してください' unless params[:post].match(%r{https://www.instagram.com/p/.*?/$})
-    parse_post(params[:post], params[:member_id], params[:event_id], true)
-    page.current_window.close
+  def manually_crawl
+    parse_post(tmp: true)
   end
   
   private
@@ -67,10 +61,10 @@ class Scrape::InstagramCrawler
     end
   end
   
-  def check_post(member_id)
+  def check_post
     all(:xpath, '//a[@class="_8mlbc _vbtk2 _t5r8b"]').each do |result|
-      post_url = result[:href].gsub(/\?.*$/, "")
-      parse_post(post_url, member_id, 1, false)
+      @article_url = result[:href].gsub(/\?.*$/, "")
+      parse_post(tmp: false)
     end
   end
   
@@ -78,10 +72,9 @@ class Scrape::InstagramCrawler
     Settings.instagram.regular_crawl.map{|obj| obj.ID}
   end
   
-  def parse_post(url, member_id, event_id, tmp)
-    doc = Nokogiri::HTML.parse(open(url+"?hl=ja"))
+  def parse_post(tmp:)
+    doc = Nokogiri::HTML.parse(open("#{@article_url}?hl=ja"))
     
-    date = Time.new
     datestr = doc.at('meta[@property="og:title"]').attribute('content').value
     if datestr.include?('午前')
       date = Time.local(*datestr.scan(/\d+/))
@@ -91,10 +84,10 @@ class Scrape::InstagramCrawler
     
     if doc.at('//meta[@content="video"]')
       video_url = doc.at('//meta[@property="og:video:secure_url"]').attribute('content').value
-      @downloader.save_media(:video, video_url, url, date, member_id, event_id, tmp)
+      @downloader.save_media(:video, video_url, @article_url, date, @member_id, @event_id, tmp)
     else
       image_url = doc.at('//meta[@property="og:image"]').attribute('content').value
-      @downloader.save_media(:image, image_url, url, date, member_id, event_id, tmp)
+      @downloader.save_media(:image, image_url, @article_url, date, @member_id, @event_id, tmp)
     end
   end
 end

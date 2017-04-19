@@ -1,4 +1,4 @@
 .detail
-  = form_tag scrape_path, name: 'ameblo' do
+  = form_tag scrape_path(media: 'ameblo'), name: 'ameblo' do
     = render 'form'
 = render 'footer'

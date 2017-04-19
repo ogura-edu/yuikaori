@@ -1,4 +1,4 @@
 .detail
-  = form_tag scrape_path, name: 'news_site' do
+  = form_tag scrape_path(media: 'news_site'), name: 'news_site' do
     =render 'form'
 = render 'footer'

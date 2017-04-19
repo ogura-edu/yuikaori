@@ -1,49 +1,50 @@
+- if action_name == 'ameblo'
+  .center-block
+    = url_field_tag 'ameblo[article_url]', nil, placeholder: 'アメブロの記事URLを入力してください', required: true
+
 - if action_name == 'instagram'
   .center-block
-    = text_field_tag :post, nil, placeholder: 'ポストURLを入力してください', required: true
+    = text_field_tag 'instagram[article_url]', nil, placeholder: 'ポストURLを入力してください', required: true
 
 - if action_name == 'twitter'
   .center-block
-    = select_tag :type, options_for_select([ ['期間を指定して取得(約10日前まで)', 'period'], ['ツイート数を指定して取得(3,200まで)', 'number'], ['ツイートURLを直接指定して取得', 'tweet'] ]), include_blank: true, required: true
+    = select_tag 'twitter[type]', options_for_select([ ['期間を指定して取得(約10日前まで)', 'date'], ['ツイート数を指定して取得(3,200まで)', 'number'], ['ツイートURLを直接指定して取得', 'tweet'] ]), include_blank: true, required: true
   .center-block.switch.period
-    = text_field_tag :screen_name, nil, placeholder: 'TwitterID'
+    = text_field_tag 'twitter[screen_name]', nil, placeholder: 'TwitterID'
   .center-block.switch.period
     %span since:
-    = date_field_tag :since, Date.today, max: Date.today
+    = date_field_tag 'twitter[since]', Date.today, max: Date.today
   .center-block.switch.period
     %span until:
-    = date_field_tag :until, Date.today, max: Date.today
+    = date_field_tag 'twitter[until]', Date.today, max: Date.today
   .center-block.switch.number
-    = text_field_tag :screen_name, nil, placeholder: 'TwitterID'
+    = text_field_tag 'twitter[screen_name]', nil, placeholder: 'TwitterID'
   .center-block.switch.number
     %span ツイート数：
-    = number_field_tag :number, nil, max: 3200
+    = number_field_tag 'twitter[number]', nil, max: 3200
   .center-block.switch.tweet
-    = url_field_tag :tweet_url, nil, placeholder: 'https://twitter.com/<user_id>/status/<tweet_id>'
-
-- if action_name == 'ameblo'
-  .center-block
-    = url_field_tag :article_url, nil, placeholder: 'アメブロの記事URLを入力してください', required: true
+    = url_field_tag 'twitter[tweet_url]', nil, placeholder: 'https://twitter.com/<user_id>/status/<tweet_id>'
 
 - if action_name == 'official_site'
   .center-block
-    = url_field_tag :page_url, nil, placeholder: '取得するページのURLを指定してください', required: true
+    = url_field_tag 'official_site[page_url]', nil, placeholder: '取得するページのURLを指定してください', required: true
   .center-block
-    = url_field_tag :allowed_links, nil, placeholder: 'もし異なるドメインに飛んでから画像をとるなら指定してください（通常は不要）'
+    = url_field_tag 'official_site[allowed_links][]', nil, placeholder: 'もし異なるドメインに飛んでから画像をとるなら指定してください（通常は不要）'
   .center-block
     %p ページ内のみ：0、1つ先のリンクまで：1
-    = number_field_tag :depth_limit, nil, min:0, max:1, required: true
+    = number_field_tag 'official_site[depth_limit]', nil, min:0, max:1, required: true
 
 - if action_name == 'news_site'
   .center-block
-    = url_field_tag :article_url, nil, placeholder: '記事URLを指定してください', required: true
+    = url_field_tag 'news_site[article_url]', nil, placeholder: '記事URLを指定してください', required: true
 
 - if action_name == 'youtube'
   .center-block
-    = url_field_tag :youtube_url, nil, placeholder: '< https://www.youtube.com/watch?v=... >', required: true
+    = url_field_tag 'youtube[youtube_url]', nil, placeholder: '< https://www.youtube.com/watch?v=... >', required: true
   .center-block
-    = url_field_tag :article_url, nil, placeholder: '本記事のURLがあれば指定してください'
+    = url_field_tag 'youtube[article_url]', nil, placeholder: '本記事のURLがあれば指定してください'
 
+-# tagを送信するフォームも必要じゃね？
 .center-block
   %span メンバー：
   = select_tag :member_id, options_from_collection_for_select(Member.all, :id, :member), include_blank: true, required: true
@@ -51,4 +52,4 @@
   %span イベント：
   = select_tag :event_id, options_from_collection_for_select(Event.all, :id, :event), required: true
 .center-block
-  = submit_tag '追加', class: 'btn btn-default', name: action_name
+  = submit_tag '追加', class: 'btn btn-default'

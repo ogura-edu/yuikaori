@@ -1,7 +1,10 @@
 class Scrape::OfficialSiteCrawler
-  def initialize(url, *links)
-    uri = Addressable::URI.parse(url).normalize
-    linked_hosts = links.map{|link| Addressable::URI.parse(link).normalize.host}
+  def initialize(params)
+    uri = Addressable::URI.parse(params[:page_url]).normalize
+    linked_hosts = params[:allowed_links].map{|link| Addressable::URI.parse(link).normalize.host}
+    @member_id = params[:member_id].to_i
+    @event_id = params[:event_id].to_i
+    @depth_limit = params[:depth_limit].to_i
     @cache = []
     @top_page = uri
     @http = Net::HTTP.new(uri.host)
@@ -10,26 +13,26 @@ class Scrape::OfficialSiteCrawler
   end
   
   def validate
-    raise ArgumentError, '追跡済みのURLは指定しないでください' if skip_hosts.include?(@top_page.host)
+    raise ArgumentError, '追跡済みのドメインは指定しないでください' if skip_hosts.include?(@top_page.host)
   end
   
-  def crawl(member_id:)
-    crawl_media(member_id, 1, true, false)
+  def crawl
+    crawl_media
   end
   
-  def manually_crawl(params:)
-    crawl_media(params[:member_id], params[:event_id], true, params[:depth_limit].to_i)
+  def manually_crawl
+    crawl_media
   end
   
   private
   
-  def crawl_media(member_id, event_id, tmp, depth_limit)
+  def crawl_media
     Dir.mkdir('tmp/anemone/') unless Dir.exist?('tmp/anemone')
     options = {
-      depth_limit: depth_limit,
-      delay: 2,
+      depth_limit:     @depth_limit,
+      delay:           2,
       obey_robots_txt: true,
-      storage: Anemone::Storage.PStore("tmp/anemone/#{@top_page.host}.dmp")
+      storage:         Anemone::Storage.PStore("tmp/anemone/#{@top_page.host}.dmp"),
     }
     
     Anemone.crawl(@top_page, options) do |anemone|
@@ -47,11 +50,11 @@ class Scrape::OfficialSiteCrawler
         doc = Nokogiri::HTML.parse(page.body)
         
         doc.xpath('//img').each do |img_tag|
-          extract_data(img_tag, page.url, :image, member_id, event_id, tmp)
+          extract_data(img_tag, page.url, :image)
         end
         
         doc.xpath('//video').each do |video_tag|
-          extract_data(video_tag, page.url, :video, member_id, event_id, tmp)
+          extract_data(video_tag, page.url, :video)
         end
         
         # youtube公式が公開しているのはiframeタグだがこれを使っていないサイトもある模様
@@ -61,7 +64,7 @@ class Scrape::OfficialSiteCrawler
           next unless url.match('youtube')
           id = File.basename(URI.parse(url).path)
           video_uri = URI.parse(url.gsub('embed/', 'watch/?v='))
-          @downloader.save_youtube(id, video_uri, page.url, member_id, event_id, tmp)
+          @downloader.save_youtube(id, video_uri, page.url, @member_id, @event_id, true)
         end
         
         doc.xpath('//link[@rel="stylesheet"]').each do |link_tag|
@@ -71,7 +74,7 @@ class Scrape::OfficialSiteCrawler
     end
   end
   
-  def extract_data(tag, page_url, type, member_id, event_id, tmp)
+  def extract_data(tag, page_url, type)
     media_url = Scrape::Helper.url(page_url, tag.attribute('src').value)
     # インスタンス変数@cacheを参照してチェック済みのURLをスキップ
     return if @cache.include?(media_url)
@@ -79,7 +82,7 @@ class Scrape::OfficialSiteCrawler
     uri = Addressable::URI.parse(media_url).normalize
     date = Time.parse(response_header(uri)['last-modified'] || Time.now.to_s)
     filepath = "#{uri.host}#{uri.path}"
-    @downloader.save_media(type, uri, page_url, date, member_id, event_id, tmp, filepath)
+    @downloader.save_media(type, uri, page_url, date, @member_id, @event_id, true, filepath)
     @cache << media_url
   end
   

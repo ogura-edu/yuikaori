@@ -1,28 +1,56 @@
 class AllCrawl
   def self.execute
     Settings.ameblo.stopped_updating.each do |obj|
-      ameblo = Scrape::AmebloCrawler.new("http://ameblo.jp/#{obj.ID}/")
-      ameblo.crawl(member_id: obj.member_id, type: :all)
+      params = {
+        amebaID:   obj.ID,
+        member_id: obj.member_id,
+        event_id:  1,
+      }
+      ameblo = Scrape::AmebloCrawler.new(params)
+      ameblo.crawl(type: :all)
     end
 
     Settings.ameblo.regular_crawl.each do |obj|
-      ameblo = Scrape::AmebloCrawler.new("http://ameblo.jp/#{obj.ID}/")
-      ameblo.crawl(member_id: obj.member_id, type: :all)
+      params = {
+        amebaID:   obj.ID,
+        member_id: obj.member_id,
+        event_id:  1,
+      }
+      ameblo = Scrape::AmebloCrawler.new(params)
+      ameblo.crawl(type: :all)
     end
 
     Settings.instagram.regular_crawl.each do |obj|
-      insta = Scrape::InstagramCrawler.new("https://www.instagram.com/#{obj.ID}/")
-      insta.crawl(member_id: obj.member_id, type: :all)
+      params = {
+        instaID:   obj.ID,
+        member_id: obj.member_id,
+        event_id:  1,
+      }
+      insta = Scrape::InstagramCrawler.new(params)
+      insta.crawl(type: :all)
     end
 
     Settings.twitter.regular_crawl.each do |obj|
-      twitter = Scrape::TwitterCrawler.new(user_type: :admin)
-      twitter.crawl(screen_name: obj.ID, member_id: obj.member_id, type: :all)
+      params = {
+        type:        'auto',
+        screen_name: obj.ID,
+        member_id:   obj.member_id,
+        event_id:    1,
+      }
+      twitter = Scrape::TwitterCrawler.new(params, user_type: :admin)
+      twitter.crawl(type: :all)
     end
 
     Settings.official_site.regular_crawl.each do |obj|
-      site = Scrape::OfficialSiteCrawler.new(obj.domain, obj,accept)
-      site.crawl(member_id: obj.member_id)
+      params = {
+        page_url:      obj.domain,
+        allowed_links: obj.allowed,
+        depth_limit:   false,
+        member_id:     obj.member_id,
+        event_id:      1,
+      }
+      site = Scrape::OfficialSiteCrawler.new(params)
+      site.crawl
     end
   end
 end

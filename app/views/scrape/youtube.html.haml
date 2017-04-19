@@ -1,4 +1,4 @@
 .detail
-  = form_tag scrape_path, name: 'youtube' do
+  = form_tag scrape_path(media: 'youtube'), name: 'youtube' do
     = render 'form'
 = render 'footer'
