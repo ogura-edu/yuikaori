@@ -40,8 +40,9 @@ class RegularCrawl
         screen_name: obj.ID,
         member_id:   obj.member_id,
         event_id:    1,
+        user_type:   :admin,
       }
-      twitter = Scrape::TwitterCrawler.new(params, user_type: :admin)
+      twitter = Scrape::TwitterCrawler.new(params)
       twitter.crawl
     end
   end

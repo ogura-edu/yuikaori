@@ -1,8 +1,8 @@
 class Scrape::TwitterCrawler < Twitter::REST::Client
   
-  def initialize(params, user_type:)
+  def initialize(params)
     super()
-    case user_type
+    case params[:user_type]
     when :admin
       self.consumer_key = Settings.twitter.consumer_key
       self.consumer_secret = Settings.twitter.consumer_secret

@@ -14,7 +14,7 @@ class ScrapeController < ApplicationController
       insta.validate
       insta.manually_crawl
     when 'twitter'
-      twitter = Scrape::TwitterCrawler.new(twitter_params, user_type: :admin)
+      twitter = Scrape::TwitterCrawler.new(twitter_params)
       twitter.validate
       twitter.manually_crawl
     when 'official_site'
@@ -36,32 +36,33 @@ class ScrapeController < ApplicationController
   # それぞれ、tagもpermitする必要がありそう
   
   def ameblo_params
-    params.require(:ameblo).permit(:article_url)
-    params.permit(:member_id, :event_id)
+    params.permit(:member_id, :event_id).
+      merge(params.require(:ameblo).permit(:article_url))
   end
   
   def instagram_params
-    params.require(:instagram).permit(:article_url)
-    params.permit(:member_id, :event_id)
+    params.permit(:member_id, :event_id).
+      merge(params.require(:instagram).permit(:article_url))
   end
   
   def twitter_params
-    params.require(:twitter).permit(:type, :screen_name, :since, :until, :number, :tweet_url)
-    params.permit(:member_id, :event_id)
+    params.permit(:member_id, :event_id).
+      merge(params.require(:twitter).permit(:type, :screen_name, :since, :until, :number, :tweet_url)).
+      merge(user_type: :admin)
   end
   
   def official_site_params
-    params.require(:official_site).permit(:page_url, :allowed_links, :depth_limit)
-    params.permit(:member_id, :event_id)
+    params.permit(:member_id, :event_id).
+      merge(params.require(:official_site).permit(:page_url, :allowed_links, :depth_limit))
   end
   
   def news_site_params
-    params.require(:news_site).permit(:article_url)
-    params.permit(:member_id, :event_id)
+    params.permit(:member_id, :event_id).
+      merge(params.require(:news_site).permit(:article_url))
   end
   
   def youtube_params
-    params.require(:youtube).permit(:youtube_url, :article_url)
-    params.permit(:member_id, :event_id)
+    params.permit(:member_id, :event_id).
+      merge(params.require(:youtube).permit(:youtube_url, :article_url))
   end
 end
