@@ -3,10 +3,10 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).on 'turbolinks:load', ->
-  $(document.twitter.type).change ->
+  $(document.twitter.twitter_type).change ->
     $('.switch').css('display', 'none')
     $('.switch input').removeAttr('required')
-    switch document.twitter.type.value
+    switch document.twitter.twitter_type.value
       when 'period'
         $('.period').css('display', 'block')
         $('.period input').attr('required', 'required')
