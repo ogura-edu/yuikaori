@@ -1,12 +1,8 @@
 class RegularCrawl
-  def self.daily
+  def self.execute
     self.ameblo
     self.instagram
     self.twitter
-  end
-
-  def self.monthly
-    self.official_site
   end
   
   def self.ameblo
@@ -44,20 +40,6 @@ class RegularCrawl
       }
       twitter = Scrape::TwitterCrawler.new(params)
       twitter.crawl
-    end
-  end
-  
-  def self.official_site
-    Settings.official_site.regular_crawl.each do |obj|
-      params = {
-        page_url:      obj.url,
-        allowed_links: obj.allowed,
-        depth_limit:   false,
-        member_id:     obj.member_id,
-        event_id:      1,
-      }
-      site = Scrape::OfficialSiteCrawler.new(params)
-      site.crawl
     end
   end
 end
