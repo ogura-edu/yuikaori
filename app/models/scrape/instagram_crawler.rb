@@ -15,7 +15,7 @@ class Scrape::InstagramCrawler
     @member_id = params[:member_id].to_i
     @event_id = params[:event_id].to_i
     @article_url = params[:article_url]
-    open(@article_url).read.match %r{\(@(.+?)\)} rescue
+    open(@article_url).read.match %r{\(@(.+?)\)} rescue nil
     @instaID = params[:instaID] || $1
     @downloader = Scrape::Downloader.new("instagram/#{@instaID}/")
   end
