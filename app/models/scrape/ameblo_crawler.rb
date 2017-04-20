@@ -11,6 +11,7 @@ class Scrape::AmebloCrawler
   def validate
     raise ArgumentError, '無効なURLです' unless @article_url.match %r{http://ameblo.jp/#{@amebaID}/entry-\d+.html}
     raise ArgumentError, '追跡済みのユーザは指定しないでください' if skip_IDs.include?(@amebaID)
+    true
   end
   
   def crawl(type: :recent)

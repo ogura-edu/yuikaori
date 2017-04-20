@@ -9,6 +9,7 @@ class Scrape::YoutubeCrawler
   
   def validate
     raise ArgumentError, 'URLが正しくありません' unless @uri.to_s.match %r{https://www.youtube.com/watch}
+    true
   end
   
   def manually_crawl

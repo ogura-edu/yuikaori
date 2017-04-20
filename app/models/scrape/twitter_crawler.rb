@@ -19,8 +19,8 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
       @screen_name = params[:screen_name].downcase
     when 'date'
       @screen_name = params[:screen_name].downcase
-      @since = Time.parse(params[:since])
-      @until = Time.parse(params[:until])
+      @since = params[:since]
+      @until = params[:until]
     when 'number'
       @screen_name = params[:screen_name].downcase
       @tweet_num = params[:number].to_i
@@ -44,6 +44,7 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
       raise ArgumentError, '無効なURLです' unless @screen_name
       @tweet = status(Twitter::Tweet.new(id: @tweet_id), {tweet_mode: 'extended'})
     end
+    true
   end
   
   def crawl(type: :recent)
@@ -108,11 +109,9 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
   
   # limit: about 10 days ago
   def get_tweets_in_certain_date(options)
-    options.merge({
-      from: @screen_name,
-      since: @since,
-      until: @until,
-    })
+    options[:from] = @screen_name
+    options[:since] = @since
+    options[:until] = @until
     search('', options)
   end
   

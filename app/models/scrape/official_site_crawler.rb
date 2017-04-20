@@ -14,6 +14,7 @@ class Scrape::OfficialSiteCrawler
   
   def validate
     raise ArgumentError, '追跡済みのドメインは指定しないでください' if skip_hosts.include?(@top_page.host)
+    true
   end
   
   def crawl

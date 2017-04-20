@@ -9,6 +9,7 @@ class Scrape::NewsSiteCrawler
   
   def validate
     raise ArgumentError, 'パーサが未作成のサイトです。管理者に申請してください' unless registered_domain
+    true
   end
   
   def manually_crawl
