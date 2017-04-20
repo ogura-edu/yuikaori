@@ -5,13 +5,14 @@ class Scrape::AmebloCrawler
     @member_id = params[:member_id].to_i
     @event_id = params[:event_id].to_i
     @article_url = params[:article_url]
-    @amebaID = params[:amebaID] || @article_url.match(%r{http://ameblo.jp/([^/]*?)/.*})[1]
+    @article_url.match %r{http://ameblo.jp/(.+?)/entry-\d+?\.html$}
+    @amebaID = params[:amebaID] || $1
     @host = "http://ameblo.jp/#{@amebaID}/"
     @downloader = Scrape::Downloader.new("ameblo/#{@amebaID}/")
   end
   
   def validate
-    if !@article_url.match(%r{http://ameblo.jp/#{@amebaID}/entry-\d+\.html})
+    if @amebaID.nil?
       @errors = '無効なURLです'
       return false
     elsif skip_IDs.include?(@amebaID)
@@ -61,7 +62,7 @@ class Scrape::AmebloCrawler
     Anemone.crawl(url, options) do |anemone|
       anemone.focus_crawl do |page|
         page.links.keep_if do |link|
-          link.to_s.match(/#{@amebaID}\/entry-[\d]*\.html/)
+          link.to_s.match %r{http://ameblo.jp/#{@amebaID}/entry-\d+?\.html$}
         end
       end
       

@@ -10,7 +10,7 @@ class Scrape::YoutubeCrawler
   end
   
   def validate
-    if !@uri.to_s.match(%r{https://www.youtube.com/watch})
+    if !@uri.to_s.match %r{https://www.youtube.com/watch}
       @errors =  '無効なURLです'
       return false
     end

@@ -10,7 +10,7 @@ class Scrape::NewsSiteCrawler
   end
   
   def validate
-    if !regiterted_domain
+    if !registered_domain
       @errors = 'パーサが未作成のサイトです。管理者に申請してください'
       return false
     end
@@ -36,7 +36,7 @@ class Scrape::NewsSiteCrawler
     puts 'checking youtube embedded video ...'
     doc.xpath('//iframe').each do |youtube_tag|
       url = youtube_tag.attribute('src').value
-      next unless url.match('youtube')
+      next unless url.match 'youtube'
       id = File.basename(URI.parse(url).path)
       video_uri = URI.parse(url.gsub('embed/', 'watch/?v='))
       @downloader.save_youtube(id, video_uri, @article_uri, @member_id, @event_id, true)
@@ -47,7 +47,7 @@ class Scrape::NewsSiteCrawler
     date = doc.xpath('//p[@class="NA_date"]/time').text.tr('年月日', '/')
     date = Time.parse(date)
     doc.xpath('//article//span[@class="NA_thumb"]').each do |thumb|
-      thumb.attribute('style').value.match(%r{url\((.*?)\)})
+      thumb.attribute('style').value.match %r{url\((.+?)\)}
       image_url = Scrape::Helper.url(@article_uri, $1.gsub('list_thumb_inbox', 'xlarge'))
       uri = Addressable::URI.parse(image_url)
       filepath = "#{uri.host}#{uri.path}"
@@ -57,12 +57,12 @@ class Scrape::NewsSiteCrawler
   end
   
   define_method 'natalie_mu/music/pp' do |doc|
-    date = doc.xpath('html/head//script').text.match(%r{"datePublished":"(.*?)"})
+    doc.xpath('html/head//script').text.match %r{"datePublished":"(.+?)"}
     date = Time.parse($1)
     Anemone.crawl(@article_uri, {depth_limit:1}) do |anemone|
       anemone.focus_crawl do |page|
         page.links.keep_if do |link|
-          link.to_s.match(@article_uri)
+          link.to_s.match @article_uri
         end
       end
       anemone.on_every_page do |page|
@@ -109,7 +109,7 @@ class Scrape::NewsSiteCrawler
       anemone.focus_crawl do |page|
         page.links.keep_if do |link|
           # 記事情報(id)がURLクエリ文字列として入っているため、escape処理をかませている。
-          link.to_s.match(Regexp.escape(@article_uri))
+          link.to_s.match Regexp.escape(@article_uri)
         end
       end
       anemone.on_every_page do |page|
@@ -127,7 +127,7 @@ class Scrape::NewsSiteCrawler
   
   def registered_domain
     Settings.news_site.each do |domain|
-      return domain if @article_uri.to_s.match(domain)
+      return domain if @article_uri.to_s.match domain
     end
     nil
   end

@@ -67,7 +67,7 @@ class Scrape::OfficialSiteCrawler
         # それらに関しては、扱いが面倒なので個別でyoutube動画を取得するページを用意することにする
         doc.xpath('//iframe').each do |youtube_tag|
           url = youtube_tag.attribute('src').value
-          next unless url.match('youtube')
+          next unless url.match 'youtube'
           id = File.basename(URI.parse(url).path)
           video_uri = URI.parse(url.gsub('embed/', 'watch/?v='))
           @downloader.save_youtube(id, video_uri, page.url, @member_id, @event_id, true)
@@ -94,7 +94,7 @@ class Scrape::OfficialSiteCrawler
   
   def allowed?(str)
     @allowed_hosts.each do |host|
-      return true if str.match(host)
+      return true if str.match host
     end
     false
   end

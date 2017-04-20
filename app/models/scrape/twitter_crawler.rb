@@ -28,21 +28,13 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     when 'tweet'
       @article_url = params[:tweet_url]
       @article_url.match %r{https://twitter.com/(.+?)/status/(\d+)$}
-      @screen_name = $1.downcase
+      @screen_name = $1.downcase rescue nil #matchしなかった時NilClassエラーを吐くので
       @tweet = status(Twitter::Tweet.new(id: $2), {tweet_mode: 'extended'}) rescue nil
     end
     @downloader = Scrape::Downloader.new("twitter/#{@screen_name}/")
   end
   
   def validate
-    if !user?(@screen_name)
-      @errors = '存在しないユーザです'
-      return false
-    elsif skip_IDs.include?(@screen_name)
-      @errors = '追跡済みのユーザは指定しないでください'
-      return false
-    end
-    
     case @type
     when 'date'
     when 'number'
@@ -55,6 +47,15 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
         return false
       end
     end
+    
+    if !user?(@screen_name)
+      @errors = '存在しないユーザです'
+      return false
+    elsif skip_IDs.include?(@screen_name)
+      @errors = '追跡済みのユーザは指定しないでください'
+      return false
+    end
+    
     true
   end
   
