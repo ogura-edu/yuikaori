@@ -42,7 +42,7 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     when 'number'
     when 'tweet'
       raise ArgumentError, '無効なURLです' unless @screen_name
-      @tweet = status(Twitter::Tweet.new(id: @tweet_id))
+      @tweet = status(Twitter::Tweet.new(id: @tweet_id), {tweet_mode: 'extended'})
     end
   end
   

@@ -9,6 +9,7 @@ get_images.rb側で責任を持つべき処理はそちらで全て終わらせ�
 ActiveRecordを使う
 
 優先度 高：
+twitter tweet指定がparse_tweetでエラーはく原因調査 ameblo,instaは動作確認了。
 イベント、タグ作成機能を取り急ぎ。
 タグ用のgemがある act as taggable
 modalで表示しているshowテンプレートから、editボタンを押すとeditテンプレートに切り替わってform送信できるように変更
