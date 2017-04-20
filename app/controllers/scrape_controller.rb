@@ -1,40 +1,59 @@
 class ScrapeController < ApplicationController
   before_action :approved_user!
+  before_action :media_exist?, only: :scrape
   
   def scrape
-    # 別ページだしsubmitボタンのnameで分けなくても良さそう。case when使えそう
-    # 各モデルの引数なども書き換える必要あり。initializeでインスタンス変数にする？
-    case params[:media]
-    when 'ameblo'
-      ameblo = Scrape::AmebloCrawler.new(ameblo_params)
-      ameblo.validate
-      ameblo.manually_crawl
-    when 'instagram'
-      insta = Scrape::InstagramCrawler.new(instagram_params)
-      insta.validate
-      insta.manually_crawl
-    when 'twitter'
-      twitter = Scrape::TwitterCrawler.new(twitter_params)
-      twitter.validate
-      twitter.manually_crawl
-    when 'official_site'
-      site = Scrape::OfficialSiteCrawler.new(official_site_params)
-      site.validate
-      site.manually_crawl
-    when 'news_site'
-      site = Scrape:: NewsSiteCrawler.new(news_site_params)
-      site.manually_crawl
-    when 'youtube'
-      youtube = Scrape::YoutubeCrawler.new(youtube_params)
-      youtube.validate
-      youtube.manually_crawl
-    end
-    redirect_to scrape_index_path
+    media = params[:media]
+    class_eval <<-EOM
+      def #{media}_crawl
+        crawler = Scrape::#{media.classify}Crawler.new(#{media}_params)
+        if crawler.validate
+          crawler.manually_crawl
+          redirect_to scrape_index_path
+        else
+          redirect_back fallback_location: scrape_index_path, alert: crawler.errors
+        end
+      end
+    EOM
+    send "#{media}_crawl"
+    # case params[:media]
+    # when 'ameblo'
+    #   ameblo = Scrape::AmebloCrawler.new(ameblo_params)
+    #   if ameblo.validate
+    #     ameblo.manually_crawl
+    #   else
+    #     redict_back fallback_location: scrape_index_path, alert: ameblo.errors
+    #   end
+    # when 'instagram'
+    #   insta = Scrape::InstagramCrawler.new(instagram_params)
+    #   insta.validate
+    #   insta.manually_crawl
+    # when 'twitter'
+    #   twitter = Scrape::TwitterCrawler.new(twitter_params)
+    #   twitter.validate
+    #   twitter.manually_crawl
+    # when 'official_site'
+    #   site = Scrape::OfficialSiteCrawler.new(official_site_params)
+    #   site.validate
+    #   site.manually_crawl
+    # when 'news_site'
+    #   site = Scrape:: NewsSiteCrawler.new(news_site_params)
+    #   site.manually_crawl
+    # when 'youtube'
+    #   youtube = Scrape::YoutubeCrawler.new(youtube_params)
+    #   youtube.validate
+    #   youtube.manually_crawl
+    # end
   end
   
   private
-  # それぞれ、tagもpermitする必要がありそう
   
+  def media_exist?
+    medias = %w(ameblo instagram twitter official_site news_site youtube)
+    redirect_back fallback_location: scrape_index_path, alert: '登録されていないパラメータです' unless medias.include?(params[:media])
+  end
+  
+  # それぞれ、tagもpermitする必要がありそう
   def ameblo_params
     params.permit(:member_id, :event_id).
       merge(params.require(:ameblo).permit(:article_url))
