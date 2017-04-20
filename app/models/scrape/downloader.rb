@@ -22,8 +22,8 @@ class Scrape::Downloader
       article_url: article_uri.to_s,
       member_id: member_id,
       event_id: event_id,
-      date: date
-      tmp: tmp
+      date: date,
+      tmp: tmp,
     )
     video.screenshot
   end
@@ -54,8 +54,8 @@ class Scrape::Downloader
         article_url: article_uri.to_s,
         member_id: member_id,
         event_id: event_id,
-        date: date
-        tmp: tmp
+        date: date,
+        tmp: tmp,
       )
     when :video
       video = Video.create(
@@ -63,8 +63,8 @@ class Scrape::Downloader
         article_url: article_uri.to_s,
         member_id: member_id,
         event_id: event_id,
-        date: date
-        tmp: tmp
+        date: date,
+        tmp: tmp,
       )
       video.screenshot
     end
