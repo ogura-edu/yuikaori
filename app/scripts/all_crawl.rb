@@ -57,7 +57,7 @@ class AllCrawl
   def self.official_site
     Settings.official_site.regular_crawl.each do |obj|
       params = {
-        page_url:      obj.domain,
+        page_url:      obj.url,
         allowed_links: obj.allowed,
         depth_limit:   false,
         member_id:     obj.member_id,

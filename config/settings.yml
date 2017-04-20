@@ -28,15 +28,18 @@ twitter:
 
 official_site:
   regular_crawl:
-    - host: 'www.yuikaori.info'
+    - url: 'http://www.yuikaori.info/'
+      host: 'www.yuikaori.info'
       member_id: 1
       allowed:
         - ''
-    - host: 'www.ogurayui.jp'
+    - url: 'http://www.ogurayui.jp/'
+      host: 'www.ogurayui.jp'
       member_id: 2
       allowed:
         - ''
-    - host: 'yuikaori-report.info'
+    - url: 'http://yuikaori-report.info/'
+      host: 'yuikaori-report.info'
       member_id: 1
       allowed:
         - ''
