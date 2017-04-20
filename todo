@@ -9,7 +9,7 @@ get_images.rb側で責任を持つべき処理はそちらで全て終わらせ�
 ActiveRecordを使う
 
 優先度 高：
-twitter tweet指定がparse_tweetでエラーはく原因調査 ameblo,instaは動作確認了。
+各scrapeで、無効なURLパターンを網羅しないといけない（しなくてもいいけどエラー画面ではなくアラート表示にしたい）
 イベント、タグ作成機能を取り急ぎ。
 タグ用のgemがある act as taggable
 modalで表示しているshowテンプレートから、editボタンを押すとeditテンプレートに切り替わってform送信できるように変更
@@ -70,3 +70,4 @@ deviseまわりをしっかり理解する。ネットに上げる以上、最�
 ユーザの権限を把握、設定
 管理者をつくり、ユーザ管理できるようにする approve,adminアクションを作成、ユーザを管理
 strong_parametersをしっかり書く
+twitter tweet指定がparse_tweetでエラーはく原因調査 ameblo,instaは動作確認了。->searchでもtweet_modeの指定をしないといけなかった
