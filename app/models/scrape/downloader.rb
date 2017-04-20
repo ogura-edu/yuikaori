@@ -14,17 +14,15 @@ class Scrape::Downloader
     
     download_youtube(filepath, fullpath, uri, id)
     
-    Nokogiri::HTML.parse(open(uri)).xpath('//strong[@class="watch-time-text"]').text.match %r{(\d+/\d+/\d+)}
-    date = Time.parse($1)
+    datestr = Nokogiri::HTML.parse(open(uri)).xpath('//meta[@itemprop="datePublished"]').attribute('content').value
+    date = Time.parse(datestr)
     
     video = Video.create(
       address: fullpath,
       article_url: article_uri.to_s,
       member_id: member_id,
       event_id: event_id,
-      date: date.strftime("%Y-%m-%d %H:%M:%S"),
-      created_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-      updated_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+      date: date
       tmp: tmp
     )
     video.screenshot
@@ -56,9 +54,7 @@ class Scrape::Downloader
         article_url: article_uri.to_s,
         member_id: member_id,
         event_id: event_id,
-        date: date.strftime("%Y-%m-%d %H:%M:%S"),
-        created_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-        updated_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+        date: date
         tmp: tmp
       )
     when :video
@@ -67,9 +63,7 @@ class Scrape::Downloader
         article_url: article_uri.to_s,
         member_id: member_id,
         event_id: event_id,
-        date: date.strftime("%Y-%m-%d %H:%M:%S"),
-        created_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-        updated_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+        date: date
         tmp: tmp
       )
       video.screenshot
