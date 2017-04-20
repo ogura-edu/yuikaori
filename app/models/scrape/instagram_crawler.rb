@@ -14,7 +14,7 @@ class Scrape::InstagramCrawler
     
     @member_id = params[:member_id].to_i
     @event_id = params[:event_id].to_i
-    @article_url = params[:article_url]
+    @article_url = params[:article_url].gsub(%r{\?.*$}, '')
     open(@article_url).read.match %r{\(@(.+?)\)} rescue nil
     @instaID = params[:instaID] || $1
     @downloader = Scrape::Downloader.new("instagram/#{@instaID}/")
@@ -24,7 +24,7 @@ class Scrape::InstagramCrawler
     if skip_IDs.include?(@instaID)
       @errors = '追跡済みのユーザは指定しないでください'
       return false
-    elsif @instaID.nil? || !@article_url.match(%r{https://www.instagram.com/p/.+?/})
+    elsif @instaID.nil? || !@article_url.match(%r{https://www.instagram.com/p/.+?/$})
       @errors = '無効なURLです'
       return false
     end
