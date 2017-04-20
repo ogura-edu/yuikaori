@@ -6,26 +6,13 @@ class Scrape::Downloader
   def save_youtube(id, uri, article_uri, member_id, event_id, tmp)
     filepath = "images/youtube/#{id}.mp4"
     fullpath = Scrape::Helper.fullpath(filepath)
-    tmpfile = "tmp/#{id}.mp4"
-    obj = S3_BUCKET.object(filepath)
     
     if Video.find_by_address(fullpath)
       puts "#{uri} has been already saved or deleted"
       return
-    elsif obj.exists?
-      puts "#{fullpath} already exists"
-      return
     end
     
-    puts "download #{uri} to #{fullpath}"
-    options = {
-      output: tmpfile,
-      format: :best,
-      no_warnings: true
-    }
-    YoutubeDL.download(uri.to_s, options)
-    obj.put(body: File.open(tmpfile))
-    File.delete(tmpfile)
+    download_youtube(filepath, fullpath, uri, id)
     
     Nokogiri::HTML.parse(open(uri)).xpath('//strong[@class="watch-time-text"]').text.match %r{(\d+/\d+/\d+)}
     date = Time.parse($1)
@@ -60,7 +47,7 @@ class Scrape::Downloader
       return
     end
     
-    download(filepath, fullpath, uri)
+    download_media(filepath, fullpath, uri)
     
     case media_type
     when :image
@@ -91,7 +78,27 @@ class Scrape::Downloader
   
   private
   
-  def download(filepath, fullpath, uri)
+  def download_youtube(filepath, fullpath, uri, id)
+    tmpfile = "tmp/#{id}.mp4"
+    obj = S3_BUCKET.object(filepath)
+    
+    if obj.exists?
+      puts "#{fullpath} already exists"
+      return
+    end
+    
+    puts "download #{uri} to #{fullpath}"
+    options = {
+      output: tmpfile,
+      format: :best,
+      no_warnings: true
+    }
+    YoutubeDL.download(uri.to_s, options)
+    obj.put(body: File.open(tmpfile))
+    File.delete(tmpfile)
+  end
+  
+  def download_media(filepath, fullpath, uri)
     obj = S3_BUCKET.object(filepath)
     
     # 既にダウンロードしてある場合はスキップ
