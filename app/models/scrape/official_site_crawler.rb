@@ -1,4 +1,6 @@
 class Scrape::OfficialSiteCrawler
+  attr_accessor :errors
+  
   def initialize(params)
     uri = Addressable::URI.parse(params[:page_url]).normalize
     linked_hosts = params[:allowed_links].map{|link| Addressable::URI.parse(link).normalize.host}
@@ -13,7 +15,10 @@ class Scrape::OfficialSiteCrawler
   end
   
   def validate
-    raise ArgumentError, '追跡済みのドメインは指定しないでください' if skip_hosts.include?(@top_page.host)
+    if skip_hosts.include?(@top_page.host)
+      @errors =  '追跡済みのドメインは指定しないでください'
+      return false
+    end
     true
   end
   

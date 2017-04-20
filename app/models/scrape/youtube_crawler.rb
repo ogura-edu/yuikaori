@@ -1,4 +1,6 @@
 class Scrape::YoutubeCrawler
+  attr_accessor :errors
+  
   def initialize(params)
     @member_id = params[:member_id]
     @event_id = params[:event_id]
@@ -8,7 +10,10 @@ class Scrape::YoutubeCrawler
   end
   
   def validate
-    raise ArgumentError, 'URLが正しくありません' unless @uri.to_s.match %r{https://www.youtube.com/watch}
+    if !@uri.to_s.match(%r{https://www.youtube.com/watch})
+      @errors =  '無効なURLです'
+      return false
+    end
     true
   end
   

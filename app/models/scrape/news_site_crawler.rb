@@ -1,4 +1,6 @@
 class Scrape::NewsSiteCrawler
+  attr_accessor :errors
+  
   def initialize(params)
     @member_id = params[:member_id].to_i
     @event_id = params[:event_id].to_i
@@ -8,7 +10,10 @@ class Scrape::NewsSiteCrawler
   end
   
   def validate
-    raise ArgumentError, 'パーサが未作成のサイトです。管理者に申請してください' unless registered_domain
+    if !regiterted_domain
+      @errors = 'パーサが未作成のサイトです。管理者に申請してください'
+      return false
+    end
     true
   end
   

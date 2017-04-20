@@ -1,6 +1,8 @@
 class Scrape::InstagramCrawler
   include Capybara::DSL
   
+  attr_accessor :errors
+  
   def initialize(params)
     ::Capybara.current_driver = :poltergeist
     ::Capybara.javascript_driver = :poltergeist
@@ -18,8 +20,13 @@ class Scrape::InstagramCrawler
   end
   
   def validate
-    raise ArgumentError, '無効なURLです' unless @article_url.match %r{https://www.instagram.com/p/.+?/$}
-    raise ArgumentError, '追跡済みのユーザは指定しないでください' if skip_IDs.include?(@instaID)
+    if skip_IDs.include?(@instaID)
+      @errors = '追跡済みのユーザは指定しないでください'
+      return false
+    elsif !@article_url.match(%r{https://www.instagram.com/p/.*?/$})
+      @errors = '無効なURLです'
+      return false
+    end
     true
   end
   

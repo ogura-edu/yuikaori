@@ -1,4 +1,5 @@
 class Scrape::TwitterCrawler < Twitter::REST::Client
+  attr_accessor :errors
   
   def initialize(params)
     super()
@@ -28,21 +29,31 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
       @article_url = params[:tweet_url]
       @article_url.match %r{https://twitter.com/(.+?)/status/(\d+)$}
       @screen_name = $1.downcase
-      @tweet_id = $2
+      @tweet = status(Twitter::Tweet.new(id: $2), {tweet_mode: 'extended'}) rescue nil
     end
     @downloader = Scrape::Downloader.new("twitter/#{@screen_name}/")
   end
   
   def validate
-    raise ArgumentError, '追跡済みのユーザは指定しないでください' if skip_IDs.include?(@screen_name)
-    raise ArgumentError, '存在しないユーザです' unless user?(@screen_name)
-    # 現状ではバリデートすることは少ないが将来的に使うかも
+    if !user?(@screen_name)
+      @errors = '存在しないユーザです'
+      return false
+    elsif skip_IDs.include?(@screen_name)
+      @errors = '追跡済みのユーザは指定しないでください'
+      return false
+    end
+    
     case @type
     when 'date'
     when 'number'
     when 'tweet'
-      raise ArgumentError, '無効なURLです' unless @screen_name
-      @tweet = status(Twitter::Tweet.new(id: @tweet_id), {tweet_mode: 'extended'})
+      if @screen_name.nil?
+        @errors = '無効なURLです'
+        return false
+      elsif @tweet.nil?
+        @errors = '存在しないツイートです'
+        return false
+      end
     end
     true
   end

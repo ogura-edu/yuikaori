@@ -1,4 +1,6 @@
 class Scrape::AmebloCrawler
+  attr_accessor :errors
+  
   def initialize(params)
     @member_id = params[:member_id].to_i
     @event_id = params[:event_id].to_i
@@ -9,8 +11,13 @@ class Scrape::AmebloCrawler
   end
   
   def validate
-    raise ArgumentError, '無効なURLです' unless @article_url.match %r{http://ameblo.jp/#{@amebaID}/entry-\d+.html}
-    raise ArgumentError, '追跡済みのユーザは指定しないでください' if skip_IDs.include?(@amebaID)
+    if !@article_url.match(%r{http://ameblo.jp/#{@amebaID}/entry-\d+\.html})
+      @errors = '無効なURLです'
+      return false
+    elsif skip_IDs.include?(@amebaID)
+      @errors = '追跡済みのユーザは指定しないでください'
+      return false
+    end
     true
   end
   
