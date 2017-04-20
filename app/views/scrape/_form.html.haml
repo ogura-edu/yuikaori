@@ -19,7 +19,7 @@
     = date_field_tag 'twitter[until]', Date.today, max: Date.today
   .center-block.switch.number
     %span ツイート数：
-    = number_field_tag 'twitter[number]', nil, max: 3200
+    = number_field_tag 'twitter[number]', nil, min: 1, max: 3200
   .center-block.switch.tweet
     = url_field_tag 'twitter[tweet_url]', nil, placeholder: 'https://twitter.com/<user_id>/status/<tweet_id>'
 
