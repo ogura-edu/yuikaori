@@ -24,9 +24,11 @@ class Scrape::Downloader
       no_warnings: true
     }
     YoutubeDL.download(uri.to_s, options)
-    date = File.mtime(tmpfile)
     obj.put(body: File.open(tmpfile))
     File.delete(tmpfile)
+    
+    Nokogiri::HTML.parse(open(uri)).xpath('//strong[@class="watch-time-text"]').text.match %r{(\d+/\d+/\d+)}
+    date = Time.parse($1)
     
     video = Video.create(
       address: fullpath,
