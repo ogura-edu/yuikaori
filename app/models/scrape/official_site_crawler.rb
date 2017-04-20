@@ -6,7 +6,7 @@ class Scrape::OfficialSiteCrawler
     linked_hosts = params[:allowed_links].map{|link| Addressable::URI.parse(link).normalize.host}
     @member_id = params[:member_id].to_i
     @event_id = params[:event_id].to_i
-    @depth_limit = params[:depth_limit].to_i
+    @depth_limit = params[:depth_limit].try(:to_i) || params[:depth_limit]
     @cache = []
     @top_page = uri
     @http = Net::HTTP.new(uri.host)

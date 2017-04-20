@@ -28,7 +28,7 @@ class AllCrawl
     end
   end
 
-  def instagram
+  def self.instagram
     Settings.instagram.regular_crawl.each do |obj|
       params = {
         instaID:   obj.ID,
@@ -40,7 +40,7 @@ class AllCrawl
     end
   end
 
-  def twitter
+  def self.twitter
     Settings.twitter.regular_crawl.each do |obj|
       params = {
         type:        'auto',
@@ -54,7 +54,7 @@ class AllCrawl
     end
   end
 
-  def official_site
+  def self.official_site
     Settings.official_site.regular_crawl.each do |obj|
       params = {
         page_url:      obj.domain,

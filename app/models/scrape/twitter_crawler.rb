@@ -28,7 +28,8 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     when 'tweet'
       @article_url = params[:tweet_url]
       @article_url.match %r{https://twitter.com/(.+?)/status/(\d+)$}
-      @screen_name = $1.downcase rescue nil #matchしなかった時NilClassエラーを吐くので
+      @screen_name = $1.try(:downcase)
+      # Twitter::Error::NotFoundを拾うためにrescue
       @tweet = status(Twitter::Tweet.new(id: $2), {tweet_mode: 'extended'}) rescue nil
     end
     @downloader = Scrape::Downloader.new("twitter/#{@screen_name}/")
