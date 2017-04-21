@@ -12,7 +12,11 @@ class Scrape::Downloader
       return
     end
     
-    download_youtube(filepath, fullpath, uri, id)
+    unless download_youtube(filepath, fullpath, uri, id)
+      puts 'download failed'
+      return
+    end
+    
     
     datestr = Nokogiri::HTML.parse(open(uri)).xpath('//meta[@itemprop="datePublished"]').attribute('content').value
     date = Time.parse(datestr)
@@ -90,7 +94,7 @@ class Scrape::Downloader
       format: :best,
       no_warnings: true
     }
-    YoutubeDL.download(uri.to_s, options)
+    YoutubeDL.download(uri.to_s, options) rescue (puts $!.to_s; return false)
     obj.put(body: File.open(tmpfile))
     File.delete(tmpfile)
   end
