@@ -68,7 +68,7 @@ gem 'devise'
 gem 'omniauth-twitter'
 
 gem 'bootstrap-sass'
-gem 'anemone'
+gem 'anemone', github: 'takuros/anemone'
 gem 'nokogiri'
 gem 'capybara'
 gem 'poltergeist'

@@ -53,7 +53,7 @@ class Scrape::OfficialSiteCrawler
       anemone.on_every_page do |page|
         puts '-----------------------------------------------'
         puts "checking #{page.url} ..."
-        doc = Nokogiri::HTML.parse(page.body.toutf8)
+        doc = page.doc
         
         doc.xpath('//img').each do |img_tag|
           extract_data(img_tag, page.url, :image)
