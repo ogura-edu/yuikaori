@@ -1,5 +1,0 @@
-heroku/ruby
-https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git
-https://github.com/livementor/heroku-buildpack-youtube-dl.git
-https://github.com/stomita/heroku-buildpack-phantomjs.git
-https://github.com/mcolyer/heroku-buildpack-libxml2.git
