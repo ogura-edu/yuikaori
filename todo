@@ -12,8 +12,8 @@ parser 未作成：
 http://music-book.jp/book/news/news/141207
 
 優先度 高：
-addons:process-scheduler,schedulerを追加。
-Twitterのクロール確認、AllCrawl実行、wheneverの代わりになるものを探す
+schedulerの動作を確認する。
+AllCrawl実行
 イベント、タグ作成機能を取り急ぎ。
 タグ用のgemがある act as taggable
 modalで表示しているshowテンプレートから、editボタンを押すとeditテンプレートに切り替わってform送信できるように変更
@@ -75,3 +75,4 @@ strong_parametersをしっかり書く
 twitter tweet指定がparse_tweetでエラーはく原因調査 ameblo,instaは動作確認了。->searchでもtweet_modeの指定をしないといけなかった
 member_id,event_idを一々引数に書いてるけどもっと楽にかけないものか。 -> initializeでインスタンス変数に入れてしまう。
 定期取得や前取得をrakeタスクに登録
+addons:process-scheduler,schedulerを追加。

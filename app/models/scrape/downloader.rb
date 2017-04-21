@@ -45,7 +45,10 @@ class Scrape::Downloader
       return
     end
     
-    download_media(filepath, fullpath, uri)
+    unless download_media(filepath, fullpath, uri)
+      puts 'download failed'
+      return
+    end
     
     case media_type
     when :image
@@ -102,6 +105,6 @@ class Scrape::Downloader
     end
     
     puts "download #{uri} to #{fullpath}"
-    obj.put(body: open(uri))
+    obj.put(body: open(uri)) rescue (puts $!.to_s; return false)
   end
 end
