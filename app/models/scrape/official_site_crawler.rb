@@ -11,6 +11,8 @@ class Scrape::OfficialSiteCrawler
     @top_page = uri
     @http = Net::HTTP.new(uri.host)
     @allowed_hosts = [ uri.host, *linked_hosts ]
+    open(uri.to_s.gsub(%r{#{uri.host}/.*}, "#{uri.host}/robots.txt")).read.downcase.match(%r{crawl-delay.*?(\d+)}) rescue nil
+    @delay = $1.to_i
     @downloader = Scrape::Downloader.new('')
   end
   
@@ -36,8 +38,7 @@ class Scrape::OfficialSiteCrawler
     Dir.mkdir('tmp/anemone/') unless Dir.exist?('tmp/anemone')
     options = {
       depth_limit:     @depth_limit,
-      delay:           2,
-      obey_robots_txt: true,
+      delay:           @delay,
       storage:         Anemone::Storage.PStore("tmp/anemone/#{@top_page.host}.dmp"),
     }
     

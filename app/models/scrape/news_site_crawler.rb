@@ -6,6 +6,8 @@ class Scrape::NewsSiteCrawler
     @event_id = params[:event_id].to_i
     @article_uri = Addressable::URI.parse(params[:article_url]).normalize
     @http = Net::HTTP.new(@article_uri.host)
+    open(@article_uri.to_s.gsub(%r{#{@article_uri.host}/.*}, "#{@article_uri.host}/robots.txt")).read.downcase.match(%r{crawl-delay.*?(\d+)}) rescue nil
+    @delay = $1.to_i
     @downloader = Scrape::Downloader.new('')
   end
   
@@ -59,7 +61,7 @@ class Scrape::NewsSiteCrawler
   define_method 'natalie_mu/music/pp' do |doc|
     doc.xpath('html/head//script').text.match %r{"datePublished":"(.+?)"}
     date = Time.parse($1)
-    Anemone.crawl(@article_uri, {depth_limit:1}) do |anemone|
+    Anemone.crawl(@article_uri, {depth_limit:1, delay: @delay}) do |anemone|
       anemone.focus_crawl do |page|
         page.links.keep_if do |link|
           link.to_s.match @article_uri
@@ -105,7 +107,7 @@ class Scrape::NewsSiteCrawler
   define_method 'www_barks_jp/news' do |doc|
     date = doc.xpath('//p[@class="article-postdate"]').text
     date = Time.parse(date)
-    Anemone.crawl(@article_uri, {depth_limit:1}) do |anemone|
+    Anemone.crawl(@article_uri, {depth_limit:1, delay: @delay}) do |anemone|
       anemone.focus_crawl do |page|
         page.links.keep_if do |link|
           # 記事情報(id)がURLクエリ文字列として入っているため、escape処理をかませている。
