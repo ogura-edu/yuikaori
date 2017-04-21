@@ -85,7 +85,7 @@ class Scrape::Downloader
     
     if obj.exists?
       puts "#{fullpath} already exists"
-      return
+      return true
     end
     
     puts "download #{uri} to #{fullpath}"
@@ -105,7 +105,7 @@ class Scrape::Downloader
     # 既にダウンロードしてある場合はスキップ
     if obj.exists?
       puts "#{fullpath} already exists"
-      return
+      return true
     end
     
     puts "download #{uri} to #{fullpath}"
