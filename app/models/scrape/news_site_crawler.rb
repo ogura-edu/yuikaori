@@ -6,8 +6,7 @@ class Scrape::NewsSiteCrawler
     @event_id = params[:event_id].to_i
     @article_uri = Addressable::URI.parse(params[:article_url]).normalize
     @http = Net::HTTP.new(@article_uri.host)
-    open(@article_uri.to_s.gsub(%r{#{@article_uri.host}/.*}, "#{@article_uri.host}/robots.txt")).read.downcase.match(%r{crawl-delay.*?(\d+)}) rescue nil
-    @delay = $1.to_i
+    @delay = Robotex.new('MyAppAgent').delay(uri.to_s)
     @downloader = Scrape::Downloader.new('')
   end
   
