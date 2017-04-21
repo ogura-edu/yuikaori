@@ -67,7 +67,7 @@ class Scrape::NewsSiteCrawler
         end
       end
       anemone.on_every_page do |page|
-        doc = Nokogiri::HTML.parse(page.body)
+        doc = Nokogiri::HTML.parse(page.body.toutf8)
         doc.xpath('//div[@id="sp-left"]//img').each do |img_tag|
           image_url = Scrape::Helper.url(page.url, img_tag.attribute('src').value.gsub(%r{(photo\d*)s}, '\1'))
           uri = Addressable::URI.parse(image_url)
@@ -114,7 +114,7 @@ class Scrape::NewsSiteCrawler
         end
       end
       anemone.on_every_page do |page|
-        doc = Nokogiri::HTML.parse(page.body)
+        doc = Nokogiri::HTML.parse(page.body.toutf8)
         doc.xpath('//section[@class="article-body"]//img').each do |img_tag|
           image_url = Scrape::Helper.url(page.url, img_tag.attribute('src').value)
           uri = Addressable::URI.parse(image_url)
