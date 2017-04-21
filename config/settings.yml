@@ -31,18 +31,15 @@ official_site:
     - url: 'http://www.yuikaori.info/'
       host: 'www.yuikaori.info'
       member_id: 1
-      allowed:
-        - ''
+      allowed: []
     - url: 'http://www.ogurayui.jp/'
       host: 'www.ogurayui.jp'
       member_id: 2
-      allowed:
-        - ''
+      allowed: []
     - url: 'http://yuikaori-report.info/'
       host: 'yuikaori-report.info'
       member_id: 1
-      allowed:
-        - ''
+      allowed: []
 
 news_site:
   - 'natalie.mu/music/news'
