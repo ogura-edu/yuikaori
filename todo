@@ -13,6 +13,7 @@ http://music-book.jp/book/news/news/141207
 https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
+文字化け治らず。自分でfork版つくるか。。。。
 yuikaori-report.infoにアクセスブロックされてしまった。。->anemoneのobey_robots_txtが全く機能していない。代わりに、gem robotexを使用する。今後、anemoneを使用する際は必ず使用すること。
 AllCrawl実行
 イベント、タグ作成機能を取り急ぎ。
