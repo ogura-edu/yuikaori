@@ -64,6 +64,10 @@ class PicturesController < ApplicationController
   # GET /pictures/1/edit
   def edit
   end
+  
+  def update
+    something
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   end
 
 
-  resources :pictures, :videos, constraints: { id: /\d+/ }, only: [ :index, :edit, :show ] do
+  resources :pictures, :videos, constraints: { id: /\d+/ }, only: [ :index, :edit, :show, :update ] do
     collection do
       get :tmp
       get :search

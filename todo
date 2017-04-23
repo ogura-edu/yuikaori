@@ -20,7 +20,7 @@ https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 modalで表示しているshowテンプレートから、editボタンを押すとeditテンプレートに切り替わってform送信できるように変更
 画面内で順番を入れ替えたい。ひとまずは日付で昇降順。
 複数条件を使った検索の実装(便利なgemがありそう)
-dynoがスリープしてる間に表示するカスタムエラーページ作成 robots.txt作成
+dynoがスリープしてる間に表示するカスタムエラーページ作成 
 
 
 優先度 低：
@@ -78,3 +78,4 @@ twitter tweet指定がparse_tweetでエラーはく原因調査 ameblo,instaは�
 member_id,event_idを一々引数に書いてるけどもっと楽にかけないものか。 -> initializeでインスタンス変数に入れてしまう。
 定期取得や前取得をrakeタスクに登録
 addons:process-scheduler,schedulerを追加。
+robots.txt作成

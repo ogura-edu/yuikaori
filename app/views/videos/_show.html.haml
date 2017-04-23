@@ -1,14 +1,20 @@
-.modal-content
-  = video_tag @video.address, id: 'modal-video', controls: true, autoplay: true
-.modal-detail
-  .center-block
-    %p メンバー：#{@video.member.member}
-  .center-block
-    %p イベント：#{@video.event.event}
-  .center-block
-    %p 日時：#{@video.date}
-  .center-block
-    - @video.tags.each do |t|
-      %span t.tag
-  .center-block
-    = link_to '元記事', @video.article_url, class: 'btn btn-default'
+.modal-header
+  %button.close{aria: {hidden: 'true'}, data: {dismiss: 'modal'}, role: 'button'} x
+  %h3#modal_label 詳細
+= video_tag @video.address, id: 'modal-video', controls: true, autoplay: true
+.modal-form
+  .modal-body
+    .center-block
+      %p メンバー：#{@video.member.member}
+    .center-block
+      %p イベント：#{@video.event.event}
+    .center-block
+      %p 日時：#{@video.date}
+    .center-block
+      - @video.tags.each do |t|
+        %span t.tag
+    .center-block
+      = link_to '元記事', @video.article_url, class: 'btn btn-default'
+  .modal-footer
+    = link_to 'Edit', edit_video_path(@video), class: 'btn btn-primary', remote: true
+    %button.btn{aria: {hidden: true}, data: {dismiss: 'modal'}} Close

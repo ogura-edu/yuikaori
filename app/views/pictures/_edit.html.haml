@@ -1,0 +1,16 @@
+= form_for(@picture) do |f|
+  .modal-body
+    .center-block
+      = f.collection_select :member_id, Member.all, :id, :member
+    .center-block
+      = f.collection_select :event_id, Event.all, :id, :event
+    .center-block
+      = f.date_select :date
+    .center-block
+      = collection_check_boxes(:picture, :tag_ids, Tag.all, :id, :tag) do |t|
+        - t.label {t.check_box + t.text}
+    .center-block
+      = f.url_field :article_url
+  .modal-footer
+    = f.submit class: 'btn btn-primary'
+    %button.btn{aria: {hidden: true}, data: {dismiss: 'modal'}} Close

@@ -1,3 +1,2 @@
-$('.modal-body').html("<%= escape_javascript(render 'show') %>");
-$('.modal-footer').append("<%= escape_javascript(link_to 'Edit', edit_picture_path(@picture), class: 'btn btn-primary') %>");
+$('.modal-content').html("<%= escape_javascript(render 'show') %>");
 $('#show_modal').modal('show');

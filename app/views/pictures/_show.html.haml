@@ -1,14 +1,20 @@
-.modal-content.img-responsive
-  = image_tag @picture.address, class: 'img-rounded', id: 'modal-image'
-.modal-detail
-  .center-block
-    %p メンバー：#{@picture.member.member}
-  .center-block
-    %p イベント：#{@picture.event.event}
-  .center-block
-    %p 日時：#{@picture.date}
-  .center-block
-    - @picture.tags.each do |t|
-      %span t.tag
-  .center-block
-    = link_to '元記事', @picture.article_url, class: 'btn btn-default'
+.modal-header
+  %button.close{aria: {hidden: 'true'}, data: {dismiss: 'modal'}, role: 'button'} x
+  %h3#modal_label 詳細
+= image_tag @picture.address, class: 'img-rounded', id: 'modal-image'
+.modal-form
+  .modal-body
+    .center-block
+      %p メンバー：#{@picture.member.member}
+    .center-block
+      %p イベント：#{@picture.event.event}
+    .center-block
+      %p 日時：#{@picture.date}
+    .center-block
+      - @picture.tags.each do |t|
+        %span t.tag
+    .center-block
+      = link_to '元記事', @picture.article_url, class: 'btn btn-default'
+  .modal-footer
+    = link_to 'Edit', edit_picture_path(@picture), class: 'btn btn-primary', remote: true
+    %button.btn{aria: {hidden: true}, data: {dismiss: 'modal'}} Close
