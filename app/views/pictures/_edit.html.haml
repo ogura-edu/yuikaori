@@ -1,14 +1,17 @@
-= form_for(@picture) do |f|
+-# 仕方無くtext_fieldにしているが、既存のものは変更できないようにボタン式とかセレクト式にしたい。どちらにしろかさばるからどう表示したものか。。。
+
+= form_for(@picture, remote: true) do |f|
   .modal-body
     .center-block
       = f.collection_select :member_id, Member.all, :id, :member
     .center-block
-      = f.collection_select :event_id, Event.all, :id, :event
+      = f.fields_for :event do |e|
+        = e.text_field :event, placeholder: Event.find(@picture.event_id_was).event
     .center-block
       = f.date_select :date
     .center-block
-      = collection_check_boxes(:picture, :tag_ids, Tag.all, :id, :tag) do |t|
-        - t.label {t.check_box + t.text}
+      = f.fields_for :tags do |t|
+        = t.text_field :tag
     .center-block
       = f.url_field :article_url
   .modal-footer

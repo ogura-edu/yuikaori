@@ -1,5 +1,5 @@
 class PicturesController < ApplicationController
-  before_action :set_picture, only: [:show, :edit]
+  before_action :set_picture, only: [:show, :edit, :update]
   before_action :approved_user!, only: [:tmp, :destroy_index, :request_destroy]
   before_action :admin_user!, only: [:multiple]
 
@@ -11,15 +11,15 @@ class PicturesController < ApplicationController
     #columnの値によって処理を分岐
     case params[:column]
     when 'date'
-      selected = Picture.selected_by_date(picture_params)
+      selected = Picture.selected_by_date(search_params)
     when 'member'
-      selected = Picture.selected_by_member(picture_params)
+      selected = Picture.selected_by_member(search_params)
     when 'event'
-      selected = Picture.selected_by_event(picture_params)
+      selected = Picture.selected_by_event(search_params)
     when 'tag'
-      selected = Picture.selected_by_tag(picture_params)
+      selected = Picture.selected_by_tag(search_params)
     when 'media'
-      selected = Picture.selected_by_media(picture_params)
+      selected = Picture.selected_by_media(search_params)
     end
     @pictures = selected.order('date DESC').page(params[:page]).per(50)
   end
@@ -63,10 +63,23 @@ class PicturesController < ApplicationController
 
   # GET /pictures/1/edit
   def edit
+    # いくつ枠を用意しておく？
+    @picture.build_event
+    @picture.tags.build
   end
   
   def update
-    something
+    if @picture.update(picture_params)
+      respond_to do |format|
+        flash[:notice] = '更新完了しました'
+        format.js {render 'show'}
+      end
+    else
+      respond_to do |format|
+        flash[:notice] = '更新に失敗しました。'
+        format.js {render 'edit'}
+      end
+    end
   end
 
   private
@@ -76,7 +89,11 @@ class PicturesController < ApplicationController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def picture_params
+    def search_params
       params.require(:picture).permit(:since, :until, :member, :event, :tag, :media)
+    end
+    
+    def picture_params
+      params.require(:picture).permit(:member_id, :date, :article_url, event_attributes: [:event], tags_attributes: [:tag])
     end
 end

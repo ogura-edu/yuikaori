@@ -12,7 +12,7 @@
       %p 日時：#{@picture.date}
     .center-block
       - @picture.tags.each do |t|
-        %span t.tag
+        %span= t.tag
     .center-block
       = link_to '元記事', @picture.article_url, class: 'btn btn-default'
   .modal-footer

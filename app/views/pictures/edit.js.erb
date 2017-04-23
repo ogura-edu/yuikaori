@@ -1,1 +1,2 @@
 $('.modal-form').html("<%= escape_javascript(render 'edit') %>");
+$('#notice').html("<% if flash[:notice] %> <%= j(javascript_tag %Q{alert('#{flash.now[:notice]}')}) %> <% end %>");

@@ -11,7 +11,9 @@
       = render 'layouts/header'
     %section
       = yield
-    - if flash[:notice]
-      = javascript_tag "alert('#{flash[:notice]}')"
-    - if flash[:alert]
-      = javascript_tag "alert('#{flash[:alert]}')"
+    #notice
+      - if flash[:notice]
+        = javascript_tag "alert('#{flash.now[:notice]}')"
+    #alert
+      - if flash[:alert]
+        = javascript_tag "alert('#{flash.now[:alert]}')"
