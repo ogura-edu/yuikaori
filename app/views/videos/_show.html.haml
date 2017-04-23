@@ -1,5 +1,5 @@
-.modal-video
-  = video_tag @video.address, class: 'modal-video'
+.modal-content
+  = video_tag @video.address, id: 'modal-video', controls: true, autoplay: true
 .modal-detail
   .center-block
     %p メンバー：#{@video.member.member}
@@ -11,4 +11,4 @@
     - @video.tags.each do |t|
       %span t.tag
   .center-block
-    %p 記事URL：#{@video.article_url}
+    = link_to '元記事', @video.article_url, class: 'btn btn-default'

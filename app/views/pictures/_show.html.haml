@@ -1,5 +1,5 @@
-.modal-image.img-responsive
-  = image_tag @picture.address, class: 'modal-image img-rounded'
+.modal-content.img-responsive
+  = image_tag @picture.address, class: 'img-rounded', id: 'modal-image'
 .modal-detail
   .center-block
     %p メンバー：#{@picture.member.member}
@@ -11,4 +11,4 @@
     - @picture.tags.each do |t|
       %span t.tag
   .center-block
-    %p 記事URL：#{@picture.article_url}
+    = link_to '元記事', @picture.article_url, class: 'btn btn-default'
