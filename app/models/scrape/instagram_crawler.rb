@@ -12,8 +12,8 @@ class Scrape::InstagramCrawler
       ::Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: false)
     end
     
-    @member_id = params[:member_id].to_i
-    @event_id = params[:event_id].to_i
+    @member_id = params[:member_id]
+    @event_id = params[:event_id]
     @article_url = params[:article_url].try(:gsub, %r{\?.*$}, '')
     open(@article_url).read.match %r{\(@(.+?)\)} rescue nil
     @instaID = params[:instaID] || $1

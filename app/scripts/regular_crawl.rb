@@ -10,7 +10,6 @@ class RegularCrawl
       params = {
         amebaID:   obj.ID,
         member_id: obj.member_id,
-        event_id:  1,
       }
       ameblo = Scrape::AmebloCrawler.new(params)
       ameblo.crawl
@@ -22,7 +21,6 @@ class RegularCrawl
       params = {
         instaID:   obj.ID,
         member_id: obj.member_id,
-        event_id:  1,
       }
       insta = Scrape::InstagramCrawler.new(params)
       insta.crawl
@@ -35,7 +33,6 @@ class RegularCrawl
         type:        'auto',
         screen_name: obj.ID,
         member_id:   obj.member_id,
-        event_id:    1,
         user_type:   :admin,
       }
       twitter = Scrape::TwitterCrawler.new(params)

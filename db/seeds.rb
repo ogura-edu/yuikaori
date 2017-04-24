@@ -24,8 +24,7 @@ User.create(
   approved:    true
 )
 Member.create([
-  { id: 1, member: 'ゆいかおり' },
-  { id: 2, member: '小倉唯'     },
-  { id: 3, member: '石原夏織'   }
+  { id: 1, name: 'ゆいかおり' },
+  { id: 2, name: '小倉唯'     },
+  { id: 3, name: '石原夏織'   }
 ])
-Event.create( id: 1, event: '----------------' ) unless Event.find(1)

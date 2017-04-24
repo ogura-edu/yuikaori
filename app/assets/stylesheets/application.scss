@@ -10,18 +10,17 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
- *= require_self
+ *= require 'bootstrap'
+ *= require 'bootstrap-tagsinput'
  *= require 'masonry/basic'
  *= require 'masonry/centered'
  *= require 'masonry/fluid'
  *= require 'masonry/gutters'
  *= require 'masonry/infinitescroll'
  *= require 'masonry/transitions'
+ *= require_tree .
+ *= require_self
  */
-
-@import 'bootstrap-sprockets';
-@import 'bootstrap-custom';
 
 html{
   height: 100%;
@@ -56,8 +55,10 @@ ul.pagination {
 }
 
 .form-control {
+  display: inline-block;
+  text-align: center;
   height: 2em;
-  width: 10em;
+  width: 12em;
 }
 
 .heading {
@@ -66,4 +67,13 @@ ul.pagination {
   p {
     font-size: 20px;
   }
+}
+
+input[type=text], input[type=url]{
+  border: none;
+  border-bottom: medium groove;
+  text-align: center;
+}
+input[type=url] {
+  width: 30em;
 }

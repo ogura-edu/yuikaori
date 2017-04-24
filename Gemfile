@@ -7,6 +7,11 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+source 'https://rails-assets.org' do
+  gem 'rails-assets-bootstrap'
+  gem 'rails-assets-bootstrap-tagsinput'
+end
+
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
@@ -49,6 +54,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  
+  gem 'whenever', require: false
 end
 
 group :production do
@@ -67,14 +74,10 @@ gem 'kaminari'
 gem 'devise'
 gem 'omniauth-twitter'
 
-gem 'bootstrap-sass'
 gem 'anemone', github: 'takuros/anemone'
 gem 'nokogiri'
 gem 'capybara'
 gem 'poltergeist'
-# gem 'selenium-webdriver', '~> 3.1.0'
-
-gem 'whenever', require: false
 
 gem 'pry-rails'
 
@@ -97,3 +100,5 @@ gem 'streamio-ffmpeg'
 gem 'dotenv-rails'
 
 gem 'aws-sdk'
+
+gem 'acts-as-taggable-on'

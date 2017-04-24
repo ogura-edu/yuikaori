@@ -2,8 +2,8 @@ class Scrape::NewsSiteCrawler
   attr_accessor :errors
   
   def initialize(params)
-    @member_id = params[:member_id].to_i
-    @event_id = params[:event_id].to_i
+    @member_id = params[:member_id]
+    @event_id = params[:event_id]
     @article_uri = Addressable::URI.parse(params[:article_url]).normalize
     @http = Net::HTTP.new(@article_uri.host)
     @delay = Robotex.new('MyAppAgent').delay(uri.to_s)

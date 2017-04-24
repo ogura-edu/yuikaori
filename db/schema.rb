@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170418144305) do
+ActiveRecord::Schema.define(version: 20170424072336) do
 
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "event"
-    t.index ["event"], name: "index_events_on_event", unique: true, using: :btree
+    t.string "name"
+    t.index ["name"], name: "index_events_on_name", unique: true, using: :btree
   end
 
   create_table "members", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "member"
-    t.index ["member"], name: "index_members_on_member", unique: true, using: :btree
+    t.string "name"
+    t.index ["name"], name: "index_members_on_name", unique: true, using: :btree
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -27,27 +27,39 @@ ActiveRecord::Schema.define(version: 20170418144305) do
     t.date     "date"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.integer  "member_id"
-    t.integer  "event_id"
     t.boolean  "tmp",         default: false, null: false
     t.boolean  "removed",     default: false, null: false
     t.string   "article_url"
+    t.integer  "member_id",                   null: false
+    t.integer  "event_id"
     t.index ["address"], name: "index_pictures_on_address", unique: true, using: :btree
+    t.index ["event_id"], name: "index_pictures_on_event_id", using: :btree
+    t.index ["member_id"], name: "index_pictures_on_member_id", using: :btree
   end
 
-  create_table "pictures_tags", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "picture_id"
-    t.integer "tag_id"
+  create_table "taggings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "tag_id"
+    t.string   "taggable_type"
+    t.integer  "taggable_id"
+    t.string   "tagger_type"
+    t.integer  "tagger_id"
+    t.string   "context",       limit: 128
+    t.datetime "created_at"
+    t.index ["context"], name: "index_taggings_on_context", using: :btree
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+    t.index ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
+    t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy", using: :btree
+    t.index ["taggable_id"], name: "index_taggings_on_taggable_id", using: :btree
+    t.index ["taggable_type"], name: "index_taggings_on_taggable_type", using: :btree
+    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type", using: :btree
+    t.index ["tagger_id"], name: "index_taggings_on_tagger_id", using: :btree
   end
 
   create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "tag"
-    t.index ["tag"], name: "index_tags_on_tag", unique: true, using: :btree
-  end
-
-  create_table "tags_videos", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "video_id"
-    t.integer "tag_id"
+    t.string  "name",                       collation: "utf8_bin"
+    t.integer "taggings_count", default: 0
+    t.index ["name"], name: "index_tags_on_name", unique: true, using: :btree
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -89,12 +101,14 @@ ActiveRecord::Schema.define(version: 20170418144305) do
     t.date     "date"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.integer  "member_id"
-    t.integer  "event_id"
     t.boolean  "tmp",         default: false, null: false
     t.boolean  "removed",     default: false, null: false
     t.string   "article_url"
+    t.integer  "member_id",                   null: false
+    t.integer  "event_id"
     t.index ["address"], name: "index_videos_on_address", unique: true, using: :btree
+    t.index ["event_id"], name: "index_videos_on_event_id", using: :btree
+    t.index ["member_id"], name: "index_videos_on_member_id", using: :btree
   end
 
 end

@@ -16,6 +16,7 @@
 //= require turbolinks
 //= require jquery.infinitescroll
 //= require imagesloaded.pkgd.min
-//= require_tree .
-//= require bootstrap-sprockets-custom
+//= require bootstrap
+//= require bootstrap-tagsinput
 //= require masonry/masonry.min
+//= require_tree .

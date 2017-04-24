@@ -2,10 +2,10 @@ class Scrape::AmebloCrawler
   attr_accessor :errors
   
   def initialize(params)
-    @member_id = params[:member_id].to_i
-    @event_id = params[:event_id].to_i
-    @article_url = params[:article_url] || '' # matchのNilClassエラー対策
-    @article_url.match %r{http://ameblo.jp/(.+?)/entry-\d+?\.html$}
+    @member_id = params[:member_id]
+    @event_id = params[:event_id]
+    @article_url = params[:article_url]
+    @article_url.match %r{http://ameblo.jp/(.+?)/entry-\d+?\.html$} rescue nil
     @amebaID = params[:amebaID] || $1
     @host = "http://ameblo.jp/#{@amebaID}/"
     @downloader = Scrape::Downloader.new("ameblo/#{@amebaID}/")

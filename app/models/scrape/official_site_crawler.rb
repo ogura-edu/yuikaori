@@ -4,8 +4,8 @@ class Scrape::OfficialSiteCrawler
   def initialize(params)
     uri = Addressable::URI.parse(params[:page_url]).normalize
     linked_hosts = params[:allowed_links].map{|link| Addressable::URI.parse(link).normalize.host}
-    @member_id = params[:member_id].to_i
-    @event_id = params[:event_id].to_i
+    @member_id = params[:member_id]
+    @event_id = params[:event_id]
     @depth_limit = params[:depth_limit].try(:to_i) || params[:depth_limit]
     @cache = []
     @top_page = uri
@@ -86,7 +86,7 @@ class Scrape::OfficialSiteCrawler
     return if @cache.include?(media_url)
     
     uri = Addressable::URI.parse(media_url).normalize
-    date = Time.parse(response_header(uri)['last-modified'] || Time.now.to_s)
+    date = Time.parse(response_header(uri)['last-modified']) rescue Time.now
     filepath = "#{uri.host}#{uri.path}"
     @downloader.save_media(type, uri, page_url, date, @member_id, @event_id, true, filepath)
     @cache << media_url

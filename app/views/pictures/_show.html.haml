@@ -5,14 +5,14 @@
 .modal-form
   .modal-body
     .center-block
-      %p メンバー：#{@picture.member.member}
-    .center-block
-      %p イベント：#{@picture.event.event}
+      %p メンバー：#{@picture.member.name}
+    .center-block 
+      - unless @picture.event.nil?
+        %p イベント：#{@picture.event.name}
     .center-block
       %p 日時：#{@picture.date}
     .center-block
-      - @picture.tags.each do |t|
-        %span= t.tag
+      = @picture.tag_list.join(' ')
     .center-block
       = link_to '元記事', @picture.article_url, class: 'btn btn-default'
   .modal-footer

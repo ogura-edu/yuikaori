@@ -4,5 +4,6 @@
 
 #modalを閉じたらvideoタグにpause()を実行する
 $(document).on 'click.dismiss.bs.modal', "#show_modal", ->
-  video = document.getElementById('modal-video')
-  video.pause()
+  if $('#modal-video')[0]
+    video = document.getElementById('modal-video')
+    video.pause()

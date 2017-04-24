@@ -12,8 +12,8 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     when :user
       # いずれユーザに投稿させるときに必要になる
     end
-    @member_id = params[:member_id].to_i
-    @event_id = params[:event_id].to_i
+    @member_id = params[:member_id]
+    @event_id = params[:event_id]
     @type = params[:type]
     case @type
     when 'auto'

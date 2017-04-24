@@ -1,18 +1,15 @@
--# 仕方無くtext_fieldにしているが、既存のものは変更できないようにボタン式とかセレクト式にしたい。どちらにしろかさばるからどう表示したものか。。。
-
 = form_for(@picture, remote: true) do |f|
   .modal-body
     .center-block.member-form
-      = f.collection_select :member_id, Member.all, :id, :member
+      = f.collection_select :member_id, Member.all, :id, :name
     .center-block.event-form
-      = f.collection_select :event_id, Event.all, :id, :event
+      = f.collection_select :event_id, Event.all, :id, :name, include_blank: true
       -# this button can be pushed only at once.
-    %button.btn.new-record.event{type: 'button'} イベント新規作成
+      %button.btn.new-record.event{type: 'button'} イベント新規作成
     .center-block.date-form
-      = f.date_select :date
+      = f.date_field :date, class: 'form-control'
     .center-block.tags-form
-      = f.collection_check_boxes :tag_ids, Tag.all, :id, :tag
-    %button.btn.new-record.tags{type: 'button'} タグ新規作成
+      = f.text_field :tag_list, {value: @picture.tag_list.join(','), 'data-role': 'tagsinput', placeholder: 'tag separeted with , or Enter', class: 'tag-list'}
     .center-block.article-form
       = f.url_field :article_url
   .modal-footer

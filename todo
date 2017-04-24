@@ -13,11 +13,11 @@ http://music-book.jp/book/news/news/141207
 https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
+search, editで入力時にサジェストする機能を実装する
 アラートがうるさいので適切な画面で表示されるように修正する
 取り急ぎ、yuikaori-reportの画像ファイルはS3に格納したので、あとはDBに登録する。
-タグ用のgemがある act as taggable
 画面内で順番を入れ替えたい。ひとまずは日付で昇降順。
-複数条件を使った検索の実装(便利なgemがありそう)
+複数条件を使った検索の実装(便利なgemがありそう)->それぞれ対応するメソッドをモデルに定義してcase whenなどで順次実行する？
 dynoがスリープしてる間に表示するカスタムエラーページ作成 
 文字化け治らず。自分でcrawler gemつくるか。。
 
@@ -80,3 +80,4 @@ addons:process-scheduler,schedulerを追加。
 robots.txt作成
 modalで表示しているshowテンプレートから、editボタンを押すとeditテンプレートに切り替わってform送信できるように変更
 イベント、タグ作成機能を取り急ぎ。
+タグ用のgemがある acts as taggable -> なかなかいい感じ。同時にbootstrap-tagsinputも導入。
