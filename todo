@@ -13,8 +13,8 @@ http://music-book.jp/book/news/news/141207
 https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
+アラートがうるさいので適切な画面で表示されるように修正する
 取り急ぎ、yuikaori-reportの画像ファイルはS3に格納したので、あとはDBに登録する。
-イベント、タグ作成機能を取り急ぎ。
 タグ用のgemがある act as taggable
 画面内で順番を入れ替えたい。ひとまずは日付で昇降順。
 複数条件を使った検索の実装(便利なgemがありそう)
@@ -79,3 +79,4 @@ member_id,event_idを一々引数に書いてるけどもっと楽にかけな�
 addons:process-scheduler,schedulerを追加。
 robots.txt作成
 modalで表示しているshowテンプレートから、editボタンを押すとeditテンプレートに切り替わってform送信できるように変更
+イベント、タグ作成機能を取り急ぎ。

@@ -2,18 +2,19 @@
 
 = form_for(@picture, remote: true) do |f|
   .modal-body
-    .center-block
+    .center-block.member-form
       = f.collection_select :member_id, Member.all, :id, :member
-    .center-block
-      = f.fields_for :event do |e|
-        = e.text_field :event, placeholder: Event.find(@picture.event_id_was).event
-    .center-block
+    .center-block.event-form
+      = f.collection_select :event_id, Event.all, :id, :event
+      -# this button can be pushed only at once.
+    %button.btn.new-record.event{type: 'button'} イベント新規作成
+    .center-block.date-form
       = f.date_select :date
-    .center-block
-      = f.fields_for :tags do |t|
-        = t.text_field :tag
-    .center-block
+    .center-block.tags-form
+      = f.collection_check_boxes :tag_ids, Tag.all, :id, :tag
+    %button.btn.new-record.tags{type: 'button'} タグ新規作成
+    .center-block.article-form
       = f.url_field :article_url
   .modal-footer
     = f.submit class: 'btn btn-primary'
-    %button.btn{aria: {hidden: true}, data: {dismiss: 'modal'}} Close
+    %button.btn{type: 'button', aria: {hidden: true}, data: {dismiss: 'modal'}} Close

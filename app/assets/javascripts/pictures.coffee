@@ -2,6 +2,15 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+new_tags = 0
+$(document).on 'click', '.new-record',->
+  if $(this).hasClass('event')
+    $('.event-form').append('<input placeholder="イベント名" type="text" name="picture[event_attributes][event]" id="picture_event_attributes_event">')
+    $(this).css('display', 'none')
+  else if $(this).hasClass('tags')
+    $('.tags-form').append("<input placeholder='タグ名' type='text' name='picture[tags_attributes][#{new_tags}][tag]' id='picture_tags_attributes_#{new_tags}_tag'>")
+    new_tags++
+
 $(document).on 'turbolinks:load', ->
   $('.my-thumbnail.selectable').click ->
     if $(this).hasClass('checked')

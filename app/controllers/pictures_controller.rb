@@ -63,9 +63,6 @@ class PicturesController < ApplicationController
 
   # GET /pictures/1/edit
   def edit
-    # いくつ枠を用意しておく？
-    @picture.build_event
-    @picture.tags.build
   end
   
   def update
@@ -94,6 +91,6 @@ class PicturesController < ApplicationController
     end
     
     def picture_params
-      params.require(:picture).permit(:member_id, :date, :article_url, event_attributes: [:event], tags_attributes: [:tag])
+      params.require(:picture).permit(:member_id, :event_id, :date, :article_url, event_attributes: [:event], tags_attributes: [:tag], tag_ids: [])
     end
 end
