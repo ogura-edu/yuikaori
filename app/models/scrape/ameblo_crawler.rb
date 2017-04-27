@@ -2,13 +2,16 @@ class Scrape::AmebloCrawler
   attr_accessor :errors
   
   def initialize(params)
-    @member_id = params[:member_id]
-    @event_id = params[:event_id]
+    member_id = params[:member_id]
+    event_id = params[:event_id]
+    new_event = params[:event_attributes]
+    tag_list = params[:tag_list]
+    tmp = params[:tmp]
     @article_url = params[:article_url]
     @article_url.match %r{http://ameblo.jp/(.+?)/entry-\d+?\.html$} rescue nil
     @amebaID = params[:amebaID] || $1
     @host = "http://ameblo.jp/#{@amebaID}/"
-    @downloader = Scrape::Downloader.new("ameblo/#{@amebaID}/")
+    @downloader = Scrape::Downloader.new("ameblo/#{@amebaID}/", member_id, event_id, new_event, tag_list, tmp)
   end
   
   def validate
@@ -34,7 +37,7 @@ class Scrape::AmebloCrawler
   end
   
   def manually_crawl
-    parse_article(tmp: true)
+    parse_article
   end
   
   private
@@ -70,7 +73,7 @@ class Scrape::AmebloCrawler
         anemone.on_every_page do |page|
           puts "image on #{page.url} :"
           @article_url = page.url
-          parse_article(tmp: false)
+          parse_article
         end
       rescue => ex
         puts ex
@@ -79,7 +82,7 @@ class Scrape::AmebloCrawler
     end
   end
 
-  def parse_article(tmp:)
+  def parse_article
     doc = Nokogiri::HTML.parse(open(@article_url))
     doc.xpath('//div[@class="articleText" or  @class="subContentsInner"]//a/img').each do |img|
       image_url = img.attribute('src').value.gsub(/t[\d]*_/, 'o').gsub(/\?.*$/, '')
@@ -89,7 +92,7 @@ class Scrape::AmebloCrawler
       dateary = [datestr.slice(0,4), datestr.slice(4,2), datestr.slice(6,2)]
       date = Time.local(*dateary)
       
-      @downloader.save_media(:image, image_url, @article_url, date, @member_id, @event_id, tmp)
+      @downloader.save_media(:image, image_url, @article_url, date)
     end
   end
   

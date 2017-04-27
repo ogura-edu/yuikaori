@@ -12,8 +12,11 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     when :user
       # いずれユーザに投稿させるときに必要になる
     end
-    @member_id = params[:member_id]
-    @event_id = params[:event_id]
+    member_id = params[:member_id]
+    event_id = params[:event_id]
+    new_event = params[:event_attributes]
+    tag_list = params[:tag_list]
+    tmp = params[:tmp]
     @type = params[:type]
     case @type
     when 'auto'
@@ -32,7 +35,7 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
       # Twitter::Error::NotFoundを拾うためにrescue
       @tweet = status(Twitter::Tweet.new(id: $2), {tweet_mode: 'extended'}) rescue nil
     end
-    @downloader = Scrape::Downloader.new("twitter/#{@screen_name}/")
+    @downloader = Scrape::Downloader.new("twitter/#{@screen_name}/", member_id, event_id, new_event, tag_list, tmp)
   end
   
   def validate
@@ -70,11 +73,11 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     case type
     when :all
       get_all_tweets(options).each do |tweet|
-        classify_tweet(tweet.attrs, tmp: false)
+        classify_tweet(tweet.attrs)
       end
     when :recent
       user_timeline(@screen_name, options).each do |tweet|
-        classify_tweet(tweet.attrs, tmp: false)
+        classify_tweet(tweet.attrs)
       end
     end
   end
@@ -89,14 +92,14 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     case @type
     when 'date'
       get_tweets_in_certain_date(options).each do |tweet|
-        classify_tweet(tweet.attrs, tmp: true)
+        classify_tweet(tweet.attrs)
       end
     when 'number'
       get_many_tweets(options).each do |tweet|
-        classify_tweet(tweet.attrs, tmp: true)
+        classify_tweet(tweet.attrs)
       end
     when 'tweet'
-      parse_tweet(@tweet.attrs, tmp: true)
+      parse_tweet(@tweet.attrs)
     end
   end
   
@@ -140,21 +143,21 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     tweetary[0, @tweet_num]
   end
   
-  def classify_tweet(tweet, tmp:)
+  def classify_tweet(tweet)
     begin
       if tweet[:is_quote_status]
-        parse_tweet(tweet[:quoted_status], tmp)
+        parse_tweet(tweet[:quoted_status])
       elsif tweet[:retweeted_status]
-        parse_tweet(tweet[:retweeted_status], tmp)
+        parse_tweet(tweet[:retweeted_status])
       else
-        parse_tweet(tweet, tmp)
+        parse_tweet(tweet)
       end
     rescue
       puts "no media in tweetID:#{tweet[:id_str]}"
     end
   end 
   
-  def parse_tweet(tweet, tmp)
+  def parse_tweet(tweet)
     date = Time.parse(tweet[:created_at])
     @article_url = "https://twitter.com/#{tweet[:user][:screen_name]}/status/#{tweet[:id_str]}"
     
@@ -162,10 +165,10 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
       if media[:video_info]
         url_list = media[:video_info][:variants].select{|item| item[:bitrate]}
         video_url = url_list.max_by{|item| item[:bitrate]}[:url]
-        @downloader.save_media(:video, video_url, @article_url, date, @member_id, @event_id, tmp)
+        @downloader.save_media(:video, video_url, @article_url, date)
       else
         image_url = media[:media_url_https]
-        @downloader.save_media(:image, image_url, @article_url, date, @member_id, @event_id, tmp)
+        @downloader.save_media(:image, image_url, @article_url, date)
       end
     end
     puts "saved madia successfully"

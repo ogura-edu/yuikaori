@@ -1,9 +1,14 @@
 class Scrape::Downloader
-  def initialize(dir_name)
+  def initialize(dir_name, member_id, event_id, new_event, tag_list, tmp)
     @dir_name = "images/#{dir_name}"
+    @member_id = member_id
+    @event_id = event_id
+    @new_event = new_event.blank? ? {} : new_event
+    @tag_list = tag_list
+    @tmp = tmp
   end
   
-  def save_youtube(id, uri, article_uri, member_id, event_id, tmp)
+  def save_youtube(id, uri, article_uri)
     filepath = "images/youtube/#{id}.mp4"
     fullpath = Scrape::Helper.fullpath(filepath)
     
@@ -24,15 +29,17 @@ class Scrape::Downloader
     video = Video.create(
       address: fullpath,
       article_url: article_uri.to_s,
-      member_id: member_id,
-      event_id: event_id,
+      member_id: @member_id,
+      event_id: @event_id,
+      event_attributes: @new_event,
+      tag_list: @tag_list,
       date: date,
-      tmp: tmp,
+      tmp: @tmp,
     )
     video.screenshot
   end
   
-  def save_media(media_type, uri, article_uri, date, member_id, event_id, tmp, filepath = nil)
+  def save_media(media_type, uri, article_uri, date, filepath = nil)
     # filepathを指定したい時は指定してもらう感じで。
     filepath = filepath ? "images/#{filepath}" : "#{@dir_name}#{File.basename(uri)}"
     fullpath = Scrape::Helper.fullpath(filepath)
@@ -59,19 +66,23 @@ class Scrape::Downloader
       Picture.create(
         address: fullpath,
         article_url: article_uri.to_s,
-        member_id: member_id,
-        event_id: event_id,
+        member_id: @member_id,
+        event_id: @event_id,
+        event_attributes: @new_event,
+        tag_list: @tag_list,
         date: date,
-        tmp: tmp,
+        tmp: @tmp,
       )
     when :video
       video = Video.create(
         address: fullpath,
         article_url: article_uri.to_s,
-        member_id: member_id,
-        event_id: event_id,
+        member_id: @member_id,
+        event_id: @event_id,
+        event_attributes: @new_event,
+        tag_list: @tag_list,
         date: date,
-        tmp: tmp,
+        tmp: @tmp,
       )
       video.screenshot
     end

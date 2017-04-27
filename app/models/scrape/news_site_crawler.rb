@@ -2,12 +2,15 @@ class Scrape::NewsSiteCrawler
   attr_accessor :errors
   
   def initialize(params)
-    @member_id = params[:member_id]
-    @event_id = params[:event_id]
+    member_id = params[:member_id]
+    event_id = params[:event_id]
+    new_event = params[:event_attributes]
+    tag_list = params[:tag_list]
+    tmp = params[:tmp]
     @article_uri = Addressable::URI.parse(params[:article_url]).normalize
     @http = Net::HTTP.new(@article_uri.host)
     @delay = Robotex.new('MyAppAgent').delay(uri.to_s)
-    @downloader = Scrape::Downloader.new('')
+    @downloader = Scrape::Downloader.new('', member_id, event_id, new_event, tag_list, tmp)
   end
   
   def validate
@@ -40,7 +43,7 @@ class Scrape::NewsSiteCrawler
       next unless url.match 'youtube'
       id = File.basename(URI.parse(url).path)
       video_uri = URI.parse(url.gsub('embed/', 'watch/?v='))
-      @downloader.save_youtube(id, video_uri, @article_uri, @member_id, @event_id, true)
+      @downloader.save_youtube(id, video_uri, @article_uri)
     end
   end
   
@@ -52,7 +55,7 @@ class Scrape::NewsSiteCrawler
       image_url = Scrape::Helper.url(@article_uri, $1.gsub('list_thumb_inbox', 'xlarge'))
       uri = Addressable::URI.parse(image_url)
       filepath = "#{uri.host}#{uri.path}"
-      @downloader.save_media(:image, uri, @article_uri, date, @member_id, @event_id, true, filepath)
+      @downloader.save_media(:image, uri, @article_uri, date, filepath)
     end
     youtube(doc)
   end
@@ -72,7 +75,7 @@ class Scrape::NewsSiteCrawler
           image_url = Scrape::Helper.url(page.url, img_tag.attribute('src').value.gsub(%r{(photo\d*)s}, '\1'))
           uri = Addressable::URI.parse(image_url)
           filepath = "#{uri.host}#{uri.path}"
-          @downloader.save_media(:image, uri, @article_uri, date, @member_id, @event_id, true, filepath)
+          @downloader.save_media(:image, uri, @article_uri, date, filepath)
         end
         youtube(doc)
       end
@@ -86,7 +89,7 @@ class Scrape::NewsSiteCrawler
       image_url = Scrape::Helper.url(@article_uri, img_tag.attribute('src').value)
       uri = Addressable::URI.parse(image_url)
       filepath = "#{uri.host}#{uri.path}"
-      @downloader.save_media(:image, uri, @article_uri, date, @member_id, @event_id, true, filepath)
+      @downloader.save_media(:image, uri, @article_uri, date, filepath)
     end
     youtube(doc)
   end
@@ -98,7 +101,7 @@ class Scrape::NewsSiteCrawler
       image_url = Scrape::Helper.url(@article_uri, img_tag.attribute('src').value)
       uri = Addressable::URI.parse(image_url)
       filepath = "#{uri.host}#{uri.path}"
-      @downloader.save_media(:image, uri, @article_uri, date, @member_id, @event_id, true, filepath)
+      @downloader.save_media(:image, uri, @article_uri, date, filepath)
     end
     youtube(doc)
   end
@@ -119,7 +122,7 @@ class Scrape::NewsSiteCrawler
           image_url = Scrape::Helper.url(page.url, img_tag.attribute('src').value)
           uri = Addressable::URI.parse(image_url)
           filepath = "#{uri.host}#{uri.path}"
-          @downloader.save_media(:image, uri, @article_uri, date, @member_id, @event_id, true, filepath)
+          @downloader.save_media(:image, uri, @article_uri, date, filepath)
         end
         youtube(doc)
       end

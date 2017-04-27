@@ -49,7 +49,7 @@ class Picture < ApplicationRecord
   private
 
   def event_blank_or_exist?(attributes)
-    return true if attributes[:event].blank? || Event.where(name: attributes[:event]).any?
+    return true if attributes[:name].blank? || Event.where(name: attributes[:name]).any?
     false
   end
 end

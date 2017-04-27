@@ -1,7 +1,10 @@
 class Video < ApplicationRecord
-  has_and_belongs_to_many :tags
+  validates :member_id, inclusion: { in: [1, 2, 3] }
+  
+  acts_as_taggable
   belongs_to :member
-  belongs_to :event
+  belongs_to :event, optional: true
+  accepts_nested_attributes_for :event, reject_if: :event_blank_or_exist?
   
   def s3_address
     attributes['address'].gsub(Settings.media.root, '')
@@ -28,25 +31,38 @@ class Video < ApplicationRecord
     File.delete(tmp_ss)
   end
 
+  def self.allowed
+    where(tmp: false, removed: false)
+  end
+  
+  def self.temporary
+    where(tmp: true, removed: false)
+  end
+
   def self.selected_by_date(params)
-    where('date >= ? AND date <= ? AND tmp IS false AND removed IS false', params[:since], params[:until])
+    where('date >= ? AND date <= ?', params[:since], params[:until]).allowed
   end
 
   def self.selected_by_member(params)
-    where('member_id = ? AND tmp IS false AND removed IS false', params[:member])
+    joins(:member).merge(Member.id_is params[:member]).allowed
   end
 
   def self.selected_by_event(params)
-    event_ids = Event.where('event LIKE ?', "%#{params[:event]}%").ids
-    where('event_id IN (?) AND tmp IS false AND removed IS false', event_ids)
+    joins(:event).merge(Event.name_like params[:event]).allowed
   end
   
   def self.selected_by_tag(params)
-    tag_ids = Tag.where('tag LIKE ?', "%#{params[:tag]}%").ids
-    where('tag_id IN (?) AND tmp IS false AND removed IS false', tag_ids)
+    tagged_with(params[:tag], any: true, wild: true).allowed
   end
 
   def self.selected_by_media(params)
-    where('address LIKE ? AND tmp IS false AND removed IS false', "%#{params[:media]}%")
+    where('address LIKE ?', "%#{params[:media]}%").allowed
+  end
+
+  private
+  
+  def event_blank_or_exist?(attributes)
+    return true if attributes[:name].blank? || Event.where(name: attributes[:name]).any?
+    false
   end
 end

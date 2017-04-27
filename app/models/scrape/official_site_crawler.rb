@@ -4,15 +4,18 @@ class Scrape::OfficialSiteCrawler
   def initialize(params)
     uri = Addressable::URI.parse(params[:page_url]).normalize
     linked_hosts = params[:allowed_links].map{|link| Addressable::URI.parse(link).normalize.host}
-    @member_id = params[:member_id]
-    @event_id = params[:event_id]
+    member_id = params[:member_id]
+    event_id = params[:event_id]
+    new_event = params[:event_attributes]
+    tag_list = params[:tag_list]
+    tmp = params[:tmp]
     @depth_limit = params[:depth_limit].try(:to_i) || params[:depth_limit]
     @cache = []
     @top_page = uri
     @http = Net::HTTP.new(uri.host)
     @allowed_hosts = [ uri.host, *linked_hosts ]
     @delay = Robotex.new('MyAppAgent').delay(uri.to_s)
-    @downloader = Scrape::Downloader.new('')
+    @downloader = Scrape::Downloader.new('', member_id, event_id, new_event, tag_list, tmp)
   end
   
   def validate
@@ -70,7 +73,7 @@ class Scrape::OfficialSiteCrawler
           next unless url.match 'youtube'
           id = File.basename(URI.parse(url).path)
           video_uri = URI.parse(url.gsub('embed/', 'watch/?v='))
-          @downloader.save_youtube(id, video_uri, page.url, @member_id, @event_id, true)
+          @downloader.save_youtube(id, video_uri, page.url)
         end
         
         doc.xpath('//link[@rel="stylesheet"]').each do |link_tag|
@@ -88,7 +91,7 @@ class Scrape::OfficialSiteCrawler
     uri = Addressable::URI.parse(media_url).normalize
     date = Time.parse(response_header(uri)['last-modified']) rescue Time.now
     filepath = "#{uri.host}#{uri.path}"
-    @downloader.save_media(type, uri, page_url, date, @member_id, @event_id, true, filepath)
+    @downloader.save_media(type, uri, page_url, date,  filepath)
     @cache << media_url
   end
   

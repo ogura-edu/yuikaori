@@ -12,12 +12,15 @@ class Scrape::InstagramCrawler
       ::Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: false)
     end
     
-    @member_id = params[:member_id]
-    @event_id = params[:event_id]
+    member_id = params[:member_id]
+    event_id = params[:event_id]
+    new_event = params[:event_attributes]
+    tag_list = params[:tag_list]
+    tmp = params[:tmp]
     @article_url = params[:article_url].try(:gsub, %r{\?.*$}, '')
     open(@article_url).read.match %r{\(@(.+?)\)} rescue nil
     @instaID = params[:instaID] || $1
-    @downloader = Scrape::Downloader.new("instagram/#{@instaID}/")
+    @downloader = Scrape::Downloader.new("instagram/#{@instaID}/", member_id, event_id, new_event, tag_list, tmp)
   end
   
   def validate
@@ -44,7 +47,7 @@ class Scrape::InstagramCrawler
   end
   
   def manually_crawl
-    parse_post(tmp: true)
+    parse_post
   end
   
   private
@@ -73,7 +76,7 @@ class Scrape::InstagramCrawler
   def check_post
     all(:xpath, '//a[@class="_8mlbc _vbtk2 _t5r8b"]').each do |result|
       @article_url = result[:href].gsub(/\?.*$/, "")
-      parse_post(tmp: false)
+      parse_post
     end
   end
   
@@ -81,7 +84,7 @@ class Scrape::InstagramCrawler
     Settings.instagram.regular_crawl.map{|obj| obj.ID}
   end
   
-  def parse_post(tmp:)
+  def parse_post
     doc = Nokogiri::HTML.parse(open("#{@article_url}?hl=ja"))
     
     datestr = doc.at('meta[@property="og:title"]').attribute('content').value
@@ -93,10 +96,10 @@ class Scrape::InstagramCrawler
     
     if doc.at('//meta[@content="video"]')
       video_url = doc.at('//meta[@property="og:video:secure_url"]').attribute('content').value
-      @downloader.save_media(:video, video_url, @article_url, date, @member_id, @event_id, tmp)
+      @downloader.save_media(:video, video_url, @article_url, date)
     else
       image_url = doc.at('//meta[@property="og:image"]').attribute('content').value
-      @downloader.save_media(:image, image_url, @article_url, date, @member_id, @event_id, tmp)
+      @downloader.save_media(:image, image_url, @article_url, date)
     end
   end
 end

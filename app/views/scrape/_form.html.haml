@@ -42,12 +42,15 @@
   .center-block
     = url_field_tag 'youtube[article_url]', nil, placeholder: '本記事のURLがあれば指定してください'
 
--# tagを送信するフォームも必要じゃね？
-.center-block
+.center-block.member-form
   %span メンバー：
-  = select_tag :member_id, options_from_collection_for_select(Member.all, :id, :member), include_blank: true, required: true
-.center-block
+  = select_tag :member_id, options_from_collection_for_select(Member.all, :id, :name), include_blank: true, required: true
+.center-block.event-form
   %span イベント：
-  = select_tag :event_id, options_from_collection_for_select(Event.all, :id, :event), required: true
+  = select_tag :event_id, options_from_collection_for_select(Event.all, :id, :name), include_blank: true
+  %button.btn.new-record.event{type: 'button'} イベント新規作成
+.center-block.tags-form
+  %span タグ：
+  = text_field_tag :tag_list, nil, {'data-role': 'tagsinput', placeholder: 'tag separated with , or Enter', class: 'tag-list'}
 .center-block
   = submit_tag '追加', class: 'btn btn-default'
