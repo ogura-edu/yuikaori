@@ -5,10 +5,10 @@ class Scrape::TwitterCrawler < Twitter::REST::Client
     super()
     case params[:user_type]
     when :admin
-      self.consumer_key = Settings.twitter.consumer_key
-      self.consumer_secret = Settings.twitter.consumer_secret
-      self.access_token = Settings.twitter.access_token
-      self.access_token_secret = Settings.twitter.access_token_secret
+      self.consumer_key = ENV['TWITTER_CONSUMER_KEY']
+      self.consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
+      self.access_token = ENV['TWITTER_ACCESS_TOKEN']
+      self.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
     when :user
       # いずれユーザに投稿させるときに必要になる
     end

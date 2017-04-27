@@ -18,10 +18,6 @@ instagram:
       member_id: 2
 
 twitter:
-  consumer_key: 'HICQLnFdWvpD390L7hw6Y3Phx'
-  consumer_secret: 'x02WyH82h76ETJlpWvFu7R9Nhhfgty6TuMBKp1ZXaENRNPx2Qc'
-  access_token: '272968442-MnbnHokfqR9lyWS8pNm2JzhG426osPb777LYPDqm'
-  access_token_secret: 'MsVaeBYwqzP0uWiNyiBwnrxTTFQYwPThuqik8EzdtmHR0'
   regular_crawl:
     - ID: 'yuikaori_staff'
       member_id: 1

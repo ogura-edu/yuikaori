@@ -9,13 +9,13 @@ default: &default
   encoding: utf8
   reconnect: false
   pool: 5
-  socket: /var/lib/mysql/mysql.sock
+  socket: /tmp/mysql.sock
 
 development:
   <<: *default
   database: db_development
   username: root
-  password: ENV['DB_DEVELOPMENT_PASSWORD']
+  password: <%= ENV['DB_DEVELOPMENT_PASSWORD'] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -24,7 +24,7 @@ test:
   <<: *default
   database: db_test
   username: root
-  password: ENV['DB_DEVELOPMENT_PASSWORD']
+  password: <%= ENV['DB_DEVELOPMENT_PASSWORD'] %>
 
 production:
   adapter: postgresql
@@ -32,4 +32,4 @@ production:
   pool: 5
   database: db_production
   username: yui
-  password: ENV['DB_PRODUCTION_PASSWORD']
+  password: <%= ENV['DB_PRODUCTION_PASSWORD'] %>

@@ -81,9 +81,6 @@ gem 'poltergeist'
 
 gem 'pry-rails'
 
-gem 'carrierwave'
-gem 'rmagick'
-
 gem 'haml-rails'
 gem 'erb2haml'
 
