@@ -13,6 +13,7 @@ http://music-book.jp/book/news/news/141207
 https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
+js, cssを分離したので、それぞれ必要な部分をピックアップして同期するなり削除するなりする
 複数条件を使った検索の実装(便利なgemがありそう)->それぞれ対応するメソッドをモデルに定義してcase whenなどで順次実行する？
 picture,videoを同じ画面にまとめることも出来そう。モーダルで表示するときに動画/画像本体を表示すればおk -> routesの変更も必要
 アラートがうるさいので適切な画面で表示されるように修正する
@@ -83,3 +84,4 @@ modalで表示しているshowテンプレートから、editボタンを押す�
 タグ用のgemがある acts as taggable -> なかなかいい感じ。同時にbootstrap-tagsinputも導入。
 picture,videoのスーパークラスとしてmediaを作成、メソッドはそこに定義する
 コントローラ内の処理部分はモデルに記述する。(pictures,videos)
+css, jsファイルを、そのページのコントローラと同名ファイルのみ読み込むようにした

@@ -3,8 +3,8 @@
 -if user_signed_in?
   %h2 こんにちは、#{current_user.username}さん
   .heading
-    = button_to '画像一覧へ', pictures_path, method: :get, class: "btn btn-default"
-    = button_to '動画一覧へ', videos_path, method: :get, class: "btn btn-default"
+    = button_to '画像一覧へ', pictures_path, method: :get, class: "btn btn-primary"
+    = button_to '動画一覧へ', videos_path, method: :get, class: "btn btn-primary"
     - if current_user.approved?
       = button_to 'メディアを追加する', scrape_index_path, method: :get, class: "btn btn-default"
       - if current_user.admin?

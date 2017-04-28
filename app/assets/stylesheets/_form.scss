@@ -1,0 +1,19 @@
+.form-control {
+  display: inline-block;
+  text-align: center;
+  height: 2em;
+  width: 12em;
+}
+
+.tag-list, .bootstrap-tagsinput {
+  border: none;
+}
+
+input[type=text], input[type=url]{
+  border: none;
+  border-bottom: medium groove;
+  text-align: center;
+}
+input[type=url] {
+  width: 30em;
+}

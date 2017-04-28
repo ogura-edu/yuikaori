@@ -3,7 +3,6 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).on 'turbolinks:load', ->
-  $('.dropdown-toggle').dropdown()
   $('.my-thumbnail.selectable').click ->
     if $(this).hasClass('checked')
       $(this).removeClass('checked')

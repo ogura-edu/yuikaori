@@ -19,3 +19,7 @@
 //= require bootstrap
 //= require bootstrap-tagsinput
 //= require masonry/masonry.min
+
+$(document).on('turbolinks:load', function(){
+  $('.dropdown-toggle').dropdown();
+});
