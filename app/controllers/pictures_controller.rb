@@ -9,19 +9,8 @@ class PicturesController < ApplicationController
   end
   
   def search
-    #columnの値によって処理を分岐
-    case params[:column]
-    when 'date'
-      selected = Picture.selected_by_date(search_params)
-    when 'member'
-      selected = Picture.selected_by_member(search_params)
-    when 'event'
-      selected = Picture.selected_by_event(search_params)
-    when 'tag'
-      selected = Picture.selected_by_tag(search_params)
-    when 'media'
-      selected = Picture.selected_by_media(search_params)
-    end
+    column = params[:column]
+    selected = Picture.send("selected_by_#{column}", search_params)
     @pictures = selected.order('date DESC').page(params[:page]).per(50)
   end
   
@@ -29,7 +18,7 @@ class PicturesController < ApplicationController
   end
   
   def request_destroy
-    Picture.where(id: params[:pictures]).update_all(tmp: true)
+    Picture.where(id: params[:picture_ids]).update_all(tmp: true)
     redirect_back fallback_location: pictures_path, notice: '削除申請を受け付けました'
   end
   
@@ -37,11 +26,11 @@ class PicturesController < ApplicationController
     #submitボタンのname属性によって処理を分岐
     if params[:destroy]
       #削除処理
-      Picture.remove(params[:pictures])
+      Picture.remove(params[:picture_ids])
       redirect_back fallback_location: tmp_pictures_path, notice: 'データベース及びストレージからの削除完了しました'
     elsif params[:permit]
       #表示処理
-      Picture.where(id: params[:pictures]).update_all(tmp: false)
+      Picture.where(id: params[:picture_ids]).update_all(tmp: false)
       redirect_back fallback_location: tmp_pictures_path, notice: '一覧に表示します'
     end
   end

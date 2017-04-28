@@ -5,14 +5,14 @@
 .modal-form
   .modal-body
     .center-block
-      %p メンバー：#{@video.member.member}
+      %p メンバー：#{@video.member.name}
     .center-block
-      %p イベント：#{@video.event.event}
+      - unless @video.event.nil?
+        %p イベント：#{@video.event.name}
     .center-block
       %p 日時：#{@video.date}
     .center-block
-      - @video.tags.each do |t|
-        %span t.tag
+      = @video.tag_list.join(' ')
     .center-block
       = link_to '元記事', @video.article_url, class: 'btn btn-default'
   .modal-footer

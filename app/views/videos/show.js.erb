@@ -1,2 +1,3 @@
-$('.modal-content').html("<%= escape_javascript(render 'show') %>");
+$('.modal-content').html("<%= j(render 'show') %>");
 $('#show_modal').modal('show');
+$('#notice').html("<% if flash[:notice] %> <%= j(javascript_tag %Q{alert('#{flash.now[:notice]}')}) %> <% end %>");

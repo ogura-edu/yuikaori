@@ -4,5 +4,5 @@
   
   - if action_name == 'destroy_index' || action_name == 'tmp'
     = image_tag video.ss_address, class: "my-thumbnail img-rounded selectable"
-    = check_box_tag 'videos[]', video.id, false, class: 'multiple_checkbox'
+    = check_box_tag 'video_ids[]', video.id, false, class: 'multiple_checkbox'
     = image_tag '/images/item/checkmark.png', class: "checkmark"
