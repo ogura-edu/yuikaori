@@ -1,0 +1,9 @@
+- provide :title, '表示/削除'
+
+= form_tag multiple_pictures_path do
+  #masonry-container.transitions-enabled.centered.clearfix
+    .sizer
+    .page
+      = render @pictures
+  = paginate @pictures
+  = render 'footer'

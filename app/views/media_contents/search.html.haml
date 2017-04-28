@@ -1,0 +1,9 @@
+- provide :title, '検索結果'
+= render 'modal'
+
+#masonry-container.transitions-enabled.centered.clearfix
+  .sizer
+  .page
+    = render @pictures
+= paginate @pictures
+= render 'footer'

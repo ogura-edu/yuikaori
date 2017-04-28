@@ -1,0 +1,9 @@
+- provide :title, '削除申請'
+
+= form_tag request_pictures_path do
+  #masonry-container.transitions-enabled.centered.clearfix
+    .sizer
+    .page
+      = render @pictures
+  = paginate @pictures
+  = render 'footer'

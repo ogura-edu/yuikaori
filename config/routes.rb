@@ -22,13 +22,13 @@ Rails.application.routes.draw do
   end
 
 
-  resources :pictures, :videos, constraints: { id: /\d+/ }, only: [ :index, :edit, :show, :update ] do
+  resources :media_contents, constraints: { id: /\d+/ }, only: [ :index, :edit, :show, :update ] do
     collection do
       get :tmp
       get :search
       get :destroy_index
       post :multiple
-      post :request
+      post :request_destroy
     end
   end
   

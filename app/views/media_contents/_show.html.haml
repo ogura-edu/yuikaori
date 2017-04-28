@@ -1,0 +1,20 @@
+.modal-header
+  %button.close{aria: {hidden: 'true'}, data: {dismiss: 'modal'}, role: 'button'} x
+  %h3#modal_label 詳細
+= image_tag @picture.address, class: 'img-rounded', id: 'modal-image'
+.modal-form
+  .modal-body
+    .center-block
+      %p メンバー：#{@picture.member.name}
+    .center-block 
+      - unless @picture.event.nil?
+        %p イベント：#{@picture.event.name}
+    .center-block
+      %p 日時：#{@picture.date}
+    .center-block
+      = @picture.tag_list.join(' ')
+    .center-block
+      = link_to '元記事', @picture.article_url, class: 'btn btn-default'
+  .modal-footer
+    = link_to 'Edit', edit_picture_path(@picture), class: 'btn btn-primary', remote: true
+    %button.btn{aria: {hidden: true}, data: {dismiss: 'modal'}} Close

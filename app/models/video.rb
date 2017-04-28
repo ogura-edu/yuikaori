@@ -1,5 +1,14 @@
 class Video < ApplicationRecord
-  include Media
+  include MediaContentBase
+  
+  def self.remove(ids)
+    videos = where(id: ids)
+    videos.update_all(removed: true)
+    videos.each do |video|
+      S3_BUCKET.object(video.s3_address).delete rescue puts "#{video.s3_address} is maybe not exists."
+      S3_BUCKET.object(video.s3_ss_address).delete rescue puts "#{video.s3_ss_address} is maybe not exists."
+    end
+  end
   
   def s3_ss_address
     s3_address.gsub(%r{\.[^.]*?$}, '.jpg')
