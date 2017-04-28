@@ -1,2 +1,3 @@
-class Picture < Media
+class Picture < ApplicationRecord
+  include Media
 end

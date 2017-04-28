@@ -1,4 +1,5 @@
-class Video < Media
+class Video < ApplicationRecord
+  include Media
   
   def s3_ss_address
     s3_address.gsub(%r{\.[^.]*?$}, '.jpg')
