@@ -48,7 +48,7 @@
 .center-block.event-form
   %span イベント：
   = select_tag :event_id, options_from_collection_for_select(Event.all, :id, :name), include_blank: true
-  %button.btn.new-record.event{type: 'button'} イベント新規作成
+  %button.btn.new-record{type: 'button'} イベント新規作成
 .center-block.tags-form
   %span タグ：
   = text_field_tag :tag_list, nil, {'data-role': 'tagsinput', placeholder: 'tag separated with , or Enter', class: 'tag-list'}

@@ -5,7 +5,11 @@
     %title= full_title(yield(:title))
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    - if File.exist? "#{Rails.root}/app/assets/stylesheets/#{controller.controller_name}.scss"
+      = stylesheet_link_tag    controller.controller_name, media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    - if File.exist? "#{Rails.root}/app/assets/javascripts/#{controller.controller_name}.coffee"
+      = javascript_include_tag controller.controller_name, 'data-turbolinks-track': 'reload'
   %body
     %header
       = render 'layouts/header'

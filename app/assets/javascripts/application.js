@@ -19,4 +19,3 @@
 //= require bootstrap
 //= require bootstrap-tagsinput
 //= require masonry/masonry.min
-//= require_tree .

@@ -2,17 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-# $(document).on 'click', '.new-record',->
-#   # maybe can remove IF statement
-#   if $(this).hasClass('event')
-#     $('.event-form').append('<input placeholder="イベント名" type="text" name="picture[event_attributes][name]" id="picture_event_attributes_name">')
-#     $(this).css('display', 'none')
-
-$(document).on 'click', '.new-record', ->
-  if $(this).hasClass('event')
-    $('.event-form').append('<input placeholder="イベント名" type="text" name="picture[event_attributes][name]" id="picture_event_attributes_name">')
-    $(this).css('display', 'none')
-
 $(document).on 'turbolinks:load', ->
   $('.dropdown-toggle').dropdown()
   $('.my-thumbnail.selectable').click ->

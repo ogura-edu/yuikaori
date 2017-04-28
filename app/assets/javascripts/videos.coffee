@@ -2,8 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-#modalを閉じたらvideoタグにpause()を実行する
-$(document).on 'click.dismiss.bs.modal', "#show_modal", ->
-  if $('#modal-video')[0]
-    video = document.getElementById('modal-video')
-    video.pause()
+# $(document).on 'click', '.new-record', ->
+#   if $(this).hasClass('event')
+#     $('.event-form').append('<input placeholder="イベント名" type="text" name="video[event_attributes][name]" id="video_event_attributes_name">')
+#     $(this).css('display', 'none')
