@@ -1,9 +1,9 @@
 - provide :title, '削除申請'
 
-= form_tag request_videos_path do
+= form_tag deletion_request_media_contents_path, method: :patch do
   #masonry-container.transitions-enabled.centered.clearfix
     .sizer
     .page
-      = render @videos
-  = paginate @videos
+      = render @media_contents
+  = paginate @media_contents
   = render 'footer'

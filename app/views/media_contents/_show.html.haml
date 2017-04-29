@@ -1,20 +1,25 @@
 .modal-header
   %button.close{aria: {hidden: 'true'}, data: {dismiss: 'modal'}, role: 'button'} x
   %h3#modal_label 詳細
-= image_tag @picture.address, class: 'img-rounded', id: 'modal-image'
+- if @media_content.content_type == 1
+  = image_tag @media_content.address, class: 'img-rounded', id: 'modal-image'
+- elsif @media_content.content_type == 2
+  = video_tag @media_content.address, id: 'modal-video', controls: true, autoplay: true
 .modal-form
   .modal-body
     .center-block
-      %p メンバー：#{@picture.member.name}
+      %p メンバー：#{@media_content.member.name}
     .center-block 
-      - unless @picture.event.nil?
-        %p イベント：#{@picture.event.name}
+      - if @media_content.event.nil?
+        %p イベント：なし
+      - else
+        %p イベント：#{@media_content.event.name}
     .center-block
-      %p 日時：#{@picture.date}
+      %p 日時：#{@media_content.date}
     .center-block
-      = @picture.tag_list.join(' ')
+      = @media_content.tag_list.join(' ')
     .center-block
-      = link_to '元記事', @picture.article_url, class: 'btn btn-default'
+      = link_to '元記事', @media_content.article_url, class: 'btn btn-default'
   .modal-footer
-    = link_to 'Edit', edit_picture_path(@picture), class: 'btn btn-primary', remote: true
+    = link_to 'Edit', edit_media_content_path(@media_content), class: 'btn btn-primary', remote: true
     %button.btn{aria: {hidden: true}, data: {dismiss: 'modal'}} Close

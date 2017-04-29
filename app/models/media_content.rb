@@ -1,42 +1,75 @@
-class MediaContent
-  # class methos
-  def self.allowed
-    [ Picture.allowed,
-      Video.allowed ].flatten
+class MediaContent < ApplicationRecord
+  validates :content_type, inclusion: { in: [1, 2] }
+  validates :member_id, inclusion: { in: [1, 2, 3] }
+  
+  acts_as_taggable
+  belongs_to :member
+  belongs_to :event, optional: true
+  accepts_nested_attributes_for :event, reject_if: :event_blank_or_exist?
+  
+  scope :paginate,   ->(page_id) { page(page_id).per(50) }
+  scope :desc_order, -> { order('date DESC') }
+  scope :asc_order,  -> { order('date ASC') }
+  scope :allowed,    -> { where(tmp: false, removed: false) }
+  scope :temporary,  -> { where(tmp: true,  removed: false) }
+  scope :selected_by_date,   ->(params) { where('date >= ? AND date <= ?', params[:since], params[:until]).allowed }
+  scope :selected_by_member, ->(params) { joins(:member).merge(Member.id_is params[:member]).allowed }
+  scope :selected_by_event,  ->(params) { joins(:event).merge(Event.name_like params[:event]).allowed }
+  scope :selected_by_tag,    ->(params) { tagged_with(params[:tag], any: true, wild: true).allowed }
+  scope :selected_by_media,  ->(params) { where('address LIKE ?', "%#{params[:media]}%").allowed }
+  
+  # class methods
+  def self.remove(ids)
+    media_contents = where(id: ids)
+    media_contents.update_all(removed: true)
+    media_contents.each do |media_content|
+      media_content.delete_from_storage
+    end
   end
   
-  def self.temporary
-    [ Picture.temporary.concat,
-      Video.temporary ].flatten
+  # instance methods
+  def delete_from_storage
+    begin
+      case content_type
+      when 1 # picture
+        S3_BUCKET.object(s3_address).delete
+      when 2 # video
+        S3_BUCKET.object(s3_address).delete
+        S3_BUCKET.object(s3_ss_address).delete
+      end
+    rescue
+      puts $!
+      puts "#{media_content.address} is maybe not exists."
+    end
   end
   
-  def self.selected_by_date(params)
-    [ Picture.selected_by_date(params).allowed.concat,
-      Video.selected_by_date(params).allowed
-  end
-
-  def self.selected_by_member(params)
-    [ Picture.selected_by_member(params).allowed.concat,
-      Video.selected_by_member(params).allowed
-  end
-
-  def self.selected_by_event(params)
-    [ Picture.selected_by_event(params).allowed.concat,
-      Video.selected_by_event(params).allowed
+  def thumbnail
+    case content_type
+    when 1 # picture
+      attributes['address']
+    when 2 # video
+      ss_address
+    end
   end
   
-  def self.selected_by_tag(params)
-    [ Picture.selected_by_tag(params).allowed.concat,
-      Video.selected_by_tag(params).allowed
-  end
-
-  def self.selected_by_media(params)
-    [ Picture.selected_by_media(params).allowed.concat,
-      Video.selected_by_media(params).allowed
+  private
+  
+  def s3_address
+    attributes['address'].gsub(Settings.media.root, '')
   end
   
-  def self.remove(picture_ids, video_ids)
-    Picture.remove(picture_ids)
-    Video.remove(video_ids)
+  def ss_address
+    attributes['address'].gsub(%r{\.[^.]*?$}, '.jpg')
+  end
+  
+  def s3_ss_address
+    s3_address.gsub(%r{\.[^.]*?$}, '.jpg')
+  end
+  
+  def event_blank_or_exist?(attributes)
+    if attributes[:name].blank? || Event.where(name: attributes[:name]).any?
+      return true
+    end
+    return false
   end
 end

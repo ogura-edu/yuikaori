@@ -8,18 +8,18 @@ class Users::AdminController < ApplicationController
   
   def approve
     if @user.approved?
-      @user.update_attribute :approved, false
+      @user.update(approved: false)
     else
-      @user.update_attribute :approved, true
+      @user.update(approved: true)
     end
     redirect_back fallback_location: root_path
   end
   
   def admin
     if @user.admin?
-      @user.update_attribute :admin, false
+      @user.update(admin: false)
     else
-      @user.update_attribute :admin, true
+      @user.update(admin: true)
     end
     redirect_back fallback_location: root_path
   end

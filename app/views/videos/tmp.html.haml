@@ -1,9 +1,0 @@
-- provide :title, '表示/削除'
-
-= form_tag multiple_videos_path do
-  #masonry-container.transitions-enabled.centered.clearfix
-    .sizer
-    .page
-      = render @videos
-  = paginate @videos
-  = render 'footer'

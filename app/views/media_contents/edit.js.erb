@@ -2,7 +2,7 @@ $('.modal-form').html("<%= escape_javascript(render 'edit') %>");
 $('input[data-role=tagsinput]').tagsinput();
 $('.new-record').on('click', function(){
   if($(this).parent().hasClass('event-form')) {
-    $(this).parent().append('<input placeholder="event title" type="text" name="picture[event_attributes][name]" id="picture_event_attributes_name">');
+    $(this).parent().append('<input placeholder="event title" type="text" name="media_content[event_attributes][name]" id="media_content_event_attributes_name">');
     $(this).css('display', 'none');
   }
 });

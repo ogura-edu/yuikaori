@@ -1,4 +1,4 @@
-= form_for(@picture, remote: true) do |f|
+= form_for(@media_content, method: :patch, remote: true) do |f|
   .modal-body
     .center-block.member-form
       = f.collection_select :member_id, Member.all, :id, :name
@@ -9,7 +9,7 @@
     .center-block.date-form
       = f.date_field :date, class: 'form-control'
     .center-block.tags-form
-      = f.text_field :tag_list, {value: @picture.tag_list.join(','), 'data-role': 'tagsinput', placeholder: 'tag separeted with , or Enter', class: 'tag-list'}
+      = f.text_field :tag_list, {value: @media_content.tag_list.join(','), 'data-role': 'tagsinput', placeholder: 'tag separeted with , or Enter', class: 'tag-list'}
     .center-block.article-form
       = f.url_field :article_url
   .modal-footer

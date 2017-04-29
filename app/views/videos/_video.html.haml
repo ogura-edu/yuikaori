@@ -1,8 +1,0 @@
-.picture
-  - if action_name == 'index' || action_name == 'search'
-    = link_to image_tag(video.ss_address, class: "my-thumbnail img-rounded modalable"), video, method: :get, remote: true
-  
-  - if action_name == 'destroy_index' || action_name == 'tmp'
-    = image_tag video.ss_address, class: "my-thumbnail img-rounded selectable"
-    = check_box_tag 'video_ids[]', video.id, false, class: 'multiple_checkbox'
-    = image_tag '/images/item/checkmark.png', class: "checkmark"

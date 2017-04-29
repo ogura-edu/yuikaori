@@ -1,44 +1,40 @@
 class MediaContentsController < ApplicationController
   before_action :set_media_content, only: [:show, :edit, :update]
-  before_action :approved_user!, only: [:tmp, :destroy_index, :request_destroy]
+  before_action :approved_user!, only: [:tmp, :deletion_request, :destroy]
   before_action :admin_user!, only: [:multiple]
 
   def tmp
-    @media_contents = MediaContent.temporary.desc_order.pagenate(params[:page])
-  end
-  
-  def search
-    column = params[:column]
-    selected_pictures = Picture.send("selected_by_#{column}", search_params)
-    selected_videos = Video.send("selected_by_#{column}", search_params)
-    selected = [selected_pictures, selected_videos].flatten
-    @media_contents = selected.order('date DESC').page(params[:page]).per(50)
-  end
-  
-  def destroy_index
-    @media_contents = MediaContent.allowed.desc_order.pagenate(params[:page])
-  end
-  
-  def request_destroy
-    if Picture.where(id: params[:picture_ids]).update_all(tmp: true) && Video.where(id: params[:video_ids]).update_all(tmp: true)
-      redirect_back fallback_location: media_contents_path, notice: '削除申請を受け付けました'
-    else
-      redirect_back fallback_location: media_contents_path, alert: '削除申請に失敗しました'
-    end
+    @media_contents = MediaContent.temporary.desc_order.paginate(params[:page])
   end
   
   def multiple
-    if params[:destroy] && Picture.remove(params[:picture_ids]) && Video.remove(params[:video_ids])
+    if params[:remove] && MediaContent.remove(params[:media_content_ids])
       redirect_back fallback_location: tmp_media_contents_path, notice: 'データベース及びストレージからの削除完了しました'
-    elsif params[:permit] && Picture.where(id: params[:picture_ids]).update_all(tmp: false) && Video.where(id: params[:video_ids]).update_all(tmp: false)
+    elsif params[:show] && MediaContent.where(id: params[:media_content_ids]).update_all(tmp: false)
       redirect_back fallback_location: tmp_media_contents_path, notice: '一覧に表示します'
     else
       redirect_back fallback_location: tmp_media_contents_path, alert: '更新に失敗しました'
     end
   end
+  
+  def search
+    @media_contents = MediaContent.send("selected_by_#{params[:column]}", search_params).desc_order.paginate(params[:page])
+  end
+  
+  def deletion_request
+    @media_contents = MediaContent.allowed.desc_order.paginate(params[:page])
+  end
+  
+  def hide
+    if MediaContent.where(id: params[:media_content_ids]).update_all(tmp: true)
+      redirect_to media_contents_path, notice: '削除申請を受け付けました'
+    else
+      redirect_back fallback_location: media_contents_path, alert: '削除申請に失敗しました'
+    end
+  end
 
   def index
-    @media_contents = MediaContent.allowed.order('date DESC').page(params[:page]).per(50)
+    @media_contents = MediaContent.allowed.desc_order.paginate(params[:page])
   end
 
   def show
@@ -64,11 +60,7 @@ class MediaContentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_media_content
-      if picture?
-        @media_content = 
-      elsif video?
-        @media_content = 
-      end
+      @media_content = MediaContent.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

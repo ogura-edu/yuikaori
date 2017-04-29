@@ -1,0 +1,8 @@
+.media_content
+  - if action_name == 'index' || action_name == 'search'
+    = link_to image_tag(media_content.thumbnail, class: "my-thumbnail img-rounded modalable"), media_content, method: :get, remote: true
+  
+  - if action_name == 'deletion_request' || action_name == 'tmp'
+    = image_tag media_content.thumbnail, class: "my-thumbnail img-rounded selectable"
+    = check_box_tag 'media_content_ids[]', media_content.id, false, class: 'multiple_checkbox'
+    = image_tag '/images/item/checkmark.png', class: "checkmark"

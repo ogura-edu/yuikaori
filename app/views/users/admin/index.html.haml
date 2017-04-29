@@ -15,5 +15,5 @@
       %td= user.screen_name
       %td= user.approved
       %td= user.admin
-      %td= link_to '承認on/off', users_approve_path(id: user.id), method: :post
-      %td= link_to '管理者on/off', users_admin_path(id: user.id), method: :post
+      %td= link_to '承認on/off', users_approve_path(id: user.id), method: :patch
+      %td= link_to '管理者on/off', users_admin_path(id: user.id), method: :patch

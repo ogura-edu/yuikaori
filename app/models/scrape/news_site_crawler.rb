@@ -9,7 +9,7 @@ class Scrape::NewsSiteCrawler
     tmp = params[:tmp]
     @article_uri = Addressable::URI.parse(params[:article_url]).normalize
     @http = Net::HTTP.new(@article_uri.host)
-    @delay = Robotex.new('MyAppAgent').delay(uri.to_s)
+    @delay = Robotex.new('MyAppAgent').delay(@article_uri.to_s)
     @downloader = Scrape::Downloader.new('', member_id, event_id, new_event, tag_list, tmp)
   end
   

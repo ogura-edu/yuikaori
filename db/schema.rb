@@ -10,11 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170424072336) do
+ActiveRecord::Schema.define(version: 20170429024522) do
 
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
     t.index ["name"], name: "index_events_on_name", unique: true, using: :btree
+  end
+
+  create_table "media_contents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "content_type", limit: 1,                 null: false
+    t.string   "address"
+    t.string   "article_url"
+    t.date     "date"
+    t.boolean  "tmp",                    default: false, null: false
+    t.boolean  "removed",                default: false, null: false
+    t.integer  "member_id",    limit: 1,                 null: false
+    t.integer  "event_id"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.index ["address"], name: "index_media_contents_on_address", unique: true, using: :btree
+    t.index ["event_id"], name: "index_media_contents_on_event_id", using: :btree
+    t.index ["member_id"], name: "index_media_contents_on_member_id", using: :btree
   end
 
   create_table "members", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

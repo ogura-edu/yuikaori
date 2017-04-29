@@ -13,9 +13,10 @@ http://music-book.jp/book/news/news/141207
 https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
-js, cssを分離したので、それぞれ必要な部分をピックアップして同期するなり削除するなりする
+instagramはloginいらない？
+search->deletion_requestとした時に、全てのmedia_contentsではなくsearch結果を表示できるように
+picture,videoを同列にして並べたので、videoの上には再生マークか何かを配置して区別がつくようにする
 複数条件を使った検索の実装(便利なgemがありそう)->それぞれ対応するメソッドをモデルに定義してcase whenなどで順次実行する？
-picture,videoを同じ画面にまとめることも出来そう。モーダルで表示するときに動画/画像本体を表示すればおk -> routesの変更も必要
 アラートがうるさいので適切な画面で表示されるように修正する
 取り急ぎ、yuikaori-reportの画像ファイルはS3に格納したので、あとはDBに登録する。
 画面内で順番を入れ替えたい。ひとまずは日付で昇降順。
@@ -85,3 +86,6 @@ modalで表示しているshowテンプレートから、editボタンを押す�
 picture,videoのスーパークラスとしてmediaを作成、メソッドはそこに定義する
 コントローラ内の処理部分はモデルに記述する。(pictures,videos)
 css, jsファイルを、そのページのコントローラと同名ファイルのみ読み込むようにした
+video,pictureではなく、media_contentモデルに焼き直し。
+さらに、それぞれに特有のメソッドなどはmedia_contentモデルを継承したそれぞれのクラスを作成してそこで実装。
+これにより見た目はvideo,pictureモデルが存在するので、scrape関係のスクリプトはそのまま使える。

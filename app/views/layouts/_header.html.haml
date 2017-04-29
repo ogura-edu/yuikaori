@@ -13,45 +13,43 @@
               MENU
               %span.caret
             %ul.dropdown-menu
-              %li= link_to 'ゆいかおり', search_pictures_path(column: 'member', picture: {member: 1})
-              %li= link_to '小倉唯', search_pictures_path(column: 'member', picture: {member: 2})
-              %li= link_to '石原夏織', search_pictures_path(column: 'member', picture: {member: 3})
+              %li= link_to 'ゆいかおり', search_media_contents_path(column: 'member', media_content: {member: 1})
+              %li= link_to '小倉唯', search_media_contents_path(column: 'member', media_content: {member: 2})
+              %li= link_to '石原夏織', search_media_contents_path(column: 'member', media_content: {member: 3})
               %li.divider{:role => "separator"}
               / 検索フォーム
               %li
-                = form_tag search_pictures_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+                = form_tag search_media_contents_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
                   .form-group
                     = hidden_field_tag :column, 'date'
                     %p since:
-                    = date_field_tag 'picture[since]', Date.today, class: 'form-control', max: Date.today
+                    = date_field_tag 'media_content[since]', Date.today, class: 'form-control', max: Date.today
                     %p until:
-                    = date_field_tag 'picture[until]', Date.today, class: 'form-control', max: Date.today
+                    = date_field_tag 'media_content[until]', Date.today, class: 'form-control', max: Date.today
                   = submit_tag '検索', class: 'btn btn-default'
               %li.divider{:role => "separator"}
               %li
-                = form_tag search_pictures_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+                = form_tag search_media_contents_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
                   .form-group
                     = hidden_field_tag :column, 'event'
-                    = text_field_tag('picture[event]', nil, class: 'form-control', placeholder: 'イベント検索')
+                    = text_field_tag('media_content[event]', nil, class: 'form-control', placeholder: 'イベント検索')
                   = submit_tag '検索', class: 'btn btn-default'
               %li.divider{:role => "separator"}
               %li
-                = form_tag search_pictures_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+                = form_tag search_media_contents_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
                   .form-group
                     = hidden_field_tag :column, 'tag'
-                    = text_field_tag('picture[tag]', nil, class: 'form-control', placeholder: 'タグ検索')
+                    = text_field_tag('media_content[tag]', nil, class: 'form-control', placeholder: 'タグ検索')
                   = submit_tag '検索', class: 'btn btn-default'
               %li
-                = form_tag search_pictures_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
+                = form_tag search_media_contents_path, method: :get, class: 'navbar-form navbar-left', role: 'search' do
                   .form-group
                     = hidden_field_tag :column, 'media'
-                    = text_field_tag 'picture[media]', nil, class: 'form-control', placeholder: 'メディア名検索'
+                    = text_field_tag 'media_content[media]', nil, class: 'form-control', placeholder: 'メディア名検索'
                   = submit_tag '検索', class: 'btn btn-default'
-          %li= link_to '画像一覧表示', pictures_path
-          %li= link_to '動画一覧表示', videos_path
+          %li= link_to '一覧表示', media_contents_path
           - if current_user.admin?
-            %li= link_to '画像削除／表示許可', tmp_pictures_path
-            %li= link_to '動画削除／表示許可', tmp_videos_path
+            %li= link_to '削除／表示許可', tmp_media_contents_path
         / 右側のコンポーネント
         %ul.nav.navbar-nav.navbar-right
           %li.dropdown

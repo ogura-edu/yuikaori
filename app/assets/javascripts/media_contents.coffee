@@ -12,13 +12,13 @@ $(document).on 'turbolinks:load', ->
       $(this).next('.multiple_checkbox').prop('checked', true)
 
   $container = $('#masonry-container')
-  num = $container.find('.picture').length
+  num = $container.find('.media_content').length
   while num < 4
-    $container.find('.page').append('<div class="picture dummy"></div>')
+    $container.find('.page').append('<div class="media_content dummy"></div>')
     num++
   $container.imagesLoaded ->
     $container.masonry
-      itemSelector: '.picture'
+      itemSelector: '.media_content'
       columnWidth: '.sizer'
       gutter: 10
       percentPosition: true
@@ -33,7 +33,7 @@ $(document).on 'turbolinks:load', ->
       msgText: ''
     navSelector: "nav .pagination"
     nextSelector: "nav .pagination a[rel=next]"
-    itemSelector: ".picture"
+    itemSelector: ".media_content"
     animate: true
     }, (newElements) ->
       $newElems = $(newElements)

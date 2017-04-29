@@ -21,10 +21,10 @@ User.create(
   screen_name: 'justice_vsbr',
   image:       'https://pbs.twimg.com/profile_images/815809568265498628/d5L08luZ.jpg',
   admin:       true,
-  approved:    true
+  approved:    true,
 )
 Member.create([
   { id: 1, name: 'ゆいかおり' },
   { id: 2, name: '小倉唯'     },
-  { id: 3, name: '石原夏織'   }
+  { id: 3, name: '石原夏織'   },
 ])
