@@ -13,10 +13,10 @@ http://music-book.jp/book/news/news/141207
 https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
-instagramはloginいらない？
+動画のみ表示、画像のみ表示のボタンを_headerに追加
 search->deletion_requestとした時に、全てのmedia_contentsではなくsearch結果を表示できるように
 picture,videoを同列にして並べたので、videoの上には再生マークか何かを配置して区別がつくようにする
-複数条件を使った検索の実装(便利なgemがありそう)->それぞれ対応するメソッドをモデルに定義してcase whenなどで順次実行する？
+複数条件を使った検索の実装(便利なgemがありそう)->指定したscopeをチェーンする感じ？
 アラートがうるさいので適切な画面で表示されるように修正する
 取り急ぎ、yuikaori-reportの画像ファイルはS3に格納したので、あとはDBに登録する。
 画面内で順番を入れ替えたい。ひとまずは日付で昇降順。
@@ -89,3 +89,4 @@ css, jsファイルを、そのページのコントローラと同名ファイ�
 video,pictureではなく、media_contentモデルに焼き直し。
 さらに、それぞれに特有のメソッドなどはmedia_contentモデルを継承したそれぞれのクラスを作成してそこで実装。
 これにより見た目はvideo,pictureモデルが存在するので、scrape関係のスクリプトはそのまま使える。
+instagramのクロールの動作を変更
