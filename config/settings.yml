@@ -11,8 +11,6 @@ ameblo:
       member_id: 3
 
 instagram:
-  username: 'jas_yuikaori'
-  password: 'darkarmed'
   regular_crawl:
     - ID: 'yui_ogura_official'
       member_id: 2
@@ -51,6 +49,3 @@ extname:
     - '.jpeg'
   videos:
     - '.mp4'
-
-media:
-  root: 'https://s3-us-west-2.amazonaws.com/yuikaori-herokuapp-com/'

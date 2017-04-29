@@ -55,7 +55,7 @@ class MediaContent < ApplicationRecord
   private
   
   def s3_address
-    attributes['address'].gsub(Settings.media.root, '')
+    attributes['address'].gsub(ENV['S3_BUCKET_URL'], '')
   end
   
   def ss_address

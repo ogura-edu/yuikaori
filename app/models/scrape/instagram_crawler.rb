@@ -35,57 +35,57 @@ class Scrape::InstagramCrawler
   end
   
   def crawl(type: :recent)
-    login
+    puts "visit user page of #{@instaID}"
     visit("#{@instaID}?hl=eg")
     case type
     when :all
-      load_all_posts
-      check_post
+      @article_urls = load_yaml
+      check_recent_posts
+      @article_urls.each do |article_url|
+        parse_post(article_url)
+      end
+      save_yaml
     when :recent
-      check_post
+      @article_urls = []
+      check_recent_posts
+      @article_urls.each do |article_url|
+        parse_post(article_url)
+      end
+      save_yaml
     end
   end
   
   def manually_crawl
-    parse_post
+    parse_post(@article_url)
   end
   
   private
   
-  def login
-    visit('/accounts/login/?hl=eg')
-    page.fill_in 'username', with: Settings.instagram.username
-    page.fill_in 'password', with: Settings.instagram.password
-    click_button 'Log in'
+  def load_yaml
+    puts "load from yaml file 'config/instagram.yml'"
+    YAML.load(File.open('config/instagram.yml'))
   end
   
-  def load_all_posts
+  def save_yaml
+    puts "save to yaml file 'config/instagram.yml'"
+    File.open('config/instagram.yml', 'w').puts @article_urls.to_yaml
+  end
+  
+  def check_recent_posts
+    puts 'checking recent posts ...'
     click_link 'Load more'
-    y_offset = 0
-    loop do
-      page.execute_script("window.scrollBy(0,3000);")
-      sleep(2)
-      if y_offset == page.evaluate_script("window.pageYOffset;")
-        break;
-      else
-        y_offset = page.evaluate_script("window.pageYOffset;")
-      end
-    end
-  end
-  
-  def check_post
     all(:xpath, '//a[@class="_8mlbc _vbtk2 _t5r8b"]').each do |result|
-      @article_url = result[:href].gsub(/\?.*$/, "")
-      parse_post
+      @article_urls << result[:href].gsub(/\?.*$/, "")
     end
+    @article_urls.uniq!
   end
   
   def skip_IDs
     Settings.instagram.regular_crawl.map{|obj| obj.ID}
   end
   
-  def parse_post
-    doc = Nokogiri::HTML.parse(open("#{@article_url}?hl=ja"))
+  def parse_post(article_url)
+    doc = Nokogiri::HTML.parse(open("#{article_url}?hl=ja"))
     
     datestr = doc.at('meta[@property="og:title"]').attribute('content').value
     if datestr.include?('午前')
@@ -96,10 +96,10 @@ class Scrape::InstagramCrawler
     
     if doc.at('//meta[@content="video"]')
       video_url = doc.at('//meta[@property="og:video:secure_url"]').attribute('content').value
-      @downloader.save_media(:video, video_url, @article_url, date)
+      @downloader.save_media(:video, video_url, article_url, date)
     else
       image_url = doc.at('//meta[@property="og:image"]').attribute('content').value
-      @downloader.save_media(:image, image_url, @article_url, date)
+      @downloader.save_media(:image, image_url, article_url, date)
     end
   end
 end

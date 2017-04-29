@@ -4,7 +4,7 @@ class Scrape::Helper
   end
 
   def self.fullpath(filepath)
-    "#{Settings.media.root}#{filepath}"
+    "#{ENV['S3_BUCKET_URL']}#{filepath}"
   end
 
   def self.url(page, src)
