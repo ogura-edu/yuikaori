@@ -21,14 +21,13 @@ Rails.application.routes.draw do
     get :youtube
   end
 
-  resources :media_contents, constraints: { id: /\d+/ }, only: [ :index, :edit, :show ] do
+  resources :media_contents, constraints: { id: /\d+/ }, only: [ :index, :edit, :show, :update ] do
     collection do
       get :tmp
       patch :tmp, to: 'media_contents#multiple'
       get :deletion_request
       patch :deletion_request, to: 'media_contents#hide'
       get :search
-      patch :update
     end
   end
   

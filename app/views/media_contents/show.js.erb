@@ -4,3 +4,7 @@ $('#notice').html(
   "<% if flash[:notice] %>" +
   "  <%= j(javascript_tag %Q{alert('#{flash.now[:notice]}')}) %>" +
   "<% end %>");
+$('#show_modal').on('click.dismiss.bs.modal', function(){
+  video = document.getElementById('modal-video');
+  video.pause();
+});
