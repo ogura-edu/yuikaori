@@ -60,7 +60,7 @@ class Scrape::AmebloCrawler
     options = {
       depth_limit: 1,
       delay: 2,
-      storage: Anemone::Storage.PStore("tmp/#{@amebaID}.dmp")
+      storage: Anemone::Storage.PStore("tmp/anemone/#{@amebaID}.dmp")
     }
     Anemone.crawl(url, options) do |anemone|
       anemone.focus_crawl do |page|

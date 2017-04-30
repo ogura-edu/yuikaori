@@ -11,6 +11,7 @@ class Scrape::InstagramCrawler
     ::Capybara.register_driver :poltergeist do |app|
       ::Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: false)
     end
+    @yaml_file = S3_BUCKET.object('config/instagram.yml')
     
     member_id = params[:member_id]
     event_id = params[:event_id]
@@ -63,12 +64,12 @@ class Scrape::InstagramCrawler
   
   def load_yaml
     puts "load from yaml file 'config/instagram.yml'"
-    YAML.load(File.open('config/instagram.yml'))
+    YAML.load(@yaml_file.get.body.read)
   end
   
   def save_yaml
     puts "save to yaml file 'config/instagram.yml'"
-    File.open('config/instagram.yml', 'w').puts @article_urls.to_yaml
+    @yaml_file.put(body: @article_urls.to_yaml) rescue puts $!
   end
   
   def check_recent_posts
