@@ -19,6 +19,8 @@ twitter:
   regular_crawl:
     - ID: 'yuikaori_staff'
       member_id: 1
+    - ID: 'oy_a_official'
+      member_id: 2
 
 official_site:
   regular_crawl:
