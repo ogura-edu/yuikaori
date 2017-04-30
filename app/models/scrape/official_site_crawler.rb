@@ -41,7 +41,7 @@ class Scrape::OfficialSiteCrawler
     options = {
       depth_limit:     @depth_limit,
       delay:           @delay,
-      storage:         Anemone::Storage.PStore("tmp/anemone/#{@top_page.host}.dmp"),
+      storage:         Anemone::Storage.PStore("tmp/#{@top_page.host}.dmp"),
     }
     
     Anemone.crawl(@top_page, options) do |anemone|
