@@ -30,6 +30,8 @@ Rails.application.routes.draw do
       get :search
     end
   end
+  get :pictures, to: 'media_contents#pictures'
+  get :videos, to: 'media_contents#videos'
   
   get 'tweets' => 'tweet#index'
 end

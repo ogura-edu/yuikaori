@@ -48,6 +48,8 @@
                     = text_field_tag 'media_content[media]', nil, class: 'form-control', placeholder: 'メディア名検索'
                   = submit_tag '検索', class: 'btn btn-default'
           %li= link_to '一覧表示', media_contents_path
+          %li= link_to '画像のみ', pictures_path
+          %li= link_to '動画のみ', videos_path
           - if current_user.admin?
             %li= link_to '削除／表示許可', tmp_media_contents_path
         / 右側のコンポーネント

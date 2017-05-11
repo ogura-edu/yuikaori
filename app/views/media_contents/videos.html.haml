@@ -1,0 +1,9 @@
+- provide :title, '動画一覧表示'
+= render 'modal'
+
+#masonry-container.transitions-enabled.centered.clearfix
+  .sizer
+  .page
+    = render partial: 'media_content', collection: @media_contents
+= paginate @media_contents
+= render 'footer'

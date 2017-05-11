@@ -32,6 +32,14 @@ class MediaContentsController < ApplicationController
       redirect_back fallback_location: media_contents_path, alert: '削除申請に失敗しました'
     end
   end
+  
+  def pictures
+    @media_contents = Picture.allowed.desc_order.paginate(params[:page])
+  end
+
+  def videos
+    @media_contents = Video.allowed.desc_order.paginate(params[:page])
+  end
 
   def index
     @media_contents = MediaContent.allowed.desc_order.paginate(params[:page])

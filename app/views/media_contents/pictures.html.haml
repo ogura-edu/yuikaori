@@ -1,0 +1,10 @@
+- provide :title, '画像一覧表示'
+= render 'modal'
+
+#masonry-container.transitions-enabled.centered.clearfix
+  .sizer
+  .page
+    = render partial: 'media_content', collection: @media_contents
+    = render @media_contents
+= paginate @media_contents
+= render 'footer'
