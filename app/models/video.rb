@@ -1,5 +1,5 @@
 class Video < MediaContent
-  default_scope -> { where(content_type: 2) }
+  default_scope -> { where(content_type: :video) }
   
   def screenshot
     ss = S3_BUCKET.object(s3_ss_address)

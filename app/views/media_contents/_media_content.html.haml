@@ -1,8 +1,12 @@
 .media_content
   - if %w(index search pictures videos).include?(action_name)
     = link_to image_tag(media_content.thumbnail, class: "my-thumbnail img-rounded modalable"), media_content, method: :get, remote: true
+    - if media_content.content_type == 'video'
+      -# videoならimages/item/playmark.pngを重ねて表示する
   
   - if %w(deletion_request tmp).include?(action_name)
     = image_tag media_content.thumbnail, class: "my-thumbnail img-rounded selectable"
+    - if media_content.content_type == 'video'
+      -# videoならimages/item/playmark.pngを重ねて表示する
     = check_box_tag 'media_content_ids[]', media_content.id, false, class: 'multiple_checkbox'
     = image_tag '/images/item/checkmark.png', class: "checkmark"

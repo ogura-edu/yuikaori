@@ -1,5 +1,8 @@
 class MediaContent < ApplicationRecord
-  validates :content_type, inclusion: { in: [1, 2] }
+  enum content_type: {
+    picture: 1,
+    video: 2,
+  }
   validates :member_id, inclusion: { in: [1, 2, 3] }
   
   acts_as_taggable
@@ -31,9 +34,9 @@ class MediaContent < ApplicationRecord
   def delete_from_storage
     begin
       case content_type
-      when 1 # picture
+      when 'picture'
         S3_BUCKET.object(s3_address).delete
-      when 2 # video
+      when 'video'
         S3_BUCKET.object(s3_address).delete
         S3_BUCKET.object(s3_ss_address).delete
       end
@@ -45,9 +48,9 @@ class MediaContent < ApplicationRecord
   
   def thumbnail
     case content_type
-    when 1 # picture
+    when 'picture'
       attributes['address']
-    when 2 # video
+    when 'video'
       ss_address
     end
   end

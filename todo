@@ -14,7 +14,6 @@ https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
 officialsiteのクロール
-元記事ボタンを押すと別タブが開くように(_blankを設定？)
 search->deletion_requestとした時に、全てのmedia_contentsではなくsearch結果を表示できるように
 picture,videoを同列にして並べたので、videoの上には再生マークか何かを配置して区別がつくようにする
 複数条件を使った検索の実装(便利なgemがありそう)->指定したscopeをチェーンする感じ？
@@ -93,3 +92,5 @@ video,pictureではなく、media_contentモデルに焼き直し。
 instagramのクロールの動作を変更
 twitterで小倉唯officialを追加
 動画のみ表示、画像のみ表示のボタンを_headerに追加
+元記事ボタンを押すと別タブが開くように(_blankを設定？)
+media_contentのcontent_typeにenumを設定

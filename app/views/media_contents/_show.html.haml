@@ -1,9 +1,10 @@
 .modal-header
   %button.close{aria: {hidden: 'true'}, data: {dismiss: 'modal'}, role: 'button'} x
   %h3#modal_label 詳細
-- if @media_content.content_type == 1
+- case @media_content.content_type
+- when 'picture'
   = image_tag @media_content.address, class: 'img-rounded', id: 'modal-image'
-- elsif @media_content.content_type == 2
+- when 'video'
   = video_tag @media_content.address, id: 'modal-video', controls: true, autoplay: true
 .modal-form
   .modal-body
@@ -19,7 +20,7 @@
     .center-block
       = @media_content.tag_list.join(' ')
     .center-block
-      = link_to '元記事', @media_content.article_url, class: 'btn btn-default'
+      = link_to '元記事', @media_content.article_url, class: 'btn btn-default', target: '_blank'
   .modal-footer
     = link_to 'Edit', edit_media_content_path(@media_content), class: 'btn btn-primary', remote: true
     %button.btn{aria: {hidden: true}, data: {dismiss: 'modal'}} Close

@@ -1,3 +1,3 @@
 class Picture < MediaContent
-  default_scope -> { where(content_type: 1) }
+  default_scope -> { where(content_type: :picture) }
 end
