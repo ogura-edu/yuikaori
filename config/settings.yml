@@ -1,7 +1,10 @@
+lineblog:
+  regular_crawl:
+    - ID: 'ogurayui'
+      member_id: 2
+
 ameblo:
   regular_crawl:
-    - ID: 'ogurayui-0815'
-      member_id: 2
     - ID: 'ishiharakaori-0806'
       member_id: 3
   stopped_updating:
@@ -9,6 +12,8 @@ ameblo:
       member_id: 2
     - ID: 'ishiharakaori'
       member_id: 3
+    - ID: 'ogurayui-0815'
+      member_id: 2
 
 instagram:
   regular_crawl:

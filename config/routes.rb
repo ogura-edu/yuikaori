@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   post :scrape, to: 'scrape#scrape'
   namespace :scrape do
     get :index
+    get :lineblog
     get :ameblo
     get :instagram
     get :twitter

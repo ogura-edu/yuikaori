@@ -21,11 +21,16 @@ class ScrapeController < ApplicationController
   private
   
   def media_exist?
-    medias = %w(ameblo instagram twitter official_site news_site youtube)
+    medias = %w(lineblog ameblo instagram twitter official_site news_site youtube)
     redirect_back fallback_location: scrape_index_path, alert: '登録されていないパラメータです' unless medias.include?(params[:media])
   end
   
-  # それぞれ、tagもpermitする必要がありそう
+  def lineblog_params
+    params.permit(:member_id, :event_id, :tag_list, event_attributes: [:name]).
+      merge(params.require(:lineblog).permit(:article_url)).
+      merge(tmp: true)
+  end
+  
   def ameblo_params
     params.permit(:member_id, :event_id, :tag_list, event_attributes: [:name]).
       merge(params.require(:ameblo).permit(:article_url)).

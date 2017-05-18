@@ -1,4 +1,5 @@
 .heading
+  = button_to 'lineblog', scrape_lineblog_path, method: :get, class: 'btn btn-default'
   = button_to 'ameblo', scrape_ameblo_path, method: :get, class: "btn btn-default"
   = button_to 'instagram', scrape_instagram_path, method: :get, class: "btn btn-default"
   = button_to 'twitter', scrape_twitter_path, method: :get, class: "btn btn-default"

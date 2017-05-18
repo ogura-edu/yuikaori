@@ -1,3 +1,7 @@
+- if action_name == 'lineblog'
+  .center-block
+    = url_field_tag 'lineblog[article_url]', nil, placeholder: 'LINEブログの記事URLを入力してください', required: true
+
 - if action_name == 'ameblo'
   .center-block
     = url_field_tag 'ameblo[article_url]', nil, placeholder: 'アメブロの記事URLを入力してください', required: true
