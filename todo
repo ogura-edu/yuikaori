@@ -13,8 +13,7 @@ http://music-book.jp/book/news/news/141207
 https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
-LINE blogの追加
-videosページでモーダルがでない。picturesページでエラー。これを解決
+LINE blogの追加->残りはクローラーの動作部分作成
 media_contentに統合前に手動でDBに保存したデータをまた手動で保存し直す（データ本体はS3にある）
 picture,videoを同列にして並べたので、videoの上には再生マークか何かを配置して区別がつくようにする
 officialsiteのクロール
@@ -97,3 +96,4 @@ twitterで小倉唯officialを追加
 動画のみ表示、画像のみ表示のボタンを_headerに追加
 元記事ボタンを押すと別タブが開くように(_blankを設定？)
 media_contentのcontent_typeにenumを設定
+videosページでモーダルがでない。picturesページでエラー。これを解決
