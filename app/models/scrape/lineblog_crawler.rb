@@ -38,12 +38,13 @@ class Scrape::LineblogCrawler
   end
   
   def manually_crawl
-    doc = Nokogiri::HTML.parse(open(@article_url)).at_xpath('//article')
+    doc = Nokogiri::HTML.parse(open(@article_url)).at_css('article')
     parse_article(doc)
   end
   
   private
   
+  # 各ページで、li.paging-next要素の有無で次ページの有無を判定
   def crawl_archives(archive_url)
     doc = Nokogiri::HTML.parse(open(archive_url))
     doc.css('article').each do |article|
@@ -55,8 +56,6 @@ class Scrape::LineblogCrawler
   end
   
   # 全記事の取得はarchives/YYYY-MM.html?p=:numで各記事をさらっていくしかないか。
-  # 2017/05/17以前のブログデータはlineblogからは取得しない方針で。
-  # 各ページで、li.paging-next要素の有無で次ページの有無を判定
   def parse_all_articles
     # 2017/05から現在までの全ての月についてeachを回す
     date = Date.new(2017, 5)
@@ -73,24 +72,27 @@ class Scrape::LineblogCrawler
   def recnet_articles
     # rdfから取得したitem要素の配列を返す
     doc = Nokogiri::XML.parse(open("http://lineblog.me/#{@lineblogID}/index.rdf"))
-    articles = doc.css('item')
+    doc.css('item')
   end
   
   # 記事URLのみを集めたような一覧ページがないため、記事URLを指定するようなparseメソッドは賢くない
   # 幸い、各記事はarticle要素でまとめられているため、Nokogiriでパースした要素をこのメソッドに渡すことにする
   # 厄介なことに、instagramに投稿した記事をLINEblogでも記事として表示してくるクソ仕様なので、「ブログ」タグがないものをスキップするようにする
   def parse_article(doc)
-    article_url = doc.xpath('//header//a').attribute('href').value
-    date = Time.parse(doc.xpath('//time').attribute('datetime').value)
+    article_url = doc.css('header a').attribute('href').value
+    date = Time.parse(doc.css('time').attribute('datetime').value)
     return if date < Date.new(2017, 05, 18)
-    return if # ブログタグがない場合
-    doc.xpath('//div[@class="article-body-inner"]//a/img').each do |img|
+    doc.css('.article-body-inner img').each do |img|
       # imgタグのsrc属性の値を取り出すが、どのように加工すれば最大サイズの画像を適切に取得できるかは要検討
-      # なお、拡張子は指定されていない模様。alt属性の値にある拡張子を参考にするのが良さそうか？
+      # サンプル数が少ないので実装は先延ばし。amebloからの移植記事と移行後の記事、インスタ連携記事では画像周りの形式が全く違うので、
+      # lineblogとしての記事サンプルが集まってからにする。
+      extension = img.attribute('alt').value.gsub()
       image_url = img.attribute('src').value.gsub()
-      next if # alt属性の拡張子が.gifだった場合
+      # filepath = image_url + extension
+      # gif画像、及びinstagramからの埋め込み画像の場合はスキップ
+      next if extension.match(%r{gif}i) || image_url.match(%r{https://scontent\.cdninstagram\.com/})
       
-      @downloader.save_media(:image, image_url, article_url, date)
+      @downloader.save_media(:image, image_url, article_url, date, filepath)
     end
   end
   
