@@ -1,9 +1,22 @@
 class AllCrawl
   def self.execute
+    self.lineblog
     self.ameblo
     self.instagram
     self.twitter
     self.official_site
+  end
+  
+  def self.lineblog
+    Settings.lineblog.regular_crawl.each do |obj|
+      params = {
+        lineblogID: obj.ID,
+        member_id:  obj.member_id,
+        tmp:        false,
+      }
+      lineblog = Scrape::LineblogCrawler.new(params)
+      lineblog.crawl(type: :all)
+    end
   end
   
   def self.ameblo

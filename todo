@@ -13,6 +13,7 @@ http://music-book.jp/book/news/news/141207
 https://nizista.com/views/article2?id=8144a060203d11e7a15f1f2b489afec5
 
 優先度 高：
+amebloのgif画像スキップ部分が間違っていた可能性があるので、もう一度回してみる必要がありそう
 LINE blogの追加->残りはクローラーの動作部分作成
 media_contentに統合前に手動でDBに保存したデータをまた手動で保存し直す（データ本体はS3にある）
 picture,videoを同列にして並べたので、videoの上には再生マークか何かを配置して区別がつくようにする
