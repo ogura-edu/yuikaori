@@ -54,6 +54,18 @@ class AllCrawl
   end
 
   def self.twitter
+    Settings.twitter.stopped_updating.each do |obj|
+      params = {
+        type:        'auto',
+        screen_name: obj.ID,
+        member_id:   obj.member_id,
+        tmp:         false,
+        user_type:   :admin,
+      }
+      twitter = Scrape::TwitterCrawler.new(params)
+      twitter.crawl(type: :all)
+    end
+
     Settings.twitter.regular_crawl.each do |obj|
       params = {
         type:        'auto',
@@ -68,6 +80,18 @@ class AllCrawl
   end
 
   def self.official_site
+    Settings.official_site.stopped_updating.each do |obj|
+      params = {
+        page_url:      obj.url,
+        allowed_links: obj.allowed,
+        depth_limit:   false,
+        member_id:     obj.member_id,
+        tmp:           true,
+      }
+      site = Scrape::OfficialSiteCrawler.new(params)
+      site.crawl
+    end
+
     Settings.official_site.regular_crawl.each do |obj|
       params = {
         page_url:      obj.url,
