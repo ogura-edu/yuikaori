@@ -84,15 +84,13 @@ class Scrape::LineblogCrawler
     date = Time.parse(doc.css('time').attribute('datetime').value)
     return if date < Date.new(2017, 05, 18)
     doc.css('.article-body-inner img').each do |img|
-      # imgタグのsrc属性の値を取り出すが、どのように加工すれば最大サイズの画像を適切に取得できるかは要検討
-      # サンプル数が少ないので実装は先延ばし。amebloからの移植記事と移行後の記事、インスタ連携記事では画像周りの形式が全く違うので、
-      # lineblogとしての記事サンプルが集まってからにする。
-      extension = '.' + img.attribute('alt').value.split('.')[-1].downcase # ex. image2-13-450x600.JPG => .jpg
       path_array = img.attribute('src').value.split('/')
-      image_url= path_array[0,4].join('/')
-      filepath = @dir_name + path_array[4] + extension
       # instagramからの埋め込み画像の場合はスキップ
       next if path_array[2] == 'scontent.cdninstagram.com'
+
+      extension = '.' + img.attribute('alt').value.split('.')[-1].downcase # ex. image2-13-450x600.JPG => .jpg
+      image_url= path_array[0,4].join('/')
+      filepath = @dir_name + path_array[3] + extension
       
       @downloader.save_media(:image, image_url, article_url, date, filepath)
     end
