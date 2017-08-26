@@ -10,6 +10,11 @@ namespace :crawl do
       AllCrawl.ameblo
     end
     
+    desc 'crawl all images for line blog'
+    task lineblog: :environment do
+      AllCrawl.lineblog
+    end
+    
     desc 'crawl all images for instagram'
     task instagram: :environment do
       AllCrawl.instagram
@@ -35,6 +40,11 @@ namespace :crawl do
     desc 'crawl recent images for ameblo'
     task ameblo: :environment do
       RegularCrawl.ameblo
+    end
+    
+    desc 'crawl recent images for line blog'
+    task lineblog: :environment do
+      RegularCrawl.lineblog
     end
     
     desc 'crawl recent images for instagram'
