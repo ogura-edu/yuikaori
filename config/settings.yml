@@ -22,20 +22,22 @@ instagram:
 
 twitter:
   regular_crawl:
-    - ID: 'yuikaori_staff'
-      member_id: 1
     - ID: 'oy_a_official'
       member_id: 2
+  stopped_updating:
+    - ID: 'yuikaori_staff'
+      member_id: 1
 
 official_site:
   regular_crawl:
-    - url: 'http://www.yuikaori.info/'
-      host: 'www.yuikaori.info'
-      member_id: 1
-      allowed: []
     - url: 'http://www.ogurayui.jp/'
       host: 'www.ogurayui.jp'
       member_id: 2
+      allowed: []
+  stopped_updating:
+    - url: 'http://www.yuikaori.info/'
+      host: 'www.yuikaori.info'
+      member_id: 1
       allowed: []
     - url: 'http://yuikaori-report.info/'
       host: 'yuikaori-report.info'
