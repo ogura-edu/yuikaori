@@ -91,8 +91,8 @@ class Scrape::LineblogCrawler
       path_array = img.attribute('src').value.split('/')
       image_url= path_array[0,4].join('/')
       filepath = @dir_name + path_array[4] + extension
-      # gif画像、及びinstagramからの埋め込み画像の場合はスキップ
-      next if extension == '.gif' || path_array[2] == 'scontent.cdninstagram.com'
+      # instagramからの埋め込み画像の場合はスキップ
+      next if path_array[2] == 'scontent.cdninstagram.com'
       
       @downloader.save_media(:image, image_url, article_url, date, filepath)
     end

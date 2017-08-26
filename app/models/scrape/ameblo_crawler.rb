@@ -86,7 +86,6 @@ class Scrape::AmebloCrawler
     doc = Nokogiri::HTML.parse(open(@article_url))
     doc.xpath('//div[@class="articleText" or  @class="subContentsInner"]//a/img').each do |img|
       image_url = img.attribute('src').value.gsub(/t[\d]*_/, 'o').gsub(/\?.*$/, '')
-      next if File.extname(image_url) == ".gif"
       
       datestr = image_url.gsub(/.*user_images\/(.*?)\//, '\1')
       dateary = [datestr.slice(0,4), datestr.slice(4,2), datestr.slice(6,2)]

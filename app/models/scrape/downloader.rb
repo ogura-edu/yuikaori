@@ -45,7 +45,7 @@ class Scrape::Downloader
     fullpath = Scrape::Helper.fullpath(filepath)
     
     # そもそもダウンロードしないものを弾く
-    if Settings.extname.images.exclude?(File.extname(uri)) && Settings.extname.videos.exclude?(File.extname(uri))
+    if Settings.extname.images.exclude?(File.extname(filepath)) && Settings.extname.videos.exclude?(File.extname(filepath))
       puts "#{uri}'s extension is not allowed to download"
       return
     elsif media_type == :image && Picture.find_by_address(fullpath)
